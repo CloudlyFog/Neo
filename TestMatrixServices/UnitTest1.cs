@@ -14,14 +14,14 @@ public class Tests
     [Test]
     public void TestDeterminant()
     {
-        var expected = 1;
+        var expected = 3;
         var matrix = new double[,]
         {
-            { 2, 3, 4 },
+            { 3, 3, 4 },
             { 1, 2, 4 },
             { 3, 4, 5 }
         };
-        var actual = Determinant.Order1(matrix);
+        var actual = Determinant.Order2(matrix);
         Assert.AreEqual(expected, actual);
     }
 }
