@@ -20,4 +20,10 @@
       <ProjectReference Include="..\NeoMatrixServices\NeoMatrixServices.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Reference Include="Mono.CairoWarp">
+        <HintPath>C:\Users\maxim\.nuget\packages\mono.cairowarp\2.0.5\lib\net40-client\Mono.CairoWarp.dll</HintPath>
+      </Reference>
+    </ItemGroup>
+
 </Project>
