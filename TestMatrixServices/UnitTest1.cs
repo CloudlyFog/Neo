@@ -33,14 +33,24 @@ public class Tests
             new double[] {4,5,6},
             new double[] {7,8,10}
         };
-        double[][] revMatrix =
+        double[][] secondMatrix =
         {
-            new double[] {1,2,3},
-            new double[] {0,1,2},
-            new double[] {0,0,1}
+            new double[] {8181,10026,12627},
+            new double[] {18444,22605,28470},
+            new double[] {30535,37424,47134}
         };
-        var expected = new GeneralMatrix(revMatrix);
-        var actual = MatrixHighLevel.GetReverseMatrix(matrix);
-        Assert.AreEqual(expected, actual);
+        
+        
+        double[][] transposed =
+        {
+            new double[] {1,4,7},
+            new double[] {2,5,8},
+            new double[] {3,6,10}
+        };
+
+        var expected = new GeneralMatrix(transposed);
+        
+        var actual = MatrixHighLevel.Transpose(matrix);
+        Assert.AreEqual(expected.RowPackedCopy, actual.RowPackedCopy);
     }
 }
