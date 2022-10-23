@@ -18,7 +18,9 @@
         </StackLayout.Background>
         
         <Frame x:Name="MatrixFrame">
-            <Label>Hello World</Label>
+            <Frame x:Name="InputFrame">
+                <Entry x:Name="Value"></Entry>
+            </Frame>
         </Frame>
     </StackLayout>
 

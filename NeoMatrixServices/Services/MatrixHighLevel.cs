@@ -1,9 +1,4 @@
-﻿
-using MathNet.Numerics.LinearAlgebra;
-using DotNetMatrix;
-using MathNet.Numerics;
-using MathNet.Numerics.Distributions;
-using MathNet.Numerics.LinearAlgebra.Double;
+﻿using DotNetMatrix;
 
 namespace NeoMatrixServices.Services;
 

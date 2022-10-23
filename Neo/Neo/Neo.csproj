@@ -12,14 +12,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Mono.CairoWarp" Version="2.0.5" />
+    <PackageReference Include="MathNet.Numerics" Version="5.0.0" />
     <PackageReference Include="Xamarin.Forms" Version="5.0.0.2196" />
     <PackageReference Include="Xamarin.Essentials" Version="1.7.0" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Reference Include="NeoServices">
-      <HintPath>..\..\..\NeoServices\NeoServices\bin\Release\net7.0\NeoServices.dll</HintPath>
-    </Reference>
   </ItemGroup>
 </Project>
