@@ -35,19 +35,29 @@ namespace Neo
             var j = 0;
             for (int i = 0; startPoint < MatrixGrid.Children.Count; i++)
             {
-                if (i == 3)
-                {
-                    i = 0;
-                    j++;
-                }
-                var frame = (Frame)MatrixGrid.Children[startPoint];
-                var entry = (Entry)frame.Content;
-                matrix[i, j] = double.Parse(entry.Text);
-                if (j == 3) j = 0;
-
+                ValidateIterators(ref i, ref j);
+                matrix = SettingValue(matrix, startPoint, i, j);
                 startPoint++;
             }
 
+            return matrix;
+        }
+
+        private void ValidateIterators(ref int i, ref int j)
+        {
+            if (i == 3)
+            {
+                i = 0;
+                j++;
+            }
+            if (j == 3) j = 0;
+        }
+
+        private double[,] SettingValue(double[,] matrix, int startPoint, int i, int j)
+        {
+            var frame = (Frame)MatrixGrid.Children[startPoint];
+            var entry = (Entry)frame.Content;
+            matrix[i, j] = double.Parse(entry.Text);
             return matrix;
         }
 
