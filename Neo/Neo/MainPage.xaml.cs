@@ -22,24 +22,37 @@ namespace Neo
 
         private void Exp_OnClick(object sender, EventArgs e)
         {
+
+            var matrix = AddingDataToMatrix();
+            var convertedMatrix = Matrix<double>.Build.DenseOfArray(matrix);
+            ShowResult(MatrixHighLevel.Exponentiation(convertedMatrix, int.Parse(ExpValue.Text)));
+        }
+
+        private double[,] AddingDataToMatrix()
+        {
             var matrix = new double[3,3];
-            var frame = MatrixGrid.Children[0] as Frame;
-            var entry = frame.Content as Entry;
-            // нужно обратиться потом к свойству Content, котоырй будет содержать объект Entry
-            // и затем оттуда достать значение через Text
-            for (int i = 0; i < 3; i++)
+            var startPoint = 0;
+            var j = 0;
+            for (int i = 0; startPoint < MatrixGrid.Children.Count; i++)
             {
-                for (int j = 0; j < 3; j++)
+                if (i == 3)
                 {
-                    matrix[j, i] = double.Parse(entry.Text);
+                    i = 0;
+                    j++;
                 }
+                var frame = (Frame)MatrixGrid.Children[startPoint];
+                var entry = (Entry)frame.Content;
+                matrix[i, j] = double.Parse(entry.Text);
+                if (j == 3) j = 0;
+
+                startPoint++;
             }
 
-            var convertedMatrix = Matrix<double>.Build.DenseOfArray(matrix);
-            
-            
-            var n = 3;
-            var output = MatrixHighLevel.Exponentiation(convertedMatrix, n);
+            return matrix;
+        }
+
+        private void ShowResult(Matrix<double> output)
+        {
             var message = new StringBuilder();
             for (int i = 0; i < output.RowCount; i++)
             {
@@ -50,7 +63,6 @@ namespace Neo
                         message = message.Append("\n");
                         continue;
                     }
-                    
                     message = message.Append($"{output[i, j]}\t");
                 }
             }
