@@ -12,16 +12,46 @@
                 <GradientStop Color="#F4D2AC"
                               Offset="1.0" />
                 <GradientStop Color="#B9A5EF"
-                              Offset="0,1,"/>
-                
+                              Offset="0,1," />
+
             </LinearGradientBrush>
         </StackLayout.Background>
-        
+
+
         <Frame x:Name="MatrixFrame">
-            <Frame x:Name="InputFrame">
-                <Entry x:Name="Value"></Entry>
-            </Frame>
+            <Grid x:Name="MatrixGrid" 
+                  HorizontalOptions="Center"
+                  VerticalOptions="Center">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="70" />
+                    <ColumnDefinition Width="70" />
+                    <ColumnDefinition Width="70" />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition />
+                    <RowDefinition />
+                    <RowDefinition />
+                </Grid.RowDefinitions>
+                <Entry Grid.Row="0" Grid.Column="0"></Entry>
+                <Entry Grid.Row="0" Grid.Column="1"></Entry>
+                <Entry Grid.Row="0" Grid.Column="2"></Entry>
+                
+                <Entry Grid.Row="1" Grid.Column="0"></Entry>
+                <Entry Grid.Row="1" Grid.Column="1"></Entry>
+                <Entry Grid.Row="1" Grid.Column="2"></Entry>
+                
+                <Entry Grid.Row="2" Grid.Column="0"></Entry>
+                <Entry Grid.Row="2" Grid.Column="1"></Entry>
+                <Entry Grid.Row="2" Grid.Column="2"></Entry>
+            </Grid>
+        </Frame>
+
+        <Label.Text></Label.Text>
+        <Frame x:Name="ButtonFrame" CornerRadius="16">
+            <Button x:Name="Exp"
+                    Clicked="Exp_OnClick"
+                    Text="Exp">
+            </Button>
         </Frame>
     </StackLayout>
-
 </ContentPage>

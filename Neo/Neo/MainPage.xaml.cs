@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -15,7 +16,7 @@ namespace Neo
         public MainPage()
         {
             InitializeComponent();
-            SetMatrixFrames();
+            RenderLayout();
         }
 
 
@@ -33,28 +34,44 @@ namespace Neo
             var output = MatrixHighLevel.Exponentiation(convertedMatrix, n);
         }
 
-        private void SetMatrixFrames()
+        private void RenderLayout()
+        {
+            RenderMatrixFrames();
+            RenderButtonFrames();
+        }
+
+        private void RenderMatrixFrames()
         {
             MatrixFrame.BackgroundColor = Color.White;
             MatrixFrame.CornerRadius = 21;
             MatrixFrame.HeightRequest = 250;
             MatrixFrame.WidthRequest = 100;
-            MatrixFrame.Margin = 
+            MatrixFrame.Margin =
                 new Thickness(33, 105, 38, 0);
+        }
 
-            InputFrame.Background = Brush.White;
-            InputFrame.CornerRadius = 21;
-            InputFrame.WidthRequest = 70;
-            InputFrame.HeightRequest = 40;
-
+        private void RenderButtonFrames()
+        {
+            Exp.CornerRadius = 16;
+            Exp.BackgroundColor = Color.White;
+            Exp.Opacity = 40;
         }
 
         private void RenderInputFrames(int columns, int rows)
         {
-            for (int j = 0; j < columns; j++)
+            int count = 1;
+            for (int j = 0; j < rows; j++)
             {
-                for (int i = 0; i < rows; i++)
+                for (int i = 0; i < columns; i++)
                 {
+                    var entry = new Entry()
+                    {
+                        Keyboard = Keyboard.Numeric,
+                        
+                    };
+                    MatrixGrid.RowDefinitions[i].Height = 70;
+                    MatrixGrid.ColumnDefinitions[i].Width = 70;
+                    MatrixGrid.Children.Add(entry);
                     
                 }
             }
