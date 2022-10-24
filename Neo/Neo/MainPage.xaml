@@ -6,9 +6,10 @@
 
     <StackLayout>
         <StackLayout.Background>
-            <LinearGradientBrush EndPoint="0,1">
+            <LinearGradientBrush EndPoint="0,0">
                 <GradientStop Color="#FEADA7"
-                              Offset="0.1" />
+                              Offset="0.1" 
+                              />
                 <GradientStop Color="#F4D2AC"
                               Offset="1.0" />
                 <GradientStop Color="#B9A5EF"
@@ -17,28 +18,47 @@
             </LinearGradientBrush>
         </StackLayout.Background>
 
-
+        
         <Frame x:Name="MatrixFrame">
             <Grid x:Name="MatrixGrid" 
                   HorizontalOptions="Center"
-                  VerticalOptions="Center"
-                  Width="">
+                  VerticalOptions="Center">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="70" />
                     <ColumnDefinition Width="70" />
                     <ColumnDefinition Width="70" />
                 </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
+                    <RowDefinition />
+                    <RowDefinition />
+                    <RowDefinition />
                 </Grid.RowDefinitions>
+                
             </Grid>
         </Frame>
-
-        <Label.Text></Label.Text>
-        <Frame x:Name="ButtonFrame" CornerRadius="16">
-            <Button x:Name="Exp"
-                    Clicked="Exp_OnClick"
-                    Text="Exp">
-            </Button>
-        </Frame>
+        
+        
+        <Grid VerticalOptions="End">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="200" />
+                <ColumnDefinition Width="200" />
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="100" />
+                <RowDefinition Height="100" />
+            </Grid.RowDefinitions>
+            <Frame x:Name="ExpButtonFrame" CornerRadius="16">
+                <Button x:Name="Exp"
+                        Clicked="Exp_OnClick"
+                        Text="Exp">
+                </Button>
+            </Frame>
+            <Frame Grid.Column="1" Grid.Row="0" x:Name="TransposeButtonFrame" CornerRadius="16">
+                <Button x:Name="Transpose"
+                        Clicked="Exp_OnClick"
+                        Text="Transpose">
+                </Button>
+            </Frame>
+        </Grid>
     </StackLayout>
 </ContentPage>

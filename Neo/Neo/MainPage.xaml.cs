@@ -44,9 +44,17 @@ namespace Neo
                 //     double.Parse(Value9.Text)
                 // }
             };
-
+            // var doubleMatrix = new double[,] { };
+            // var s = MatrixGrid.Children[0].ToString();
+            // for (int i = 0; i < MatrixGrid.Children.ToArray().Length; i++)
+            // {
+            //     // for (int j = 0; j < int.Parse(ColumnCount.Text); j++)
+            //     // {
+            //     // }
+            // }
             var convertedMatrix = Matrix<double>.Build.DenseOfColumns(matrix);
-
+            
+            
             var n = 3;
             var output = MatrixHighLevel.Exponentiation(convertedMatrix, n);
             Console.WriteLine(output);
@@ -55,8 +63,8 @@ namespace Neo
         private void RenderLayout()
         {
             RenderMatrixFrames();
-            RenderButtonFrames();
             RenderInputFrames(3, 3);
+            RenderButtonFrames();
         }
 
         private void RenderMatrixFrames()
@@ -75,6 +83,8 @@ namespace Neo
             Exp.CornerRadius = 16;
             Exp.BackgroundColor = Color.White;
             Exp.Opacity = 40;
+
+            Transpose = Exp;
         }
 
         private void RenderInputFrames(int columns, int rows)
@@ -92,14 +102,14 @@ namespace Neo
                         CornerRadius = 20,
                         BorderColor = Color.Orchid
                     };
-                    MatrixGrid.ColumnDefinitions[i] = new ColumnDefinition()
-                    {
-                        Width = 70
-                    };
-                    MatrixGrid.Children.Add(frame, i, j);
+                    // MatrixGrid.ColumnDefinitions[j] = new ColumnDefinition()
+                    // {
+                    //     Width = 70
+                    // };
+                    // MatrixGrid.RowDefinitions[i] = new RowDefinition();
+                    MatrixGrid.Children.Add(frame, j, i);
                 }
 
-                MatrixGrid.RowDefinitions[j] = new RowDefinition();
             }
         }
     }
