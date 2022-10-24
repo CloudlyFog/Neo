@@ -40,8 +40,9 @@ namespace Neo.Services
         /// <returns></returns>
         public static Matrix<double> Exponentiation(Matrix<double> matrix, int n)
         {
-            for (int i = 1; i < n - 1; i++)
-                matrix = matrix.Multiply(matrix);
+            var tempMatrix = matrix;
+            for (int i = 1; i < n; i++)
+                matrix = matrix.Multiply(tempMatrix);
             return matrix;
         }
 

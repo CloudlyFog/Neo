@@ -22,42 +22,39 @@ namespace Neo
 
         private void Exp_OnClick(object sender, EventArgs e)
         {
-            var matrix = new[]
+            var matrix = new double[3,3];
+            var frame = MatrixGrid.Children[0] as Frame;
+            var entry = frame.Content as Entry;
+            // нужно обратиться потом к свойству Content, котоырй будет содержать объект Entry
+            // и затем оттуда достать значение через Text
+            for (int i = 0; i < 3; i++)
             {
-                new double[] { }
-                // new double[]
-                // {
-                //     double.Parse(Value1.Text), 
-                //     double.Parse(Value2.Text), 
-                //     double.Parse(Value3.Text)
-                // },
-                // new double[]
-                // {
-                //     double.Parse(Value4.Text), 
-                //     double.Parse(Value5.Text), 
-                //     double.Parse(Value6.Text)
-                // },
-                // new double[]
-                // {
-                //     double.Parse(Value7.Text), 
-                //     double.Parse(Value8.Text), 
-                //     double.Parse(Value9.Text)
-                // }
-            };
-            // var doubleMatrix = new double[,] { };
-            // var s = MatrixGrid.Children[0].ToString();
-            // for (int i = 0; i < MatrixGrid.Children.ToArray().Length; i++)
-            // {
-            //     // for (int j = 0; j < int.Parse(ColumnCount.Text); j++)
-            //     // {
-            //     // }
-            // }
-            var convertedMatrix = Matrix<double>.Build.DenseOfColumns(matrix);
+                for (int j = 0; j < 3; j++)
+                {
+                    matrix[j, i] = double.Parse(entry.Text);
+                }
+            }
+
+            var convertedMatrix = Matrix<double>.Build.DenseOfArray(matrix);
             
             
             var n = 3;
             var output = MatrixHighLevel.Exponentiation(convertedMatrix, n);
-            Console.WriteLine(output);
+            var message = new StringBuilder();
+            for (int i = 0; i < output.RowCount; i++)
+            {
+                for (int j = 0; j <= output.ColumnCount; j++)
+                {
+                    if (j == 3)
+                    {
+                        message = message.Append("\n");
+                        continue;
+                    }
+                    
+                    message = message.Append($"{output[i, j]}\t");
+                }
+            }
+            DisplayAlert("Exponentiation", message.ToString(), "Close");
         }
 
         private void RenderLayout()
@@ -102,11 +99,6 @@ namespace Neo
                         CornerRadius = 20,
                         BorderColor = Color.Orchid
                     };
-                    // MatrixGrid.ColumnDefinitions[j] = new ColumnDefinition()
-                    // {
-                    //     Width = 70
-                    // };
-                    // MatrixGrid.RowDefinitions[i] = new RowDefinition();
                     MatrixGrid.Children.Add(frame, j, i);
                 }
 
