@@ -21,12 +21,22 @@ namespace Neo
 
 
         private void Exp_OnClick(object sender, EventArgs e)
-        {
+            => ShowResult(MatrixHighLevel.Exponentiation(ConvertMatrix(), int.Parse(ExpValue.Text)), ResultKind.Exponentiation);
+        
+        private void Transpose_OnClick(object sender, EventArgs e) 
+            => ShowResult(MatrixHighLevel.Transpose(ConvertMatrix()), ResultKind.Transpose);
 
-            var matrix = AddingDataToMatrix();
-            var convertedMatrix = Matrix<double>.Build.DenseOfArray(matrix);
-            ShowResult(MatrixHighLevel.Exponentiation(convertedMatrix, int.Parse(ExpValue.Text)));
-        }
+        private void Reverse_OnClick(object sender, EventArgs e)
+            => ShowResult(MatrixHighLevel.GetReverseMatrix(ConvertMatrix()), ResultKind.Reverse);
+        
+        private void Rank_OnClick(object sender, EventArgs e)
+            => ShowResult(MatrixHighLevel.GetRank(ConvertMatrix()).ToString(), ResultKind.Rank);
+
+        private void Determinant_OnClick(object sender, EventArgs e)
+            => ShowResult(MatrixHighLevel.GetDeterminant(ConvertMatrix()).ToString(), ResultKind.Determinant);
+
+        private Matrix<double> ConvertMatrix()
+            => Matrix<double>.Build.DenseOfArray(AddingDataToMatrix());
 
         private double[,] AddingDataToMatrix()
         {
@@ -61,7 +71,7 @@ namespace Neo
             return matrix;
         }
 
-        private void ShowResult(Matrix<double> output)
+        private void ShowResult(Matrix<double> output, ResultKind resultKind)
         {
             var message = new StringBuilder();
             for (int i = 0; i < output.RowCount; i++)
@@ -76,8 +86,11 @@ namespace Neo
                     message = message.Append($"{output[i, j]}\t");
                 }
             }
-            DisplayAlert("Exponentiation", message.ToString(), "Close");
+            DisplayAlert(resultKind.ToString(), message.ToString(), "Close");
         }
+        
+        private void ShowResult(string output, ResultKind resultKind)
+            => DisplayAlert(resultKind.ToString(), output, "Close");
 
         private void RenderLayout()
         {
@@ -99,13 +112,48 @@ namespace Neo
 
         private void RenderButtonFrames()
         {
+            StyleExponentiation();
+            StyleTranspose();
+            StyleDeterminant();
+            StyleRank();
+            StyleReverse();
+        }
+
+        private void StyleExponentiation()
+        {
             Exp.CornerRadius = 16;
             Exp.BackgroundColor = Color.White;
             Exp.Opacity = 40;
-
-            Transpose = Exp;
+        }
+        
+        private void StyleTranspose()
+        {
+            Transpose.CornerRadius = 16;
+            Transpose.BackgroundColor = Color.White;
+            Transpose.Opacity = 40;
         }
 
+        private void StyleDeterminant()
+        {
+            Determinant.CornerRadius = 16;
+            Determinant.BackgroundColor = Color.White;
+            Determinant.Opacity = 40;
+        }
+
+        private void StyleRank()
+        {
+            Rank.CornerRadius = 16;
+            Rank.BackgroundColor = Color.White;
+            Rank.Opacity = 40;
+        }
+        
+        private void StyleReverse()
+        {
+            Reverse.CornerRadius = 16;
+            Reverse.BackgroundColor = Color.White;
+            Reverse.Opacity = 40;
+        }
+        
         private void RenderInputFrames(int columns, int rows)
         {
             for (int j = 0; j < rows; j++)

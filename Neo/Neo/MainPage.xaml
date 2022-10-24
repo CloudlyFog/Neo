@@ -37,36 +37,57 @@
             </Grid>
         </Frame>
         
-        <Grid Margin="0, 10, 0, 0">
+        <Grid Margin="15, 10, 0, 0">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="70" />
+                <ColumnDefinition Width="265"/>
             </Grid.ColumnDefinitions>
             
-            <Frame>
-                <Entry x:Name="ExpValue"></Entry>
+            <Frame CornerRadius="20">
+                <Entry Keyboard="Numeric" x:Name="ExpValue" Placeholder="Exponentiation value"></Entry>
             </Frame>
             
         </Grid>
         
-        <Grid VerticalOptions="End">
+        <Grid x:Name="ButtonGrid" VerticalOptions="End" HorizontalOptions="Center">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="200" />
-                <ColumnDefinition Width="200" />
+                <ColumnDefinition Width="185" />
+                <ColumnDefinition Width="185" />
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
-                <RowDefinition Height="100" />
-                <RowDefinition Height="100" />
+                <RowDefinition />
+                <RowDefinition />
+                <RowDefinition />
             </Grid.RowDefinitions>
             <Frame x:Name="ExpButtonFrame" CornerRadius="16">
                 <Button x:Name="Exp"
                         Clicked="Exp_OnClick"
-                        Text="Exp">
+                        Text="Exponentiation">
                 </Button>
             </Frame>
             <Frame Grid.Column="1" Grid.Row="0" x:Name="TransposeButtonFrame" CornerRadius="16">
                 <Button x:Name="Transpose"
-                        Clicked="Exp_OnClick"
+                        Clicked="Transpose_OnClick"
                         Text="Transpose">
+                </Button>
+            </Frame>
+            
+            <Frame Grid.Column="0" Grid.Row="1" x:Name="ReverseButtonFrame" CornerRadius="16">
+                <Button x:Name="Reverse"
+                        Clicked="Reverse_OnClick"
+                        Text="Reverse">
+                </Button>
+            </Frame>
+            <Frame Grid.Column="1" Grid.Row="1" x:Name="RankButtonFrame" CornerRadius="16">
+                <Button x:Name="Rank"
+                        Clicked="Rank_OnClick"
+                        Text="Rank">
+                </Button>
+            </Frame>
+            
+            <Frame Grid.Column="0" Grid.Row="2" x:Name="DeterminantButtonFrame" CornerRadius="16">
+                <Button x:Name="Determinant"
+                        Clicked="Determinant_OnClick"
+                        Text="Determinant">
                 </Button>
             </Frame>
         </Grid>
