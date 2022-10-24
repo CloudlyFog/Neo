@@ -24,20 +24,39 @@ namespace Neo
         {
             var matrix = new[]
             {
-                new double[] { },
                 new double[] { }
+                // new double[]
+                // {
+                //     double.Parse(Value1.Text), 
+                //     double.Parse(Value2.Text), 
+                //     double.Parse(Value3.Text)
+                // },
+                // new double[]
+                // {
+                //     double.Parse(Value4.Text), 
+                //     double.Parse(Value5.Text), 
+                //     double.Parse(Value6.Text)
+                // },
+                // new double[]
+                // {
+                //     double.Parse(Value7.Text), 
+                //     double.Parse(Value8.Text), 
+                //     double.Parse(Value9.Text)
+                // }
             };
 
             var convertedMatrix = Matrix<double>.Build.DenseOfColumns(matrix);
 
-            var n = new int();
+            var n = 3;
             var output = MatrixHighLevel.Exponentiation(convertedMatrix, n);
+            Console.WriteLine(output);
         }
 
         private void RenderLayout()
         {
             RenderMatrixFrames();
             RenderButtonFrames();
+            RenderInputFrames(3, 3);
         }
 
         private void RenderMatrixFrames()
@@ -48,6 +67,7 @@ namespace Neo
             MatrixFrame.WidthRequest = 100;
             MatrixFrame.Margin =
                 new Thickness(33, 105, 38, 0);
+            
         }
 
         private void RenderButtonFrames()
@@ -59,21 +79,27 @@ namespace Neo
 
         private void RenderInputFrames(int columns, int rows)
         {
-            int count = 1;
             for (int j = 0; j < rows; j++)
             {
                 for (int i = 0; i < columns; i++)
                 {
-                    var entry = new Entry()
+                    var frame = new Frame
                     {
-                        Keyboard = Keyboard.Numeric,
-                        
+                        Content = new Entry
+                        {
+                            Keyboard = Keyboard.Numeric
+                        },
+                        CornerRadius = 20,
+                        BorderColor = Color.Orchid
                     };
-                    MatrixGrid.RowDefinitions[i].Height = 70;
-                    MatrixGrid.ColumnDefinitions[i].Width = 70;
-                    MatrixGrid.Children.Add(entry);
-                    
+                    MatrixGrid.ColumnDefinitions[i] = new ColumnDefinition()
+                    {
+                        Width = 70
+                    };
+                    MatrixGrid.Children.Add(frame, i, j);
                 }
+
+                MatrixGrid.RowDefinitions[j] = new RowDefinition();
             }
         }
     }

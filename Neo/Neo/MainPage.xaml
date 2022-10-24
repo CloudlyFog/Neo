@@ -6,7 +6,7 @@
 
     <StackLayout>
         <StackLayout.Background>
-            <LinearGradientBrush EndPoint="0,2">
+            <LinearGradientBrush EndPoint="0,1">
                 <GradientStop Color="#FEADA7"
                               Offset="0.1" />
                 <GradientStop Color="#F4D2AC"
@@ -21,28 +21,15 @@
         <Frame x:Name="MatrixFrame">
             <Grid x:Name="MatrixGrid" 
                   HorizontalOptions="Center"
-                  VerticalOptions="Center">
+                  VerticalOptions="Center"
+                  Width="">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="70" />
                     <ColumnDefinition Width="70" />
                     <ColumnDefinition Width="70" />
                 </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
-                    <RowDefinition />
-                    <RowDefinition />
-                    <RowDefinition />
                 </Grid.RowDefinitions>
-                <Entry Grid.Row="0" Grid.Column="0"></Entry>
-                <Entry Grid.Row="0" Grid.Column="1"></Entry>
-                <Entry Grid.Row="0" Grid.Column="2"></Entry>
-                
-                <Entry Grid.Row="1" Grid.Column="0"></Entry>
-                <Entry Grid.Row="1" Grid.Column="1"></Entry>
-                <Entry Grid.Row="1" Grid.Column="2"></Entry>
-                
-                <Entry Grid.Row="2" Grid.Column="0"></Entry>
-                <Entry Grid.Row="2" Grid.Column="1"></Entry>
-                <Entry Grid.Row="2" Grid.Column="2"></Entry>
             </Grid>
         </Frame>
 
