@@ -37,11 +37,15 @@ namespace Neo
 
         private Matrix<double> ConvertMatrix()
             => Matrix<double>.Build.DenseOfArray(AddingDataToMatrix());
-
+        
+        /// <summary>
+        /// converting data from IGridListView to double[,]
+        /// </summary>
+        /// <returns></returns>
         private double[,] AddingDataToMatrix()
         {
             var matrix = new double[3,3];
-            var startPoint = 0;
+            var startPoint = 0; // like an i in default cycle
             var j = 0;
             for (int i = 0; startPoint < MatrixGrid.Children.Count; i++)
             {
@@ -52,15 +56,19 @@ namespace Neo
 
             return matrix;
         }
-
+        
         private void ValidateIterators(ref int i, ref int j)
         {
-            
+            // if i equals count of columns
+            // we go to the next row and resetting to zero i
             if (i == 3)
             {
                 i = 0;
                 j++;
             }
+            
+            // if j equals count of columns
+            // we stopping all
             if (j == 3) j = 0;
         }
 
