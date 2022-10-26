@@ -55,6 +55,7 @@ namespace Neo
 
         private void ValidateIterators(ref int i, ref int j)
         {
+            
             if (i == 3)
             {
                 i = 0;
