@@ -73,7 +73,6 @@ namespace Neo
                 using (var newStream = File.OpenWrite(newFile))
                     await stream.CopyToAsync(newStream);
                 
-                // загружаем в ImageView
                 img.Source = ImageSource.FromFile(photo.FullPath);
             }
             catch (Exception ex)
