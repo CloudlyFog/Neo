@@ -13,12 +13,15 @@ namespace Neo
 {
     public partial class MainPage : ContentPage
     {
+        private readonly int _columns;
+        private readonly int _rows;
         public MainPage()
         {
             InitializeComponent();
             RenderLayout();
+            _columns = int.Parse(ColumnCount.Text);
+            _rows = int.Parse(RowCount.Text);
         }
-
 
         private void Exp_OnClick(object sender, EventArgs e)
             => ShowResult(MatrixHighLevel.Exponentiation(ConvertMatrix(), int.Parse(ExpValue.Text)), ResultKind.Exponentiation);
@@ -44,7 +47,7 @@ namespace Neo
         /// <returns></returns>
         private double[,] AddingDataToMatrix()
         {
-            var matrix = new double[3,3];
+            var matrix = new double[_columns,_rows];
             var startPoint = 0; // like an i in default cycle
             var j = 0;
             for (int i = 0; startPoint < MatrixGrid.Children.Count; i++)
@@ -61,7 +64,7 @@ namespace Neo
         {
             // if i equals count of columns
             // we go to the next row and resetting to zero i
-            if (i == 3)
+            if (i == _columns)
             {
                 i = 0;
                 j++;
@@ -69,7 +72,7 @@ namespace Neo
             
             // if j equals count of columns
             // we stopping all
-            if (j == 3) j = 0;
+            if (j == _rows) j = 0;
         }
 
         private double[,] SettingValue(double[,] matrix, int startPoint, int i, int j)
@@ -104,7 +107,7 @@ namespace Neo
         private void RenderLayout()
         {
             RenderMatrixFrames();
-            RenderInputFrames(3, 3);
+            RenderInputFrames(_columns, _rows);
             RenderButtonFrames();
         }
 
