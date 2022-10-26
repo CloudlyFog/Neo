@@ -1,0 +1,87 @@
+{
+  "format": 1,
+  "restore": {
+    "H:\\Neo\\Neo\\Neo\\Neo.csproj": {}
+  },
+  "projects": {
+    "H:\\Neo\\Neo\\Neo\\Neo.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "H:\\Neo\\Neo\\Neo\\Neo.csproj",
+        "projectName": "Neo",
+        "projectPath": "H:\\Neo\\Neo\\Neo\\Neo.csproj",
+        "packagesPath": "C:\\Users\\maxim\\.nuget\\packages\\",
+        "outputPath": "H:\\Neo\\Neo\\Neo\\obj\\",
+        "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+        ],
+        "configFilePaths": [
+          "C:\\Users\\maxim\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "netstandard2.0"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "C:\\Program Files\\dotnet\\library-packs": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "netstandard2.0": {
+            "targetAlias": "netstandard2.0",
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "netstandard2.0": {
+          "targetAlias": "netstandard2.0",
+          "dependencies": {
+            "LiveXAML": {
+              "target": "Package",
+              "version": "[2.1.73, )"
+            },
+            "MathNet.Numerics": {
+              "target": "Package",
+              "version": "[5.0.0, )"
+            },
+            "NETStandard.Library": {
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[2.0.3, )",
+              "autoReferenced": true
+            },
+            "Xamarin.Essentials": {
+              "target": "Package",
+              "version": "[1.7.0, )"
+            },
+            "Xamarin.Forms": {
+              "target": "Package",
+              "version": "[5.0.0.2515, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.100-rc.2.22477.23\\RuntimeIdentifierGraph.json"
+        }
+      }
+    }
+  }
+}

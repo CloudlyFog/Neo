@@ -1,0 +1,16 @@
+H:\Neo\Neo\Neo\bin\Debug\netstandard2.0\Neo.deps.json
+H:\Neo\Neo\Neo\bin\Debug\netstandard2.0\Neo.dll
+H:\Neo\Neo\Neo\bin\Debug\netstandard2.0\Neo.pdb
+H:\Neo\Neo\Neo\obj\Debug\netstandard2.0\Neo.csproj.AssemblyReference.cache
+H:\Neo\Neo\Neo\obj\Debug\netstandard2.0\Neo.GeneratedMSBuildEditorConfig.editorconfig
+H:\Neo\Neo\Neo\obj\Debug\netstandard2.0\MainPage.xaml.g.cs
+H:\Neo\Neo\Neo\obj\Debug\netstandard2.0\Neo.AssemblyInfoInputs.cache
+H:\Neo\Neo\Neo\obj\Debug\netstandard2.0\Neo.AssemblyInfo.cs
+H:\Neo\Neo\Neo\obj\Debug\netstandard2.0\Neo.csproj.CoreCompileInputs.cache
+H:\Neo\Neo\Neo\obj\Debug\netstandard2.0\XamlC.stamp
+H:\Neo\Neo\Neo\obj\Debug\netstandard2.0\Neo.dll
+H:\Neo\Neo\Neo\obj\Debug\netstandard2.0\refint\Neo.dll
+H:\Neo\Neo\Neo\obj\Debug\netstandard2.0\Neo.pdb
+H:\Neo\Neo\Neo\obj\Debug\netstandard2.0\ref\Neo.dll
+H:\Neo\Neo\Neo\obj\Debug\netstandard2.0\PhotoPage.xaml.g.cs
+H:\Neo\Neo\Neo\obj\Debug\netstandard2.0\obj\Debug\netstandard2.0\App.xaml.g.cs

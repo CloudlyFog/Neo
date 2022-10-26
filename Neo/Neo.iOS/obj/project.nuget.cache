@@ -1,0 +1,14 @@
+{
+  "version": 2,
+  "dgSpecHash": "MNyY+P7d9wikdIvG93cuINhL1k1UZg5d8haJCHGrSO5m9AryQB4ulzVv6eHQZhAaMMAOO6OtmNS7mQb4zR2ULw==",
+  "success": true,
+  "projectFilePath": "H:\\Neo\\Neo\\Neo.iOS\\Neo.iOS.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\maxim\\.nuget\\packages\\livexaml\\2.1.73\\livexaml.2.1.73.nupkg.sha512",
+    "C:\\Users\\maxim\\.nuget\\packages\\mathnet.numerics\\5.0.0\\mathnet.numerics.5.0.0.nupkg.sha512",
+    "C:\\Users\\maxim\\.nuget\\packages\\system.numerics.vectors\\4.5.0\\system.numerics.vectors.4.5.0.nupkg.sha512",
+    "C:\\Users\\maxim\\.nuget\\packages\\xamarin.essentials\\1.7.0\\xamarin.essentials.1.7.0.nupkg.sha512",
+    "C:\\Users\\maxim\\.nuget\\packages\\xamarin.forms\\5.0.0.2515\\xamarin.forms.5.0.0.2515.nupkg.sha512"
+  ],
+  "logs": []
+}

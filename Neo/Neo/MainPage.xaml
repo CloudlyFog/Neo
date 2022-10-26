@@ -11,8 +11,7 @@
                               />
                 <GradientStop Color="#F4D2AC"
                               Offset="1.0" />
-                <GradientStop Color="#B9A5EF"
-                              Offset="0,1," />
+                <GradientStop Color="#B9A5EF"/>
 
             </LinearGradientBrush>
         </StackLayout.Background>

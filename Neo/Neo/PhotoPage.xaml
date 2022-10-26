@@ -5,7 +5,9 @@
              x:Class="Neo.PhotoPage">
     <ContentPage.Content>
         <StackLayout>
-            
+            <Frame>
+                
+            </Frame>
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>
