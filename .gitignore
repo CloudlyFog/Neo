@@ -3,3 +3,5 @@ riderModule.iml
 /_ReSharper.Caches/
 .vs/*
 .idea/
+bin/
+obj/
