@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<XamlProjectMeta xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<XamlProjectMeta xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <Files>
     <XamlFileMeta>
       <FilePath>H:\Neo\Neo\Neo\App.xaml</FilePath>
@@ -8,7 +8,7 @@
     </XamlFileMeta>
     <XamlFileMeta>
       <FilePath>H:\Neo\Neo\Neo\MainPage.xaml</FilePath>
-      <Hash>51-E1-AE-DB-4A-FE-2F-31-4F-29-47-07-99-FD-A9-39</Hash>
+      <Hash>24-06-D3-4A-5D-11-19-6E-B7-9E-2A-6F-E1-50-2D-8F</Hash>
       <Properties />
     </XamlFileMeta>
     <XamlFileMeta>

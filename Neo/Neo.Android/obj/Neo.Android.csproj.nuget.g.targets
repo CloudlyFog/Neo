@@ -58,5 +58,6 @@
     <Import Project="$(NuGetPackageRoot)xamarin.androidx.browser\1.3.0.6\buildTransitive\monoandroid90\Xamarin.AndroidX.Browser.targets" Condition="Exists('$(NuGetPackageRoot)xamarin.androidx.browser\1.3.0.6\buildTransitive\monoandroid90\Xamarin.AndroidX.Browser.targets')" />
     <Import Project="$(NuGetPackageRoot)xamarin.forms\5.0.0.2515\buildTransitive\Xamarin.Forms.targets" Condition="Exists('$(NuGetPackageRoot)xamarin.forms\5.0.0.2515\buildTransitive\Xamarin.Forms.targets')" />
     <Import Project="$(NuGetPackageRoot)livexaml\2.1.73\build\netstandard2.0\LiveXAML.targets" Condition="Exists('$(NuGetPackageRoot)livexaml\2.1.73\build\netstandard2.0\LiveXAML.targets')" />
+    <Import Project="$(NuGetPackageRoot)ironocr\2022.11.10109\build\IronOcr.targets" Condition="Exists('$(NuGetPackageRoot)ironocr\2022.11.10109\build\IronOcr.targets')" />
   </ImportGroup>
 </Project>

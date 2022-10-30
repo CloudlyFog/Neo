@@ -1,11 +1,13 @@
 {
   "version": 2,
-  "dgSpecHash": "2u9mfLgPOnM6emoRdTzctsQ5r08geckSAFfnZugXNOU4aEGVSSaSNqIEbzi2IhPTqAis23tIdE5+JwGRWpgznw==",
+  "dgSpecHash": "zv/31vNxlrOMtdVKV2MyynV3lSO37mSSJ4pnZ2RNKUrhCaquAOXin1u+16Yg6U5CbAmtKCBGjhrXoLsK1JaCJg==",
   "success": true,
   "projectFilePath": "H:\\Neo\\Neo\\Neo.Android\\Neo.Android.csproj",
   "expectedPackageFiles": [
+    "C:\\Users\\maxim\\.nuget\\packages\\ironocr\\2022.11.10109\\ironocr.2022.11.10109.nupkg.sha512",
     "C:\\Users\\maxim\\.nuget\\packages\\livexaml\\2.1.73\\livexaml.2.1.73.nupkg.sha512",
     "C:\\Users\\maxim\\.nuget\\packages\\mathnet.numerics\\5.0.0\\mathnet.numerics.5.0.0.nupkg.sha512",
+    "C:\\Users\\maxim\\.nuget\\packages\\system.drawing.common\\5.0.2\\system.drawing.common.5.0.2.nupkg.sha512",
     "C:\\Users\\maxim\\.nuget\\packages\\system.numerics.vectors\\4.5.0\\system.numerics.vectors.4.5.0.nupkg.sha512",
     "C:\\Users\\maxim\\.nuget\\packages\\xamarin.androidx.activity\\1.2.4.1\\xamarin.androidx.activity.1.2.4.1.nupkg.sha512",
     "C:\\Users\\maxim\\.nuget\\packages\\xamarin.androidx.annotation\\1.2.0.1\\xamarin.androidx.annotation.1.2.0.1.nupkg.sha512",

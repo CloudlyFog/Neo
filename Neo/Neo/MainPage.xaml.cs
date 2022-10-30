@@ -8,14 +8,14 @@ namespace Neo
 {
     public partial class MainPage : ContentPage
     {
-        private readonly int _columns;
-        private readonly int _rows;
+        private int _columns;
+        private int _rows;
         public MainPage()
         {
             InitializeComponent();
             RenderLayout();
-            _columns = int.Parse(ColumnCount.Text) > 0 ? int.Parse(ColumnCount.Text) : 1;
-            _rows = int.Parse(RowCount.Text) > 0 ? int.Parse(RowCount.Text) : 1;
+            _columns = 1;
+            _rows = 1;
         }
 
         private void Exp_OnClick(object sender, EventArgs e)
@@ -47,7 +47,8 @@ namespace Neo
             var j = 0;
             for (int i = 0; startPoint < MatrixGrid.Children.Count; i++)
             {
-                ValidateIterators(ref i, ref j);
+                if (ValidateIterators(ref i, ref j))
+                    break;
                 matrix = SettingValue(matrix, startPoint, i, j);
                 startPoint++;
             }
@@ -55,7 +56,7 @@ namespace Neo
             return matrix;
         }
 
-        private void ValidateIterators(ref int i, ref int j)
+        private bool ValidateIterators(ref int i, ref int j)
         {
             // if i equals count of columns
             // we go to the next row and resetting to zero i
@@ -69,12 +70,17 @@ namespace Neo
             // we stopping all
             if (j == _rows)
                 j = 0;
+            return j == 0;
         }
 
         private double[,] SettingValue(double[,] matrix, int startPoint, int i, int j)
         {
+            // get frame with index startPoint from array of MatrixGrid
             var frame = (Frame)MatrixGrid.Children[startPoint];
+            
             var entry = (Entry)frame.Content;
+            
+            // assign value of entered Entry
             matrix[i, j] = double.Parse(entry.Text);
             return matrix;
         }
@@ -91,7 +97,7 @@ namespace Neo
                         message = message.Append("\n");
                         continue;
                     }
-                    message = message.Append($"{output[i, j]}\t");
+                    message = message.Append($"{output[i, j]}|\t\t");
                 }
             }
             DisplayAlert(resultKind.ToString(), message.ToString(), "Close");
@@ -116,6 +122,16 @@ namespace Neo
             MatrixFrame.Margin =
                 new Thickness(33, 105, 38, 0);
 
+        }
+        private void MyEntry_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            var entry = sender as Entry;
+            Console.WriteLine(entry.IsFocused ? "change from UI" : "change from code");
+        }
+        private void SetMatrixSize()
+        {
+            _columns = int.Parse(ColumnCount.Text);
+            _rows = int.Parse(RowCount.Text);
         }
 
         private void RenderButtonFrames()
@@ -175,7 +191,7 @@ namespace Neo
                             Keyboard = Keyboard.Numeric
                         },
                         CornerRadius = 20,
-                        BorderColor = Color.Orchid
+                        BorderColor = new Color(254, 173, 167)
                     };
                     MatrixGrid.Children.Add(frame, j, i);
                 }

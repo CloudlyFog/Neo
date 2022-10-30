@@ -1,9 +1,12 @@
 ﻿using System;
-
+using System.ComponentModel;
 using Android.App;
 using Android.Content.PM;
 using Android.Runtime;
 using Android.OS;
+using Android.Views;
+using Xamarin.Forms;
+using Xamarin.Forms.Platform.Android;
 
 namespace Neo.Droid
 {
