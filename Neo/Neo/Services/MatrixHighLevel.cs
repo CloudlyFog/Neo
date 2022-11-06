@@ -14,6 +14,8 @@ namespace Neo.Services
 {
     public class MatrixHighLevel
     {
+        
+        
 
         /// <summary>
         /// returns determinant of matrix
@@ -65,39 +67,45 @@ namespace Neo.Services
         /// <summary>
         /// solving linear equation
         /// </summary>
-        /// <param name="leftSideMatrix">left side of matrix </param>
-        /// <param name="rightSideMatrix">digits after |'s symbol (equals) in matrix. In other words result of equation</param>
+        /// <param name="input">parsed data from image by Tesseract OCR </param>
         /// <returns></returns>
-        public static double[] SolveLinearEquation(string leftSideMatrix, string rightSideMatrix) 
-            => ParseToMatrix(leftSideMatrix)
-                .Solve(ParseToVector(rightSideMatrix))
-                .Select(x => Math.Round(x)).ToArray();
+        public static Vector<double> SolveLinearEquation(string input)
+            => MatrixEquation.GetMatrixEquation(input).LeftSide
+                .Solve(MatrixEquation.GetMatrixEquation(input).RightSide);
         
-        private Matrix<double> Read(string path, int rowsCount)
+        /// <summary>
+        /// read matrix from image by Tesseract OCR
+        /// </summary>
+        /// <param name="path">path to image</param>
+        /// <param name="rowsCount">row's count of matrix</param>
+        /// <returns></returns>
+        private string Read(string path, int rowsCount)
         {
             var ocr = new IronTesseract();
             var img = Image.FromFile(path);
+            ResizeImage(img, 300, 300);
 
+            // idk why x equals 1
             var contentArea = new CropRectangle(x: 1, y: 0, height: img.Height / rowsCount, width: img.Width);
             var input = new OcrInput(path, contentArea);
             var sb = new StringBuilder();
             for (int i = 1; i <= rowsCount; i++)
             {
                 if (img.Height / i != img.Height)
+                    // crop the image so that only one line is visible
                     contentArea = new CropRectangle(x: 0, y: 0, height: img.Height / rowsCount, width: img.Width);
                 input = new OcrInput(path, contentArea);
-                ResizeImage(img, 300, 300);
                 input.Deskew();
                 input.EnhanceResolution();
                 input.DeNoise();
                 input.Contrast();
                 input.Binarize();
-                sb = sb.Append($"{ocr.Read(input).Text},");
+                sb = sb.Append($"{ocr.Read(input).Text}{MatrixEquation.SplitSymbol}");
             }
 
             img.Dispose();
             input.Dispose();
-            return ParseToMatrix(sb.ToString());
+            return sb.ToString();
         }
         
         /// <summary>
@@ -128,123 +136,6 @@ namespace Neo.Services
                     graphics.DrawImage(image, destRect, 0, 0, image.Width, image.Height, GraphicsUnit.Pixel, wrapMode);
                 }
             }
-        }
-        
-        /// <summary>
-        /// Parse data from <see cref="input"/> to <see cref="Matrix{T}"/>
-        /// </summary>
-        /// <param name="input">output of Tesseract OCR</param>
-        /// <returns></returns>
-        private static Matrix<double> ParseToMatrix(string input)
-        {
-            var targetArray = new double[
-                // set count of columns by parsing input text
-                // at the end of any matrix's row will types comma
-                input.Count(x => x == ',') + 1,
-                
-                // takes all elements before comma
-                input.TakeWhile(x => x != ',').Count(x => !char.IsWhiteSpace(x)) - 1];
-            
-            
-            // removing white space and commas
-            var filterResult = input.Split(' ', ',').Where(x => x != " " || x != string.Empty).ToList();
-            
-            // removing empty space
-            filterResult.Remove("");
-            AddToMatrix(targetArray, filterResult);
-
-            return Matrix<double>.Build.DenseOfArray(targetArray);
-        }
-        
-        /// <summary>
-        /// Parse data from <see cref="input"/> to <see cref="Matrix{T}"/>
-        /// </summary>
-        /// <param name="input">output of Tesseract OCR</param>
-        /// <returns></returns>
-        private static Vector<double> ParseToVector(string input)
-        {
-            var targetArray = new double[
-                // set count of columns by parsing input text
-                // at the end of any matrix's row will types comma
-                input.Count(x => x == ',') + 1];
-            
-            
-            // removing white space and commas
-            var filterResult = input.Split(' ', ',').Where(x => x != " " || x != string.Empty).ToList();
-            
-            // removing empty space
-            filterResult.Remove("");
-            AddToVector(targetArray, filterResult);
-
-            return Vector<double>.Build.DenseOfArray(targetArray);
-        }
-
-
-        /// <summary>
-        /// Adding data to <see cref="targetArray"/> from <see cref="filterResult"/>
-        /// </summary>
-        /// <param name="targetArray">array which will contain parsed data from <see cref="filterResult"/></param>
-        /// <param name="filterResult">parsed data from Tesseract OCR</param>
-        private static void AddToMatrix(double[,] targetArray, List<string> filterResult)
-        {
-            // start point for input text
-            // like an iterator
-            var point = 0;
-            
-            for (int i = 0; i < targetArray.GetLength(0);)
-            {
-                // on every iteration we increasing point instead of j
-                // because we have to iterate filterResult but not columns of sourceArray
-                for (int j = 0; j < targetArray.GetLength(1); point++)
-                {
-                    if (!Validate(ref point, filterResult))
-                        break;
-                    targetArray[i, j] = double.Parse(filterResult[point]);
-                    j++;
-                }
-                i++;
-            }
-        }
-        
-        
-        /// <summary>
-        /// Adding data to <see cref="targetArray"/> from <see cref="filterResult"/>
-        /// </summary>
-        /// <param name="targetArray">array which will contain parsed data from <see cref="filterResult"/></param>
-        /// <param name="filterResult">parsed data from Tesseract OCR</param>
-        private static void AddToVector(double[] targetArray, List<string> filterResult)
-        {
-            // start point for input text
-            // like an iterator
-            var point = 0;
-            
-            for (int i = 0; i < targetArray.GetLength(0);)
-            {
-                // on every iteration we increasing point instead of j
-                // because we have to iterate filterResult but not columns of sourceArray
-                if (!Validate(ref point, filterResult))
-                    break;
-                targetArray[i] = double.Parse(filterResult[point]);
-                i++;
-            }
-        }
-        
-        /// <summary>
-        /// Validate index of filterResult is corresponding to requirements or not
-        /// </summary>
-        /// <param name="point">index of <see cref="filterResult"/></param>
-        /// <param name="filterResult">parsed data from Tesseract OCR</param>
-        /// <returns></returns>
-        private static bool Validate(ref int point, List<string> filterResult)
-        {
-            if (point == filterResult.Count)
-                return false;
-            if (filterResult[point] == string.Empty)
-            {
-                point++;
-                return false;
-            }
-            return true;
         }
     }
 }
