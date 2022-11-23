@@ -13,44 +13,32 @@ namespace Neo
     //[XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class PhotoPage : ContentPage
     {
-        Image img;
-        Button takePhotoBtn;
-        Button getPhotoBtn;
+        public Image Image { get; set; } = new Image();
+
+        public Button TakePhoto { get; set; } = new Button()
+        {
+            Text = "Take photo"
+        };
+
+        public Button GetPhoto { get; set; } = new Button()
+        {
+            Text = "Get photo"
+        };
+        
         public PhotoPage()
         {
             InitializeComponent();
-            takePhotoBtn = new Button { Text = "Сделать фото" };
-            getPhotoBtn = new Button { Text = "Выбрать фото" };
-            img = new Image();
- 
-            // выбор фото
-            getPhotoBtn.Clicked += GetPhotoAsync;
- 
-            // съемка фото
-            takePhotoBtn.Clicked += TakePhotoAsync;
- 
-            Content = new StackLayout
-            {
-                HorizontalOptions = LayoutOptions.Center,
-                Children = {
-                    new StackLayout
-                    {
-                        Children = {takePhotoBtn, getPhotoBtn},
-                        Orientation =StackOrientation.Horizontal,
-                        HorizontalOptions = LayoutOptions.CenterAndExpand
-                    },
-                    img
-                }
-            };
+            SetCameraButtons();
         }
-        async void GetPhotoAsync(object sender, EventArgs e)
+        
+        private async void GetPhotoAsync(object sender, EventArgs e)
         {
             try
             {
                 // выбираем фото
                 var photo = await MediaPicker.PickPhotoAsync();
                 // загружаем в ImageView
-                img.Source = ImageSource.FromFile(photo.FullPath);
+                Image.Source = ImageSource.FromFile(photo.FullPath);
             }
             catch (Exception ex)
             {
@@ -58,7 +46,7 @@ namespace Neo
             }
         }
  
-        async void TakePhotoAsync(object sender, EventArgs e)
+        private async void TakePhotoAsync(object sender, EventArgs e)
         {
             try
             {
@@ -73,12 +61,39 @@ namespace Neo
                 using (var newStream = File.OpenWrite(newFile))
                     await stream.CopyToAsync(newStream);
                 
-                img.Source = ImageSource.FromFile(photo.FullPath);
+                Image.Source = ImageSource.FromFile(photo.FullPath);
             }
             catch (Exception ex)
             {
                 await DisplayAlert("Сообщение об ошибке", ex.Message, "OK");
             }
+        }
+        
+        private void SetCameraButtons()
+        {
+            // select photo
+            GetPhoto.Clicked += GetPhotoAsync;
+ 
+            // take photo
+            TakePhoto.Clicked += TakePhotoAsync;
+ 
+            Content = new StackLayout
+            {
+                HorizontalOptions = LayoutOptions.Center,
+                Children = {
+                    new StackLayout
+                    {
+                        Children =
+                        {
+                            TakePhoto,
+                            GetPhoto
+                        },
+                        Orientation =StackOrientation.Horizontal,
+                        HorizontalOptions = LayoutOptions.CenterAndExpand
+                    },
+                    Image
+                }
+            };
         }
     }
 }
