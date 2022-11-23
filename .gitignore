@@ -410,10 +410,19 @@ FodyWeavers.xsd
 .idea/**/dictionaries
 .idea/**/shelf
 
-Neo/Neo.Android/obj
+Neo/Neo.Android/bin/
+Neo/Neo.Android/obj/
+
+Neo/Neo.iOS/bin/
+Neo/Neo.iOS/obj/
+
+Neo/Neo/bin/
+Neo/Neo/obj/
 
 # AWS User-specific
 .idea/**/aws.xml
+
+
 
 # Generated files
 .idea/**/contentModel.xml
