@@ -123,16 +123,6 @@ namespace Neo
                 new Thickness(33, 105, 38, 0);
 
         }
-        private void MyEntry_TextChanged(object sender, TextChangedEventArgs e)
-        {
-            var entry = sender as Entry;
-            Console.WriteLine(entry.IsFocused ? "change from UI" : "change from code");
-        }
-        private void SetMatrixSize()
-        {
-            _columns = int.Parse(ColumnCount.Text);
-            _rows = int.Parse(RowCount.Text);
-        }
 
         private void RenderButtonFrames()
         {

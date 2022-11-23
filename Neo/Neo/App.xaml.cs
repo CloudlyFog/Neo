@@ -9,8 +9,8 @@ namespace Neo
         public App()
         {
             InitializeComponent();
-
-            MainPage = new MainPage();
+            
+            MainPage = new PhotoPage();
         }
 
         protected override void OnStart()

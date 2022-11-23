@@ -2,6 +2,13 @@
 riderModule.iml
 /_ReSharper.Caches/
 .vs/*
-.idea/
-bin/
-obj/
+.idea/*
+
+Neo/Neo.Android/bin/*
+Neo/Neo.iOS/bin/*
+Neo/Neo/bin/*
+
+Neo/Neo.Android/obj/Debug/*
+Neo/Neo.Android/obj/*
+Neo/Neo.iOS/obj/*
+Neo/Neo/obj/*

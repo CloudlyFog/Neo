@@ -10,7 +10,7 @@ using Xamarin.Forms.Xaml;
 
 namespace Neo
 {
-    [XamlCompilation(XamlCompilationOptions.Compile)]
+    //[XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class PhotoPage : ContentPage
     {
         Image img;
