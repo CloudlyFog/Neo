@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<XamlProjectMeta xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Files>
+    <XamlFileMeta>
+      <FilePath>H:\Neo\Neo\Neo\App.xaml</FilePath>
+      <Hash>4E-B1-3F-EE-E7-7E-08-F0-9F-E0-27-9D-76-1F-02-7D</Hash>
+      <Properties />
+    </XamlFileMeta>
+    <XamlFileMeta>
+      <FilePath>H:\Neo\Neo\Neo\MainPage.xaml</FilePath>
+      <Hash>24-06-D3-4A-5D-11-19-6E-B7-9E-2A-6F-E1-50-2D-8F</Hash>
+      <Properties />
+    </XamlFileMeta>
+    <XamlFileMeta>
+      <FilePath>H:\Neo\Neo\Neo\PhotoPage.xaml</FilePath>
+      <Hash>14-22-17-7B-91-1C-4A-DA-EB-39-13-5D-B8-E6-5B-E5</Hash>
+      <Properties />
+    </XamlFileMeta>
+  </Files>
+</XamlProjectMeta>

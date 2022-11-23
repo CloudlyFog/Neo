@@ -1,11 +1,19 @@
 ﻿using MathNet.Numerics.LinearAlgebra;
 using System;
+using System.Collections.Generic;
+using System.Drawing;
+using System.Drawing.Drawing2D;
+using System.Drawing.Imaging;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using IronOcr;
+using MathNet.Numerics.LinearAlgebra.Double;
 
 namespace Neo.Services
 {
     public class MatrixHighLevel
     {
-
         /// <summary>
         /// returns determinant of matrix
         /// </summary>
@@ -14,7 +22,6 @@ namespace Neo.Services
         public static double GetDeterminant(Matrix<double> matrix) 
             => matrix.Determinant();
 
-
         /// <summary>
         /// returns rank of matrix
         /// </summary>
@@ -22,7 +29,6 @@ namespace Neo.Services
         /// <returns></returns>
         public static double GetRank(Matrix<double> matrix)
             => matrix.Rank();
-
 
         /// <summary>
         /// reversing matrix
@@ -36,7 +42,7 @@ namespace Neo.Services
         /// Raises the matrix to the specified power
         /// </summary>
         /// <param name="matrix"></param>
-        /// <param name="n"></param>
+        /// <param name="n">Exponentiation value</param>
         /// <returns></returns>
         public static Matrix<double> Exponentiation(Matrix<double> matrix, int n)
         {
@@ -45,7 +51,6 @@ namespace Neo.Services
                 matrix = matrix.Multiply(tempMatrix);
             return matrix;
         }
-
 
         /// <summary>
         /// transposing matrix

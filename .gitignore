@@ -1,7 +1,14 @@
-bin/
-obj/
 /packages/
 riderModule.iml
 /_ReSharper.Caches/
 .vs/*
 .idea/*
+
+Neo/Neo.Android/bin/*
+Neo/Neo.iOS/bin/*
+Neo/Neo/bin/*
+
+Neo/Neo.Android/obj/Debug/*
+Neo/Neo.Android/obj/*
+Neo/Neo.iOS/obj/*
+Neo/Neo/obj/*
