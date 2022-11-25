@@ -26,12 +26,24 @@ namespace Neo.Services
         /// read matrix from image by Tesseract OCR
         /// </summary>
         /// <param name="path">path to image</param>
-        /// <param name="rowsCount">row's count of matrix</param>
+        /// <param name="dpi">set dpi of image</param>
+        /// <param name="deviation">percentage of image' smoothing</param>
         /// <returns></returns>
-        public static string Read(string path, int DPI = 300, double deviation = 1.7d)
+        public static string Read(string path, int dpi = 300, double deviation = 1.7d)
         {
-            var input = ConfigureOcrInput((Bitmap)Image.FromFile(path), DPI, deviation);
+            var input = ConfigureOcrInput((Bitmap)Image.FromFile(path), dpi, deviation);
             var output = OCR.Read(input).Text.Replace("\r", "").RemoveSplitSymbol();
+            return Regex.Replace(output, "[^0-9 _]", ";").RemoveSplitSymbol();
+        }
+        
+        /// <summary>
+        /// read matrix from image by Tesseract OCR
+        /// </summary>
+        /// <param name="image">image for reading</param>
+        /// <returns></returns>
+        public static string Read(Image image)
+        {
+            var output = OCR.Read(image).Text.Replace("\r", "").RemoveSplitSymbol();
             return Regex.Replace(output, "[^0-9 _]", ";").RemoveSplitSymbol();
         }
 

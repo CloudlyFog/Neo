@@ -1,13 +1,22 @@
-﻿using MathNet.Numerics.LinearAlgebra;
+﻿using System.Drawing;
+using MathNet.Numerics.LinearAlgebra;
 using Neo.Services;
 
 namespace Neo.Services
 {
     public class Solver
     {
-        public Solver(string input)
+        public Solver(string path)
         {
-            Parser.Input = input;
+            Parser.Input = Reader.Read(path);
+            LeftSide = Parser.ParseToMatrix();
+            RightSide = Parser.ParseToVector();
+            Result = LeftSide.Solve(RightSide);
+        }
+
+        public Solver(Image image)
+        {
+            Parser.Input = Reader.Read(image);
             LeftSide = Parser.ParseToMatrix();
             RightSide = Parser.ParseToVector();
             Result = LeftSide.Solve(RightSide);

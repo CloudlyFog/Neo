@@ -1,33 +1,40 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Drawing.Imaging;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Neo.Services;
 using Xamarin.Essentials;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
+using Image = System.Drawing.Image;
 
 namespace Neo
 {
-    //[XamlCompilation(XamlCompilationOptions.Compile)]
+    [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class PhotoPage : ContentPage
     {
-        public Image Image { get; set; } = new Image();
+        public Image Image { get; set; }
 
-        public Button TakePhoto { get; set; } = new Button()
-        {
-            Text = "Take photo"
-        };
+        public Button TakePhoto { get; set; }
+        
+        public Grid GridWindow { get; set; }
 
-        public Button GetPhoto { get; set; } = new Button()
-        {
-            Text = "Get photo"
-        };
+        public Grid GridTakePhoto { get; set; }
+        
+        public Frame CaptureWindow { get; set; }
+
+        public Button PickPhoto { get; }
+
+        private const int TakePhotoSizeBtn = 80;
         
         public PhotoPage()
         {
             InitializeComponent();
+            PickPhoto = new Button
+            {
+                Text = "Get photo"
+            };
+            
+            SetGrids();
             SetCameraButtons();
         }
         
@@ -35,14 +42,15 @@ namespace Neo
         {
             try
             {
-                // выбираем фото
+                // select photo
                 var photo = await MediaPicker.PickPhotoAsync();
-                // загружаем в ImageView
-                Image.Source = ImageSource.FromFile(photo.FullPath);
+                
+                // load image to source
+                Image = Image.FromFile(photo.FullPath);
             }
             catch (Exception ex)
             {
-                await DisplayAlert("Сообщение об ошибке", ex.Message, "OK");
+                await DisplayAlert("Oh... something went wrong :(", ex.Message, "OK");
             }
         }
  
@@ -50,48 +58,115 @@ namespace Neo
         {
             try
             {
-                var photo = await MediaPicker.CapturePhotoAsync(new MediaPickerOptions 
+                var photo = await MediaPicker.CapturePhotoAsync(new MediaPickerOptions
                 { 
                     Title = $"xamarin.{DateTime.Now.ToString("dd.MM.yyyy_hh.mm.ss")}.png"
                 });
  
-                // для примера сохраняем файл в локальном хранилище
+                // save file to local storage
                 var newFile = Path.Combine(FileSystem.AppDataDirectory, photo.FileName);
-                using (var stream = await photo.OpenReadAsync())
-                using (var newStream = File.OpenWrite(newFile))
-                    await stream.CopyToAsync(newStream);
                 
-                Image.Source = ImageSource.FromFile(photo.FullPath);
+                using (var readStream = await photo.OpenReadAsync())
+                {
+                    using (var writeStream = File.OpenWrite(newFile))
+                        await readStream.CopyToAsync(writeStream);
+                }
+                Image.Save("test", ImageFormat.Png);
             }
             catch (Exception ex)
             {
-                await DisplayAlert("Сообщение об ошибке", ex.Message, "OK");
+                await DisplayAlert("Oh... something went wrong :(", ex.Message, "OK");
             }
+        }
+
+        private void SetGrids()
+        {
+            
+            // Take photo
+            
+            TakePhoto = new Button
+            {
+                CornerRadius = TakePhotoSizeBtn,
+                BorderColor = Color.DimGray,
+                BorderWidth = 5,
+                BackgroundColor = System.Drawing.Color.Bisque
+            };
+            
+            GridTakePhoto = new Grid
+            {
+                Children =
+                {
+                    TakePhoto
+                },
+                Margin = new Thickness(0, 0, 0, 40),
+                VerticalOptions = LayoutOptions.End,
+                HorizontalOptions = LayoutOptions.Center,
+                ColumnDefinitions = new ColumnDefinitionCollection
+                {
+                    new ColumnDefinition
+                    {
+                        Width = TakePhotoSizeBtn,
+                    },
+                },
+                RowDefinitions = new RowDefinitionCollection
+                {
+                    new RowDefinition
+                    {
+                        Height = TakePhotoSizeBtn
+                    },
+                }
+            };
+            
+            // Capture window
+            
+            CaptureWindow = new Frame
+            {
+                BorderColor = Color.White,
+                CornerRadius = 20
+            };
+            
+            GridWindow = new Grid
+            {
+                VerticalOptions = LayoutOptions.Start,
+                HorizontalOptions = LayoutOptions.Center,
+                Children =
+                {
+                    CaptureWindow
+                },
+                ColumnDefinitions = new ColumnDefinitionCollection
+                {
+                    new ColumnDefinition
+                    {
+                        Width = 200
+                    }
+                },
+                RowDefinitions = new RowDefinitionCollection
+                {
+                    new RowDefinition
+                    {
+                        Height = 200
+                    }
+                },
+            };
         }
         
         private void SetCameraButtons()
         {
             // select photo
-            GetPhoto.Clicked += GetPhotoAsync;
+            PickPhoto.Clicked += GetPhotoAsync;
  
             // take photo
             TakePhoto.Clicked += TakePhotoAsync;
- 
+            
             Content = new StackLayout
             {
                 HorizontalOptions = LayoutOptions.Center,
-                Children = {
-                    new StackLayout
-                    {
-                        Children =
-                        {
-                            TakePhoto,
-                            GetPhoto
-                        },
-                        Orientation =StackOrientation.Horizontal,
-                        HorizontalOptions = LayoutOptions.CenterAndExpand
-                    },
-                    Image
+                VerticalOptions = LayoutOptions.End,
+                
+                Children = 
+                {
+                    GridWindow,
+                    GridTakePhoto
                 }
             };
         }
