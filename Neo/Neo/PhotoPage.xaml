@@ -2,9 +2,11 @@
 
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:xct="http://xamarin.com/schemas/2020/toolkit"
              x:Class="Neo.PhotoPage">
     <ContentPage.Content>
-        <StackLayout x:Name="Layout">
+        <StackLayout>
+            <xct:AvatarView />
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>

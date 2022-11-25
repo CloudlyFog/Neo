@@ -22,36 +22,14 @@ namespace Neo
         
         public Frame CaptureWindow { get; set; }
 
-        public Button PickPhoto { get; }
-
         private const int TakePhotoSizeBtn = 80;
         
         public PhotoPage()
         {
             InitializeComponent();
-            PickPhoto = new Button
-            {
-                Text = "Get photo"
-            };
             
             SetGrids();
             SetCameraButtons();
-        }
-        
-        private async void GetPhotoAsync(object sender, EventArgs e)
-        {
-            try
-            {
-                // select photo
-                var photo = await MediaPicker.PickPhotoAsync();
-                
-                // load image to source
-                Image = Image.FromFile(photo.FullPath);
-            }
-            catch (Exception ex)
-            {
-                await DisplayAlert("Oh... something went wrong :(", ex.Message, "OK");
-            }
         }
  
         private async void TakePhotoAsync(object sender, EventArgs e)
@@ -81,9 +59,37 @@ namespace Neo
 
         private void SetGrids()
         {
+            // Capture window
             
+            CaptureWindow = new Frame
+            {
+                BorderColor = Color.White,
+                CornerRadius = 20
+            };
+
+            GridWindow = new Grid
+            {
+                Children =
+                {
+                    CaptureWindow
+                },
+                ColumnDefinitions = new ColumnDefinitionCollection
+                {
+                    new ColumnDefinition
+                    {
+                        Width = 200
+                    },
+                },
+                RowDefinitions = new RowDefinitionCollection
+                {
+                    new RowDefinition
+                    {
+                        Height = 200
+                    },
+                },
+            };
+
             // Take photo
-            
             TakePhoto = new Button
             {
                 CornerRadius = TakePhotoSizeBtn,
@@ -94,13 +100,12 @@ namespace Neo
             
             GridTakePhoto = new Grid
             {
+                HorizontalOptions = LayoutOptions.Center,
                 Children =
                 {
                     TakePhoto
                 },
-                Margin = new Thickness(0, 0, 0, 40),
-                VerticalOptions = LayoutOptions.End,
-                HorizontalOptions = LayoutOptions.Center,
+                Margin = new Thickness(0, 350, 0, 0),
                 ColumnDefinitions = new ColumnDefinitionCollection
                 {
                     new ColumnDefinition
@@ -116,58 +121,22 @@ namespace Neo
                     },
                 }
             };
-            
-            // Capture window
-            
-            CaptureWindow = new Frame
-            {
-                BorderColor = Color.White,
-                CornerRadius = 20
-            };
-            
-            GridWindow = new Grid
-            {
-                VerticalOptions = LayoutOptions.Start,
-                HorizontalOptions = LayoutOptions.Center,
-                Children =
-                {
-                    CaptureWindow
-                },
-                ColumnDefinitions = new ColumnDefinitionCollection
-                {
-                    new ColumnDefinition
-                    {
-                        Width = 200
-                    }
-                },
-                RowDefinitions = new RowDefinitionCollection
-                {
-                    new RowDefinition
-                    {
-                        Height = 200
-                    }
-                },
-            };
         }
         
         private void SetCameraButtons()
         {
-            // select photo
-            PickPhoto.Clicked += GetPhotoAsync;
- 
             // take photo
             TakePhoto.Clicked += TakePhotoAsync;
             
             Content = new StackLayout
             {
-                HorizontalOptions = LayoutOptions.Center,
-                VerticalOptions = LayoutOptions.End,
-                
                 Children = 
                 {
                     GridWindow,
                     GridTakePhoto
-                }
+                },
+                Margin = new Thickness(0, 80, 0, 0),
+                HorizontalOptions = LayoutOptions.Center
             };
         }
     }
