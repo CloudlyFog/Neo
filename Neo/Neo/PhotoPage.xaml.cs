@@ -2,6 +2,8 @@
 using System.Drawing.Imaging;
 using System.IO;
 using Neo.Services;
+using Neo.Views;
+using Xamarin.CommunityToolkit.UI.Views;
 using Xamarin.Essentials;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
@@ -12,11 +14,11 @@ namespace Neo
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class PhotoPage : ContentPage
     {
-        public Image Image { get; set; }
 
         public Button TakePhoto { get; set; }
         
         public Grid GridWindow { get; set; }
+        public CameraPreview Camera { get; set; }
 
         public Grid GridTakePhoto { get; set; }
         
@@ -38,7 +40,7 @@ namespace Neo
             {
                 var photo = await MediaPicker.CapturePhotoAsync(new MediaPickerOptions
                 { 
-                    Title = $"xamarin.{DateTime.Now.ToString("dd.MM.yyyy_hh.mm.ss")}.png"
+                    Title = $"xamarin.{DateTime.Now:dd.MM.yyyy_hh.mm.ss}.png"
                 });
  
                 // save file to local storage
@@ -49,7 +51,8 @@ namespace Neo
                     using (var writeStream = File.OpenWrite(newFile))
                         await readStream.CopyToAsync(writeStream);
                 }
-                Image.Save("test", ImageFormat.Png);
+
+                var result = new Solver(Image.FromFile(newFile)).Result;
             }
             catch (Exception ex)
             {
@@ -60,18 +63,21 @@ namespace Neo
         private void SetGrids()
         {
             // Capture window
-            
-            CaptureWindow = new Frame
+            Camera = new CameraPreview
             {
                 BorderColor = Color.White,
-                CornerRadius = 20
+                CornerRadius = 20,
+                Options = CameraOptions.Back,
+                HorizontalOptions = LayoutOptions.Center,
+                VerticalOptions = LayoutOptions.Center
             };
 
             GridWindow = new Grid
             {
+                BackgroundColor = Color.Red,
                 Children =
                 {
-                    CaptureWindow
+                    Camera
                 },
                 ColumnDefinitions = new ColumnDefinitionCollection
                 {
