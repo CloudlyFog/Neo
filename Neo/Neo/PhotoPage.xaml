@@ -4,10 +4,5 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="Neo.PhotoPage">
     <ContentPage.Content>
-        <StackLayout>
-            <Frame>
-                
-            </Frame>
-        </StackLayout>
     </ContentPage.Content>
 </ContentPage>

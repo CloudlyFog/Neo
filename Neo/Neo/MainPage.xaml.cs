@@ -6,7 +6,7 @@ using Xamarin.Forms;
 
 namespace Neo
 {
-    public partial class MainPage : ContentPage
+    public partial class MainPage
     {
         private int _columns;
         private int _rows;

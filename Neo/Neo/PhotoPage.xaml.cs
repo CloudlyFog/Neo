@@ -1,84 +1,116 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
+using IronOcr;
+using Neo.Services;
+using Plugin.Media;
+using Plugin.Media.Abstractions;
 using Xamarin.Essentials;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
+using Color = Xamarin.Forms.Color;
+using Image = Xamarin.Forms.Image;
 
 namespace Neo
 {
-    //[XamlCompilation(XamlCompilationOptions.Compile)]
-    public partial class PhotoPage : ContentPage
+    [XamlCompilation(XamlCompilationOptions.Compile)]
+    public partial class PhotoPage
     {
-        Image img;
-        Button takePhotoBtn;
-        Button getPhotoBtn;
+        public Button TakePhoto { get; set; }
+
+        public Grid GridTakePhoto { get; set; }
+
+        private const int TakePhotoSizeBtn = 80;
+        
         public PhotoPage()
         {
             InitializeComponent();
-            takePhotoBtn = new Button { Text = "Сделать фото" };
-            getPhotoBtn = new Button { Text = "Выбрать фото" };
-            img = new Image();
+            
+            SetStylesTakePhotoButton();
+            ConfigureTakePhotoButton();
+        }
+        
  
-            // выбор фото
-            getPhotoBtn.Clicked += GetPhotoAsync;
- 
-            // съемка фото
-            takePhotoBtn.Clicked += TakePhotoAsync;
- 
-            Content = new StackLayout
+        private async void TakePhotoAsync(object sender, EventArgs e)
+        {
+            try
+            {
+                if (!CrossMedia.Current.IsCameraAvailable || !CrossMedia.Current.IsTakePhotoSupported)
+                {
+                    await DisplayAlert("Exception", $"{nameof(CrossMedia.Current.IsCameraAvailable)}: CrossMedia.Current.IsCameraAvailable\n{nameof(CrossMedia.Current.IsTakePhotoSupported)}: {CrossMedia.Current.IsTakePhotoSupported}","OK");
+                }
+                
+                var photo = await CrossMedia.Current.TakePhotoAsync(new StoreCameraMediaOptions
+                {
+                    Name = "tessImage.png",
+                    Directory = "Pictures",
+                    DefaultCamera = CameraDevice.Rear,
+                });
+                DependencyService.Get<IMediaService>().SavePicture("text.png", photo.GetStream(), "Pictures");
+                Content = new Image
+                {
+                    Source = ImageSource.FromStream(() => photo.GetStream()),
+                };
+                
+            }
+            catch (Exception ex)
+            {
+                await DisplayAlert("Oh... something went wrong :(",
+                    $"inner: {ex.InnerException?.Message}\nmessage: {ex.Message}", 
+                    "OK");
+            }
+        }
+
+        private void SetStylesTakePhotoButton()
+        {
+            // Take photo
+            TakePhoto = new Button
+            {
+                CornerRadius = TakePhotoSizeBtn,
+                BorderColor = Color.DimGray,
+                BorderWidth = 5,
+                BackgroundColor = System.Drawing.Color.Bisque
+            };
+            
+            GridTakePhoto = new Grid
             {
                 HorizontalOptions = LayoutOptions.Center,
-                Children = {
-                    new StackLayout
+                Children =
+                {
+                    TakePhoto
+                },
+                Margin = new Thickness(0, 350, 0, 0),
+                ColumnDefinitions = new ColumnDefinitionCollection
+                {
+                    new ColumnDefinition
                     {
-                        Children = {takePhotoBtn, getPhotoBtn},
-                        Orientation =StackOrientation.Horizontal,
-                        HorizontalOptions = LayoutOptions.CenterAndExpand
+                        Width = TakePhotoSizeBtn,
                     },
-                    img
+                },
+                RowDefinitions = new RowDefinitionCollection
+                {
+                    new RowDefinition
+                    {
+                        Height = TakePhotoSizeBtn
+                    },
                 }
             };
         }
-        async void GetPhotoAsync(object sender, EventArgs e)
+        
+        private void ConfigureTakePhotoButton()
         {
-            try
+            // take photo
+            TakePhoto.Clicked += TakePhotoAsync;
+            
+            Content = new StackLayout
             {
-                // выбираем фото
-                var photo = await MediaPicker.PickPhotoAsync();
-                // загружаем в ImageView
-                img.Source = ImageSource.FromFile(photo.FullPath);
-            }
-            catch (Exception ex)
-            {
-                await DisplayAlert("Сообщение об ошибке", ex.Message, "OK");
-            }
-        }
- 
-        async void TakePhotoAsync(object sender, EventArgs e)
-        {
-            try
-            {
-                var photo = await MediaPicker.CapturePhotoAsync(new MediaPickerOptions 
-                { 
-                    Title = $"xamarin.{DateTime.Now.ToString("dd.MM.yyyy_hh.mm.ss")}.png"
-                });
- 
-                // для примера сохраняем файл в локальном хранилище
-                var newFile = Path.Combine(FileSystem.AppDataDirectory, photo.FileName);
-                using (var stream = await photo.OpenReadAsync())
-                using (var newStream = File.OpenWrite(newFile))
-                    await stream.CopyToAsync(newStream);
-                
-                img.Source = ImageSource.FromFile(photo.FullPath);
-            }
-            catch (Exception ex)
-            {
-                await DisplayAlert("Сообщение об ошибке", ex.Message, "OK");
-            }
+                Children = 
+                {
+                    GridTakePhoto
+                },
+                Margin = new Thickness(0, 80, 0, 0),
+                HorizontalOptions = LayoutOptions.Center
+            };
         }
     }
 }

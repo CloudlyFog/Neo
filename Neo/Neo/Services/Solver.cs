@@ -1,19 +1,54 @@
-﻿using MathNet.Numerics.LinearAlgebra;
+﻿using System.Drawing;
+using System.IO;
+using System.Text;
+using MathNet.Numerics.LinearAlgebra;
 using Neo.Services;
 
 namespace Neo.Services
 {
-    public class Solver
+    public sealed class Solver
     {
-        public Solver(string input)
+        public Solver(string path)
         {
-            Parser.Input = input;
+            Parser.Input = Reader.Read(path);
+            OnCreating();
+        }
+
+        public Solver(Image image)
+        {
+            Parser.Input = Reader.Read(image);
+            OnCreating();
+        }
+
+        public Solver(Stream stream)
+        {
+            Parser.Input = Reader.Read(stream);
+            OnCreating();
+        }
+
+        public Solver(byte[] bytes)
+        {
+            Parser.Input = Reader.Read(bytes);
+            OnCreating();
+        }
+
+        private void OnCreating()
+        {
             LeftSide = Parser.ParseToMatrix();
             RightSide = Parser.ParseToVector();
             Result = LeftSide.Solve(RightSide);
         }
-        public Matrix<double> LeftSide { get; }
-        public Vector<double> RightSide { get; }
-        public Vector<double> Result { get; }
+        
+        public Matrix<double> LeftSide { get; private set; }
+        public Vector<double> RightSide { get; private set; }
+        public Vector<double> Result { get; private set; }
+
+        public override string ToString()
+        {
+            var sb = new StringBuilder();
+            for (int i = 0; i < Result.Count; i++)
+                sb = sb.Append(Result[i]);
+            return sb.ToString();
+        }
     }
 }
