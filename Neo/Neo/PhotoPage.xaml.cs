@@ -1,28 +1,24 @@
 ﻿using System;
-using System.Drawing.Imaging;
 using System.IO;
+using System.Threading.Tasks;
+using IronOcr;
 using Neo.Services;
-using Neo.Views;
-using Xamarin.CommunityToolkit.UI.Views;
+using Plugin.Media;
+using Plugin.Media.Abstractions;
 using Xamarin.Essentials;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
-using Image = System.Drawing.Image;
+using Color = Xamarin.Forms.Color;
+using Image = Xamarin.Forms.Image;
 
 namespace Neo
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
-    public partial class PhotoPage : ContentPage
+    public partial class PhotoPage
     {
-
         public Button TakePhoto { get; set; }
-        
-        public Grid GridWindow { get; set; }
-        public CameraPreview Camera { get; set; }
 
         public Grid GridTakePhoto { get; set; }
-        
-        public Frame CaptureWindow { get; set; }
 
         private const int TakePhotoSizeBtn = 80;
         
@@ -30,71 +26,43 @@ namespace Neo
         {
             InitializeComponent();
             
-            SetGrids();
-            SetCameraButtons();
+            SetStylesTakePhotoButton();
+            ConfigureTakePhotoButton();
         }
+        
  
         private async void TakePhotoAsync(object sender, EventArgs e)
         {
             try
             {
-                var photo = await MediaPicker.CapturePhotoAsync(new MediaPickerOptions
-                { 
-                    Title = $"xamarin.{DateTime.Now:dd.MM.yyyy_hh.mm.ss}.png"
-                });
- 
-                // save file to local storage
-                var newFile = Path.Combine(FileSystem.AppDataDirectory, photo.FileName);
-                
-                using (var readStream = await photo.OpenReadAsync())
+                if (!CrossMedia.Current.IsCameraAvailable || !CrossMedia.Current.IsTakePhotoSupported)
                 {
-                    using (var writeStream = File.OpenWrite(newFile))
-                        await readStream.CopyToAsync(writeStream);
+                    await DisplayAlert("Exception", $"{nameof(CrossMedia.Current.IsCameraAvailable)}: CrossMedia.Current.IsCameraAvailable\n{nameof(CrossMedia.Current.IsTakePhotoSupported)}: {CrossMedia.Current.IsTakePhotoSupported}","OK");
                 }
-
-                var result = new Solver(Image.FromFile(newFile)).Result;
+                
+                var photo = await CrossMedia.Current.TakePhotoAsync(new StoreCameraMediaOptions
+                {
+                    Name = "tessImage.png",
+                    Directory = "Pictures",
+                    DefaultCamera = CameraDevice.Rear,
+                });
+                DependencyService.Get<IMediaService>().SavePicture("text.png", photo.GetStream(), "Pictures");
+                Content = new Image
+                {
+                    Source = ImageSource.FromStream(() => photo.GetStream()),
+                };
+                
             }
             catch (Exception ex)
             {
-                await DisplayAlert("Oh... something went wrong :(", ex.Message, "OK");
+                await DisplayAlert("Oh... something went wrong :(",
+                    $"inner: {ex.InnerException?.Message}\nmessage: {ex.Message}", 
+                    "OK");
             }
         }
 
-        private void SetGrids()
+        private void SetStylesTakePhotoButton()
         {
-            // Capture window
-            Camera = new CameraPreview
-            {
-                BorderColor = Color.White,
-                CornerRadius = 20,
-                Options = CameraOptions.Back,
-                HorizontalOptions = LayoutOptions.Center,
-                VerticalOptions = LayoutOptions.Center
-            };
-
-            GridWindow = new Grid
-            {
-                BackgroundColor = Color.Red,
-                Children =
-                {
-                    Camera
-                },
-                ColumnDefinitions = new ColumnDefinitionCollection
-                {
-                    new ColumnDefinition
-                    {
-                        Width = 200
-                    },
-                },
-                RowDefinitions = new RowDefinitionCollection
-                {
-                    new RowDefinition
-                    {
-                        Height = 200
-                    },
-                },
-            };
-
             // Take photo
             TakePhoto = new Button
             {
@@ -129,7 +97,7 @@ namespace Neo
             };
         }
         
-        private void SetCameraButtons()
+        private void ConfigureTakePhotoButton()
         {
             // take photo
             TakePhoto.Clicked += TakePhotoAsync;
@@ -138,7 +106,6 @@ namespace Neo
             {
                 Children = 
                 {
-                    GridWindow,
                     GridTakePhoto
                 },
                 Margin = new Thickness(0, 80, 0, 0),

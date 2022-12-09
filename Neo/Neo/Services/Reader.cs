@@ -2,23 +2,24 @@
 using System;
 using System.Drawing;
 using System.Drawing.Imaging;
+using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
 
 namespace Neo.Services
 {
-    internal class Reader
+    internal sealed class Reader
     {
-        public static IronTesseract OCR { get; } = new IronTesseract()
+        public static IronTesseract Ocr { get; } = new IronTesseract
         {
             Language = OcrLanguage.EnglishBest,
-            Configuration = new TesseractConfiguration()
+            Configuration = new TesseractConfiguration
             {
                 WhiteListCharacters = "0123456789 ",
                 PageSegmentationMode = TesseractPageSegmentationMode.Auto,
                 ReadBarCodes = false,
-                RenderSearchablePdfsAndHocr = false
+                RenderSearchablePdfsAndHocr = false,
             }
         };
 
@@ -32,29 +33,92 @@ namespace Neo.Services
         public static string Read(string path, int dpi = 300, double deviation = 1.7d)
         {
             var input = ConfigureOcrInput((Bitmap)Image.FromFile(path), dpi, deviation);
-            var output = OCR.Read(input).Text.Replace("\r", "").RemoveSplitSymbol();
+            var output = Ocr.Read(input).Text.Replace("\r", "").RemoveSplitSymbol();
             return Regex.Replace(output, "[^0-9 _]", ";").RemoveSplitSymbol();
         }
         
         /// <summary>
         /// read matrix from image by Tesseract OCR
         /// </summary>
-        /// <param name="image">image for reading</param>
+        /// <param name="image">image for read</param>
+        /// <param name="dpi">set dpi of image</param>
+        /// <param name="deviation">percentage of image' smoothing</param>
         /// <returns></returns>
-        public static string Read(Image image)
+        public static string Read(Image image, int dpi = 300, double deviation = 1.7d)
         {
-            var output = OCR.Read(image).Text.Replace("\r", "").RemoveSplitSymbol();
+            var output = Ocr.Read(ConfigureOcrInput((Bitmap)image, dpi, deviation)).Text.Replace("\r", "").RemoveSplitSymbol();
+            return Regex.Replace(output, "[^0-9 _]", ";").RemoveSplitSymbol();
+        }
+        
+        /// <summary>
+        /// read matrix from image by Tesseract OCR
+        /// </summary>
+        /// <param name="stream">stream for read</param>
+        /// <param name="dpi">set dpi of image</param>
+        /// <param name="deviation">percentage of image' smoothing</param>
+        /// <returns></returns>
+        public static string Read(Stream stream, int dpi = 300, double deviation = 1.7d)
+        {
+            var output = Ocr.Read(ConfigureOcrInput(stream, dpi, deviation)).Text.Replace("\r", "").RemoveSplitSymbol();
+            return Regex.Replace(output, "[^0-9 _]", ";").RemoveSplitSymbol();
+        }
+        
+        /// <summary>
+        /// read matrix from image by Tesseract OCR
+        /// </summary>
+        /// <param name="bytes">stream for read</param>
+        /// <param name="dpi">set dpi of image</param>
+        /// <param name="deviation">percentage of image' smoothing</param>
+        /// <returns></returns>
+        public static string Read(byte[] bytes, int dpi = 300, double deviation = 1.7d)
+        {
+            var output = Ocr.Read(ConfigureOcrInput(bytes, dpi, deviation)).Text.Replace("\r", "").RemoveSplitSymbol();
             return Regex.Replace(output, "[^0-9 _]", ";").RemoveSplitSymbol();
         }
 
-        private static OcrInput ConfigureOcrInput(Bitmap bitmap, int DPI, double deviation)
+        private static OcrInput ConfigureOcrInput(Bitmap bitmap, int dpi, double deviation)
         {
             return new OcrInput(bitmap.ImageGaussianSmooth(deviation).Sharpen())
             {
-                TargetDPI = DPI
+                TargetDPI = dpi
             }
             .ToGrayScale()
             .Invert();
+        }
+        
+        private static OcrInput ConfigureOcrInput(Stream stream, int dpi, double deviation)
+        {
+            var inputStream = new OcrInput();
+            inputStream.AddImage(stream);
+            var convertedToBitmap = inputStream.Pages[0].ToBitmap();
+            return new OcrInput(
+                    convertedToBitmap.ImageGaussianSmooth(deviation).Sharpen())
+                {
+                    TargetDPI = dpi
+                }
+                .ToGrayScale()
+                .Invert();
+        }
+        
+        private static OcrInput ConfigureOcrInput(byte[] bytes, int dpi, double deviation)
+        {
+            try
+            {
+                var input = new OcrInput();
+                input.AddImage(bytes);
+                var convertedToBitmap = input.Pages[0].ToBitmap();
+                return new OcrInput(convertedToBitmap.ImageGaussianSmooth(deviation).Sharpen())
+                    {
+                        TargetDPI = dpi
+                    }
+                    .ToGrayScale()
+                    .Invert();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
         }
     }
 
