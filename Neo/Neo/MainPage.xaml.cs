@@ -33,16 +33,16 @@ namespace Neo
         private void Determinant_OnClick(object sender, EventArgs e)
             => ShowResult(MatrixHighLevel.GetDeterminant(ConvertMatrix()).ToString(), ResultKind.Determinant);
 
-        private Matrix<double> ConvertMatrix()
-            => Matrix<double>.Build.DenseOfArray(AddingDataToMatrix());
+        private Matrix<decimal> ConvertMatrix()
+            => Matrix<decimal>.Build.DenseOfArray(AddingDataToMatrix());
 
         /// <summary>
         /// converting data from IGridListView to double[,]
         /// </summary>
         /// <returns></returns>
-        private double[,] AddingDataToMatrix()
+        private decimal[,] AddingDataToMatrix()
         {
-            var matrix = new double[_columns, _rows];
+            var matrix = new decimal[_columns, _rows];
             var startPoint = 0; // like an i in default cycle
             var j = 0;
             for (int i = 0; startPoint < MatrixGrid.Children.Count; i++)
@@ -73,7 +73,7 @@ namespace Neo
             return j == 0;
         }
 
-        private double[,] SettingValue(double[,] matrix, int startPoint, int i, int j)
+        private decimal[,] SettingValue(decimal[,] matrix, int startPoint, int i, int j)
         {
             // get frame with index startPoint from array of MatrixGrid
             var frame = (Frame)MatrixGrid.Children[startPoint];
@@ -81,11 +81,11 @@ namespace Neo
             var entry = (Entry)frame.Content;
             
             // assign value of entered Entry
-            matrix[i, j] = double.Parse(entry.Text);
+            matrix[i, j] = decimal.Parse(entry.Text);
             return matrix;
         }
 
-        private void ShowResult(Matrix<double> output, ResultKind resultKind)
+        private void ShowResult(Matrix<decimal> output, ResultKind resultKind)
         {
             var message = new StringBuilder();
             for (int i = 0; i < output.RowCount; i++)
