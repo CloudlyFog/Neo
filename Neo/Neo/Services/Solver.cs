@@ -1,6 +1,9 @@
 ﻿using System.Drawing;
 using System.IO;
+using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
+using IronSoftware.Drawing;
 using MathNet.Numerics.LinearAlgebra;
 using Neo.Services;
 
@@ -14,22 +17,21 @@ namespace Neo.Services
             OnCreating();
         }
 
-        public Solver(Image image)
+        public Solver(AnyBitmap anyBitmap)
         {
-            Parser.Input = Reader.Read(image);
+            Parser.Input = Reader.Read(anyBitmap);
             OnCreating();
         }
 
-        public Solver(Stream stream)
+        public Solver()
         {
-            Parser.Input = Reader.Read(stream);
-            OnCreating();
+            
         }
 
-        public Solver(byte[] bytes)
+        public async Task<Vector<decimal>> ReadAsync(AnyBitmap anyBitmap)
         {
-            Parser.Input = Reader.Read(bytes);
-            OnCreating();
+            Parser.Input = await Reader.ReadAsync(anyBitmap);
+            return Parser.Input.Equals(string.Empty) ? null : OnSolving();
         }
 
         private void OnCreating()
@@ -38,16 +40,23 @@ namespace Neo.Services
             RightSide = Parser.ParseToVector();
             Result = LeftSide.Solve(RightSide);
         }
-        
-        public Matrix<double> LeftSide { get; private set; }
-        public Vector<double> RightSide { get; private set; }
-        public Vector<double> Result { get; private set; }
+
+        private Vector<decimal> OnSolving()
+        {
+            LeftSide = Parser.ParseToMatrix();
+            RightSide = Parser.ParseToVector();
+            Result = LeftSide.Solve(RightSide);
+            return Result;
+        }
+
+        public Matrix<decimal> LeftSide { get; private set; }
+        public Vector<decimal> RightSide { get; private set; }
+        public Vector<decimal> Result { get; private set; }
 
         public override string ToString()
         {
             var sb = new StringBuilder();
-            for (int i = 0; i < Result.Count; i++)
-                sb = sb.Append(Result[i]);
+            sb = Result.Aggregate(sb, (current, t) => current.Append(t));
             return sb.ToString();
         }
     }

@@ -9,7 +9,7 @@ namespace Neo
         public App()
         {
             InitializeComponent();
-            MainPage = new PhotoPage
+            MainPage = new MainPage
             {
                 BackgroundColor = new Color(0, 0, 0, 0.7)
             };

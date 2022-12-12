@@ -62,22 +62,24 @@
   <ItemGroup>
     <PackageReference Include="Carbon.Kit.Xamarin.Abstractions" Version="2.1.0.866" />
     <PackageReference Include="Carbon.Kit.Xamarin.Plugins" Version="2.1.0" />
-    <PackageReference Include="IronOcr" Version="2022.11.10109" />
+    <PackageReference Include="IronOcr" Version="2022.12.10830" />
     <PackageReference Include="LiveXAML" Version="2.1.73" />
     <PackageReference Include="MathNet.Numerics" Version="5.0.0" />
-    <PackageReference Include="MvvmCross.Droid.Support.V7.AppCompat" Version="6.4.2" />
+    <PackageReference Include="Microsoft.Maui.Graphics" Version="7.0.49" />
+    <PackageReference Include="SkiaSharp" Version="2.88.3" />
+    <PackageReference Include="SkiaSharp.Extended" Version="2.0.0-preview.61" />
     <PackageReference Include="Xamarin.CommunityToolkit.Markup">
       <Version>2.0.5</Version>
     </PackageReference>
-    <PackageReference Include="Xamarin.Forms" Version="5.0.0.2515" />
-    <PackageReference Include="Xamarin.Essentials" Version="1.7.0" />
-    <PackageReference Include="Xamarin.GooglePlayServices.Vision" Version="120.1.3.7" />
+    <PackageReference Include="Xamarin.Forms" Version="5.0.0.2545" />
+    <PackageReference Include="Xamarin.Essentials" Version="1.7.3" />
     <PackageReference Include="Xamarin.Tesseract" Version="0.3.4" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="MainActivity.cs" />
     <Compile Include="Resources\Resource.designer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="View\Tesseract.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\AboutResources.txt" />
@@ -103,8 +105,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Resources\drawable\" />
-    <Folder Include="Services" />
-    <Folder Include="View" />
+    <Folder Include="Services\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Neo\Neo.csproj">
