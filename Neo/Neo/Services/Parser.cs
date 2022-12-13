@@ -9,32 +9,37 @@ namespace Neo.Services
         public const char SplitSymbol = ';';
 
         /// <summary>
-        /// every what iteration 'll doing something
-        /// </summary>
-        public static int Every { get; private set; } = 1;
-
-        /// <summary>
         /// output of Tesseract OCR
         /// </summary>
-        public static string Input { get; internal set; } = string.Empty;
+        private readonly string _input;
+
+        /// <summary>
+        /// every what iteration 'll doing something
+        /// </summary>
+        private int _every = 1;
+
+        public Parser(string input)
+        {
+            _input = input;
+        }
 
         /// <summary>
         /// Parse data from <see cref="Input"/> to <see cref="Matrix{T}"/>
         /// </summary>
         /// <returns></returns>
-        public static Matrix<decimal> ParseToMatrix()
+        public Matrix<decimal> ParseToMatrix()
         {
             var targetArray = new decimal[
                 // read count of ";" and therefore count will one less than actually
-                Input.Count(x => x == SplitSymbol) + 1,
+                _input.Count(x => x == SplitSymbol) + 1,
                 // read count of spaces and divide it on count of symbol ";" and subtract 1
-                Input.Count(x => x == ' ') / Input.Count(x => x == SplitSymbol) - 1];
+                _input.Count(x => x == ' ') / _input.Count(x => x == SplitSymbol) - 1];
 
-            Every = targetArray.GetLength(1);
+            _every = targetArray.GetLength(1);
 
             // removing white space and commas
-            var filterResult = Input.Split(' ', SplitSymbol).Where(x => x != " " || x != string.Empty).ToList()
-                .RemoveEvery(Every, targetArray.GetLength(0));
+            var filterResult = _input.Split(' ', SplitSymbol).Where(x => x != " " || x != string.Empty).ToList()
+                .RemoveEvery(_every, targetArray.GetLength(0));
 
             return Matrix<decimal>.Build.DenseOfArray(AddToMatrix(targetArray, filterResult));
         }
@@ -43,14 +48,14 @@ namespace Neo.Services
         /// Parse data from <see cref="Input"/> to <see cref="Vector{T}"/>
         /// </summary>
         /// <returns></returns>
-        public static Vector<decimal> ParseToVector()
+        public Vector<decimal> ParseToVector()
         {
             // remove white space and commas
-            var filterResult = Input.Split(' ', SplitSymbol).Where(x => x != " " || x != string.Empty).ToList();
+            var filterResult = _input.Split(' ', SplitSymbol).Where(x => x != " " || x != string.Empty).ToList();
 
             // remove empty space
             filterResult = filterResult.Where(s => !string.IsNullOrWhiteSpace(s)).AsEnumerable().ToList()
-                .AddEvery(Every, Input.Count(x => x == SplitSymbol) + 1);
+                .AddEvery(_every, _input.Count(x => x == SplitSymbol) + 1);
 
             var targetArray = new decimal[filterResult.Count];
 
@@ -62,7 +67,7 @@ namespace Neo.Services
         /// </summary>
         /// <param name="targetArray">array which will contain parsed data from <see cref="filterResult"/></param>
         /// <param name="filterResult">parsed data from Tesseract OCR</param>
-        private static decimal[,] AddToMatrix(decimal[,] targetArray, List<string> filterResult)
+        private static decimal[,] AddToMatrix(decimal[,] targetArray, IReadOnlyList<string> filterResult)
         {
             // start point for input text
             // like an iterator
@@ -79,8 +84,10 @@ namespace Neo.Services
                     targetArray[i, j] = decimal.Parse(filterResult[point]);
                     j++;
                 }
+
                 i++;
             }
+
             return targetArray;
         }
 
@@ -104,6 +111,7 @@ namespace Neo.Services
 
                 targetArray[x] = decimal.Parse(item);
             }
+
             return targetArray;
         }
 
@@ -144,6 +152,7 @@ namespace Neo.Services
                 input.RemoveAt((--every * i) - 1);
                 every++;
             }
+
             return input.Where(s => !string.IsNullOrWhiteSpace(s)).AsEnumerable().ToList();
         }
 
@@ -165,8 +174,10 @@ namespace Neo.Services
                     every++;
                     continue;
                 }
+
                 output.Add(input[every * i - 1]);
             }
+
             return output.Where(s => !string.IsNullOrWhiteSpace(s)).AsEnumerable().ToList();
         }
     }

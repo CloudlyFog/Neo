@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Threading.Tasks;
-using IronOcr;
-using IronSoftware.Drawing;
 using Neo.Services;
 using Plugin.Media;
 using Plugin.Media.Abstractions;
@@ -22,16 +20,16 @@ namespace Neo
         public Grid GridTakePhoto { get; set; }
 
         private const int TakePhotoSizeBtn = 80;
-        
+
         public PhotoPage()
         {
             InitializeComponent();
-            
+
             SetStylesTakePhotoButton();
             ConfigureTakePhotoButton();
         }
-        
- 
+
+
         private async void TakePhotoAsync(object sender, EventArgs e)
         {
             try
@@ -40,12 +38,13 @@ namespace Neo
                 {
                     await DisplayAlert("Exception",
                         $"{nameof(CrossMedia.Current.IsCameraAvailable)}: CrossMedia.Current.IsCameraAvailable" +
-                        $"\n{nameof(CrossMedia.Current.IsTakePhotoSupported)}: {CrossMedia.Current.IsTakePhotoSupported}","OK");
+                        $"\n{nameof(CrossMedia.Current.IsTakePhotoSupported)}: {CrossMedia.Current.IsTakePhotoSupported}",
+                        "OK");
                 }
 
                 if (!await SavePhotoAsync())
                     await DisplayAlert("Exception", $"didn't save photo.", "ok");
-                
+
                 Content = new Image
                 {
                     Source = ImageSource.FromStream(() => Photo?.GetStream()),
@@ -54,7 +53,7 @@ namespace Neo
             catch (Exception ex)
             {
                 await DisplayAlert("Oh... something went wrong :(",
-                    $"inner: {ex.InnerException?.Message}\nmessage: {ex.Message}", 
+                    $"inner: {ex.InnerException?.Message}\nmessage: {ex.Message}",
                     "OK");
             }
         }
@@ -68,12 +67,12 @@ namespace Neo
                 SaveToAlbum = false,
                 SaveMetaData = false,
             });
-                
+
             if (photo is null)
                 return false;
             Photo = photo;
             DependencyService.Get<IMediaService>().SavePicture("tessImage.png", photo.GetStream(), "Pictures");
-            
+
             return true;
         }
 
@@ -87,7 +86,7 @@ namespace Neo
                 BorderWidth = 5,
                 BackgroundColor = System.Drawing.Color.Bisque
             };
-            
+
             GridTakePhoto = new Grid
             {
                 HorizontalOptions = LayoutOptions.Center,
@@ -112,15 +111,15 @@ namespace Neo
                 }
             };
         }
-        
+
         private void ConfigureTakePhotoButton()
         {
             // take photo
             TakePhoto.Clicked += TakePhotoAsync;
-            
+
             Content = new StackLayout
             {
-                Children = 
+                Children =
                 {
                     GridTakePhoto
                 },

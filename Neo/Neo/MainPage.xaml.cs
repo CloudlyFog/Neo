@@ -23,8 +23,8 @@ public partial class MainPage
         _columns = 3;
         _rows = 3;
         InitializeComponent();
-        RenderLayout();
         ConfigureTakePhotoButton();
+        RenderLayout();
 
         // StackLayout
         ConfigureStackLayout();
@@ -209,12 +209,19 @@ public partial class MainPage
         // take photo
         TakePhoto = new Button
         {
-            ImageSource = ImageSource.FromFile("G:/Neo/Neo/resources/icons8-calculator-48.png"),
+            CornerRadius = TakePhotoSizeBtn,
+            BorderColor = Color.DimGray,
+            BorderWidth = 5,
+            BackgroundColor = System.Drawing.Color.Bisque,
+            WidthRequest = 60,
+            HeightRequest = 60,
+            HorizontalOptions = LayoutOptions.CenterAndExpand,
+            VerticalOptions = LayoutOptions.CenterAndExpand,
         };
 
         TakePhoto.Clicked += TakePhotoAsync;
 
-        ButtonGrid.Children.Add(TakePhoto, _columns, _rows);
+        ButtonGrid.Children.Add(TakePhoto, 0, 2);
     }
 
     private void ConfigureButtons()

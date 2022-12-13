@@ -1,52 +1,70 @@
-﻿using System.Drawing;
+﻿using System;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using IronSoftware.Drawing;
 using MathNet.Numerics.LinearAlgebra;
-using Neo.Services;
+using Xamarin.Forms.Internals;
 
 namespace Neo.Services
 {
-    public sealed class Solver
+    public sealed class Solver : IDisposable
     {
-        public Solver(string path)
+        private readonly Stream _stream;
+        private Parser _parser;
+
+        public Solver(Stream stream)
         {
-            Parser.Input = Reader.Read(path);
-            OnCreating();
+            _stream = stream;
         }
 
-        public Solver(AnyBitmap anyBitmap)
+        private Solver(Matrix<decimal> leftSide, Vector<decimal> rightSide, Vector<decimal> result)
         {
-            Parser.Input = Reader.Read(anyBitmap);
-            OnCreating();
+            LeftSide = leftSide;
+            RightSide = rightSide;
+            Result = result;
         }
 
-        public Solver()
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="stream"></param>
+        /// <returns></returns>
+        public async Task<Solver> ReadAsync()
         {
-            
+            if (_stream is null)
+                throw new ArgumentException("passed to class constructor {stream} is null.");
+            try
+            {
+                using var reader = new Reader(_stream);
+                var readerOutput = reader.Read();
+                if (readerOutput.Equals(string.Empty) || readerOutput is null)
+                    throw new ArgumentException("output of reader is empty string." +
+                                                "\nPlease check on valid passed to class " +
+                                                "constructor arg [stream}.");
+                _parser = new Parser(readerOutput);
+
+                Solve();
+            }
+            catch (Exception exception)
+            {
+                Console.WriteLine(exception);
+                throw new InvalidOperationException(exception.Message, exception.InnerException);
+            }
+            finally
+            {
+                Dispose();
+            }
+
+            return new Solver(LeftSide, RightSide, Result);
         }
 
-        public async Task<Vector<decimal>> ReadAsync(AnyBitmap anyBitmap)
+        private void Solve()
         {
-            Parser.Input = await Reader.ReadAsync(anyBitmap);
-            return Parser.Input.Equals(string.Empty) ? null : OnSolving();
-        }
-
-        private void OnCreating()
-        {
-            LeftSide = Parser.ParseToMatrix();
-            RightSide = Parser.ParseToVector();
+            LeftSide = _parser.ParseToMatrix();
+            RightSide = _parser.ParseToVector();
             Result = LeftSide.Solve(RightSide);
-        }
-
-        private Vector<decimal> OnSolving()
-        {
-            LeftSide = Parser.ParseToMatrix();
-            RightSide = Parser.ParseToVector();
-            Result = LeftSide.Solve(RightSide);
-            return Result;
         }
 
         public Matrix<decimal> LeftSide { get; private set; }
@@ -56,8 +74,36 @@ namespace Neo.Services
         public override string ToString()
         {
             var sb = new StringBuilder();
-            sb = Result.Aggregate(sb, (current, t) => current.Append(t));
+            sb = Result.Aggregate(sb, (current, t)
+                => current.Append($"{Result.IndexOf(t)}: {t}\n"));
             return sb.ToString();
+        }
+
+        private void ReleaseUnmanagedResources()
+        {
+            LeftSide = null;
+            RightSide = null;
+            Result = null;
+        }
+
+        private void Dispose(bool disposing)
+        {
+            ReleaseUnmanagedResources();
+            if (disposing)
+            {
+                _stream?.Dispose();
+            }
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        ~Solver()
+        {
+            Dispose(false);
         }
     }
 }

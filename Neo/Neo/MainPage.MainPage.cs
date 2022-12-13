@@ -1,9 +1,5 @@
 ﻿using System;
-using System.IO;
-using System.Text;
 using System.Threading.Tasks;
-using IronSoftware.Drawing;
-using MathNet.Numerics.LinearAlgebra;
 using Neo.Services;
 using Plugin.Media;
 using Plugin.Media.Abstractions;
@@ -13,7 +9,6 @@ namespace Neo;
 
 public partial class MainPage
 {
-    public Vector<decimal> Result { get; set; }
     public static MediaFile Photo { get; set; }
 
     private async void TakePhotoAsync(object sender, EventArgs e)
@@ -23,7 +18,7 @@ public partial class MainPage
             if (!CrossMedia.Current.IsCameraAvailable || !CrossMedia.Current.IsTakePhotoSupported)
             {
                 await DisplayAlert("Exception",
-                    $"{nameof(CrossMedia.Current.IsCameraAvailable)}: CrossMedia.Current.IsCameraAvailable" +
+                    $"{nameof(CrossMedia.Current.IsCameraAvailable)}: {CrossMedia.Current.IsCameraAvailable}" +
                     $"\n{nameof(CrossMedia.Current.IsTakePhotoSupported)}: {CrossMedia.Current.IsTakePhotoSupported}",
                     "OK");
             }
@@ -31,8 +26,8 @@ public partial class MainPage
             if (!await SavePhotoAsync())
                 await DisplayAlert("Exception", $"didn't save photo.", "ok");
 
-            Result = await new Solver().ReadAsync(new AnyBitmap(Photo?.GetStream()));
-            
+
+            await DisplayAlert("Result", new Solver(Photo?.GetStream()).ReadAsync().ToString(), "Ok");
         }
         catch (Exception ex)
         {

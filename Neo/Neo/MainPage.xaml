@@ -68,15 +68,12 @@
             </Frame>
 
             <Frame Grid.Column="1" Grid.Row="2" x:Name="DeterminantButtonFrame" CornerRadius="16">
+
                 <Button x:Name="Determinant"
                         Clicked="Determinant_OnClick"
                         Text="Determinant" FontSize="14">
                 </Button>
             </Frame>
-
-            <Button Grid.Column="0" Grid.Row="2" x:Name="FrameTakePhoto">
-
-            </Button>
         </Grid>
     </StackLayout>
 </ContentPage>

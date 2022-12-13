@@ -1,6 +1,4 @@
-﻿using System;
-using Xamarin.Forms;
-using Xamarin.Forms.Xaml;
+﻿using Xamarin.Forms;
 
 namespace Neo
 {
@@ -11,7 +9,7 @@ namespace Neo
             InitializeComponent();
             MainPage = new MainPage
             {
-                BackgroundColor = new Color(0, 0, 0, 0.7)
+                BackgroundColor = new Color(0, 0, 0, 0.7),
             };
         }
 
