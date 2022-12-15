@@ -41,7 +41,7 @@ namespace Neo.Services
             var filterResult = _input.Split(' ', SplitSymbol).Where(x => x != " " || x != string.Empty).ToList()
                 .RemoveEvery(_every, targetArray.GetLength(0));
 
-            return Matrix<double>.Build.DenseOfArray(AddToMatrix(targetArray, filterResult));
+            return Matrix<double>.Build.DenseOfArray(AddValueToMatrix(targetArray, filterResult));
         }
 
         /// <summary>
@@ -59,7 +59,7 @@ namespace Neo.Services
 
             var targetArray = new double[filterResult.Count];
 
-            return Vector<double>.Build.DenseOfArray(AddToVector(targetArray, filterResult));
+            return Vector<double>.Build.DenseOfArray(AddValueToVector(targetArray, filterResult));
         }
 
         /// <summary>
@@ -67,7 +67,7 @@ namespace Neo.Services
         /// </summary>
         /// <param name="targetArray">array which will contain parsed data from <see cref="filterResult"/></param>
         /// <param name="filterResult">parsed data from Tesseract OCR</param>
-        private static double[,] AddToMatrix(double[,] targetArray, IReadOnlyList<string> filterResult)
+        private static double[,] AddValueToMatrix(double[,] targetArray, IReadOnlyList<string> filterResult)
         {
             // start point for input text
             // like an iterator
@@ -96,7 +96,7 @@ namespace Neo.Services
         /// </summary>
         /// <param name="targetArray">array which will contain parsed data from <see cref="filterResult"/></param>
         /// <param name="filterResult">parsed data from Tesseract OCR</param>
-        private static double[] AddToVector(double[] targetArray, List<string> filterResult)
+        private static double[] AddValueToVector(double[] targetArray, List<string> filterResult)
         {
             // start point for input text
             // like an iterator
