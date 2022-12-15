@@ -18,7 +18,7 @@ namespace Neo.Services
             _stream = stream;
         }
 
-        private Solver(Matrix<decimal> leftSide, Vector<decimal> rightSide, Vector<decimal> result)
+        private Solver(Matrix<double> leftSide, Vector<double> rightSide, Vector<double> result)
         {
             LeftSide = leftSide;
             RightSide = rightSide;
@@ -42,7 +42,7 @@ namespace Neo.Services
                 if (readerOutput.Equals(string.Empty) || readerOutput is null)
                     throw new ArgumentException("output of reader is empty string." +
                                                 "\nPlease check on valid passed to class " +
-                                                "constructor arg [stream}.");
+                                                "constructor arg {stream}.");
                 _parser = new Parser(readerOutput);
 
                 Solve();
@@ -67,9 +67,9 @@ namespace Neo.Services
             Result = LeftSide.Solve(RightSide);
         }
 
-        public Matrix<decimal> LeftSide { get; private set; }
-        public Vector<decimal> RightSide { get; private set; }
-        public Vector<decimal> Result { get; private set; }
+        public Matrix<double> LeftSide { get; private set; }
+        public Vector<double> RightSide { get; private set; }
+        public Vector<double> Result { get; private set; }
 
         public override string ToString()
         {

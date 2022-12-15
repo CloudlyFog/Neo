@@ -27,9 +27,9 @@ namespace Neo.Services
         /// Parse data from <see cref="Input"/> to <see cref="Matrix{T}"/>
         /// </summary>
         /// <returns></returns>
-        public Matrix<decimal> ParseToMatrix()
+        public Matrix<double> ParseToMatrix()
         {
-            var targetArray = new decimal[
+            var targetArray = new double[
                 // read count of ";" and therefore count will one less than actually
                 _input.Count(x => x == SplitSymbol) + 1,
                 // read count of spaces and divide it on count of symbol ";" and subtract 1
@@ -41,14 +41,14 @@ namespace Neo.Services
             var filterResult = _input.Split(' ', SplitSymbol).Where(x => x != " " || x != string.Empty).ToList()
                 .RemoveEvery(_every, targetArray.GetLength(0));
 
-            return Matrix<decimal>.Build.DenseOfArray(AddToMatrix(targetArray, filterResult));
+            return Matrix<double>.Build.DenseOfArray(AddToMatrix(targetArray, filterResult));
         }
 
         /// <summary>
         /// Parse data from <see cref="Input"/> to <see cref="Vector{T}"/>
         /// </summary>
         /// <returns></returns>
-        public Vector<decimal> ParseToVector()
+        public Vector<double> ParseToVector()
         {
             // remove white space and commas
             var filterResult = _input.Split(' ', SplitSymbol).Where(x => x != " " || x != string.Empty).ToList();
@@ -57,9 +57,9 @@ namespace Neo.Services
             filterResult = filterResult.Where(s => !string.IsNullOrWhiteSpace(s)).AsEnumerable().ToList()
                 .AddEvery(_every, _input.Count(x => x == SplitSymbol) + 1);
 
-            var targetArray = new decimal[filterResult.Count];
+            var targetArray = new double[filterResult.Count];
 
-            return Vector<decimal>.Build.DenseOfArray(AddToVector(targetArray, filterResult));
+            return Vector<double>.Build.DenseOfArray(AddToVector(targetArray, filterResult));
         }
 
         /// <summary>
@@ -67,7 +67,7 @@ namespace Neo.Services
         /// </summary>
         /// <param name="targetArray">array which will contain parsed data from <see cref="filterResult"/></param>
         /// <param name="filterResult">parsed data from Tesseract OCR</param>
-        private static decimal[,] AddToMatrix(decimal[,] targetArray, IReadOnlyList<string> filterResult)
+        private static double[,] AddToMatrix(double[,] targetArray, IReadOnlyList<string> filterResult)
         {
             // start point for input text
             // like an iterator
@@ -81,7 +81,7 @@ namespace Neo.Services
                 {
                     if (!Validate(ref point, filterResult))
                         break;
-                    targetArray[i, j] = decimal.Parse(filterResult[point]);
+                    targetArray[i, j] = double.Parse(filterResult[point]);
                     j++;
                 }
 
@@ -96,7 +96,7 @@ namespace Neo.Services
         /// </summary>
         /// <param name="targetArray">array which will contain parsed data from <see cref="filterResult"/></param>
         /// <param name="filterResult">parsed data from Tesseract OCR</param>
-        private static decimal[] AddToVector(decimal[] targetArray, List<string> filterResult)
+        private static double[] AddToVector(double[] targetArray, List<string> filterResult)
         {
             // start point for input text
             // like an iterator
@@ -109,7 +109,7 @@ namespace Neo.Services
                 if (!Validate(ref point, filterResult))
                     break;
 
-                targetArray[x] = decimal.Parse(item);
+                targetArray[x] = double.Parse(item);
             }
 
             return targetArray;

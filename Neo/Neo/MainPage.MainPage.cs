@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using IronOcr;
 using Neo.Services;
 using Plugin.Media;
 using Plugin.Media.Abstractions;
@@ -24,10 +25,13 @@ public partial class MainPage
             }
 
             if (!await SavePhotoAsync())
+            {
                 await DisplayAlert("Exception", $"didn't save photo.", "ok");
+                return;
+            }
 
-
-            await DisplayAlert("Result", new Solver(Photo?.GetStream()).ReadAsync().ToString(), "Ok");
+            var solverResult = new Solver(Photo?.GetStream()).ReadAsync().ToString();
+            await DisplayAlert("Result", solverResult, "Ok");
         }
         catch (Exception ex)
         {
@@ -41,7 +45,7 @@ public partial class MainPage
     {
         var photo = await CrossMedia.Current.TakePhotoAsync(new StoreCameraMediaOptions
         {
-            Name = "tessImage.png",
+            Name = Guid.NewGuid().ToString(),
             DefaultCamera = CameraDevice.Rear,
             SaveToAlbum = false,
             SaveMetaData = false,
@@ -50,7 +54,8 @@ public partial class MainPage
         if (photo is null)
             return false;
         Photo = photo;
-        DependencyService.Get<IMediaService>().SavePicture("tessImage.png", photo.GetStream(), "Pictures");
+        DependencyService.Get<IMediaService>()
+            .SavePicture(photo.OriginalFilename, photo.GetStream(), "Pictures");
 
         return true;
     }

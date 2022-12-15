@@ -14,39 +14,45 @@ namespace Neo.Services;
 internal sealed class Reader : IDisposable
 {
     private readonly Stream _stream;
+    private IronTesseract _ocr;
 
     public Reader(Stream stream)
     {
         _stream = stream;
-    }
-
-    public IronTesseract Ocr { get; private set; } = new()
-    {
-        Language = OcrLanguage.EnglishBest,
-        Configuration = new TesseractConfiguration
+        _ocr = new IronTesseract
         {
-            WhiteListCharacters = "0123456789 ",
-            PageSegmentationMode = TesseractPageSegmentationMode.Auto,
-            ReadBarCodes = false,
-            RenderSearchablePdfsAndHocr = false,
-        }
-    };
+            Language = OcrLanguage.EnglishBest,
+            Configuration = new TesseractConfiguration
+            {
+                WhiteListCharacters = "0123456789 ",
+                PageSegmentationMode = TesseractPageSegmentationMode.Auto,
+                ReadBarCodes = false,
+                RenderSearchablePdfsAndHocr = false,
+                EngineMode = TesseractEngineMode.TesseractAndLstm,
+                TesseractVersion = TesseractVersion.Tesseract5,
+            }
+        };
+    }
 
     /// <summary>
     /// read matrix from image by Tesseract OCR
     /// </summary>
     /// <param name="stream">stream for read</param>
     /// <param name="dpi">dpi of output image</param>
+    /// <exception cref="ArgumentNullException">if ocr wasn't initialized</exception>
+    /// <exception cref="InvalidOperationException">if executable path was wrong</exception>
     /// <returns></returns>
-    public string Read(int dpi = 300)
+    public string Read(int dpi = 300, double deviation = 1.7d)
     {
-        string _regex;
+        if (_ocr is null)
+            throw new ArgumentNullException(_ocr.ToString());
+        string _output;
         try
         {
-            using var input = ConfigureOcrInput(_stream, dpi);
-            var output = Ocr.Read(input)
+            using var input = ConfigureOcrInput(_stream, dpi, deviation);
+            var output = _ocr.Read(input)
                 .Text.Replace("\r", "").RemoveSplitSymbol();
-            _regex =
+            _output =
                 Regex.Replace(output, "[^0-9 _]", ";").RemoveSplitSymbol();
         }
         catch (Exception exception)
@@ -55,23 +61,33 @@ internal sealed class Reader : IDisposable
             throw new InvalidOperationException(exception.Message, exception.InnerException);
         }
 
-        return _regex;
+        return _output;
     }
 
-    private static OcrInput ConfigureOcrInput(Stream stream, int dpi)
+    private static OcrInput ConfigureOcrInput(Stream stream, int dpi, double deviation)
     {
-        return new OcrInput(stream)
+        // init for the next cast from stream to bitmap
+        var prevInput = new OcrInput(stream)
             {
                 TargetDPI = dpi
             }
-            .Deskew()
+            .ToGrayScale()
+            .Invert();
+
+        // pass bitmap to OcrInput's constructor instead of stream 
+        // and here the bitmap 'll smoothed and increased sharpness for next reading
+        return new OcrInput(prevInput.Pages[0].ToBitmap()
+                .ImageGaussianSmooth(deviation).Sharpen())
+            {
+                TargetDPI = dpi
+            }
             .ToGrayScale()
             .Invert();
     }
 
     private void ReleaseUnmanagedResources()
-    {
-        Ocr = null;
+    { 
+        _ocr = null;
     }
 
     public void Dispose()
@@ -192,7 +208,7 @@ public static class BitmapExtension
     /// <param name="image"></param>
     /// <param name="deviation"></param>
     /// <returns></returns>
-    public static Bitmap ImageGaussianSmooth(this Bitmap image, double deviation = 1)
+    public static Bitmap ImageGaussianSmooth(this Bitmap image, double deviation = 1.7d)
         => GaussianBlur.FilterProcessImage(image, deviation);
 
     public static Bitmap Crop(this Bitmap sourceBitmap, Rectangle rect)

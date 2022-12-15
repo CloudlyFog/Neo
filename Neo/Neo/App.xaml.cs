@@ -1,4 +1,5 @@
-﻿using Xamarin.Forms;
+﻿using IronOcr;
+using Xamarin.Forms;
 
 namespace Neo
 {
