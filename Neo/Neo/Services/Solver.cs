@@ -40,7 +40,7 @@ namespace Neo.Services
                 using var reader = new Reader(_stream);
                 var readerOutput = reader.Read();
                 if (readerOutput.Equals(string.Empty) || readerOutput is null)
-                    throw new ArgumentException("output of reader is empty string." +
+                    throw new ArgumentException("output of the {reader} is empty string." +
                                                 "\nPlease check on valid passed to class " +
                                                 "constructor arg {stream}.");
                 _parser = new Parser(readerOutput);
@@ -64,7 +64,19 @@ namespace Neo.Services
         {
             LeftSide = _parser.ParseToMatrix();
             RightSide = _parser.ParseToVector();
-            Result = LeftSide.Solve(RightSide);
+            try
+            {
+                Result = LeftSide.Solve(RightSide);
+            }
+            catch (Exception exception)
+            {
+                Console.WriteLine(exception);
+                throw new InvalidOperationException(exception.Message, exception.InnerException);
+            }
+            finally
+            {
+                Dispose();
+            }
         }
 
         public Matrix<double> LeftSide { get; private set; }
