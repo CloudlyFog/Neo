@@ -11,7 +11,7 @@ namespace Neo.Services
         public const char SplitSymbol = ';';
 
         /// <summary>
-        /// output of Tesseract OCR
+        /// output of ocr
         /// </summary>
         private readonly string _input;
 
@@ -66,9 +66,9 @@ namespace Neo.Services
         /// <summary>
         /// Adding data to <see cref="targetArray"/> from <see cref="filterResult"/>
         /// </summary>
-        /// <param name="targetArray">array which will contain parsed data from <see cref="filterResult"/></param>
-        /// <param name="filterResult">parsed data from Tesseract OCR</param>
-        private static Matrix<double> GetMatrixValue(double[,] targetArray, IReadOnlyList<string> filterResult)
+        /// <param name="targetArray"> describe only size of array</param>
+        /// <param name="filterResult">data from ocr output</param>
+        private static Matrix<double> GetMatrixValue(double[,] targetArray, List<string> filterResult)
         {
             // start point for input text
             // like an iterator
@@ -116,7 +116,16 @@ namespace Neo.Services
             // start point for input text
             // like an iterator
             var point = 0;
-            filterResult = filterResult.TakeWhile(item => Validate(ref point, filterResult)).ToList();
+            try
+            {
+                filterResult =
+                    filterResult.TakeWhile(item => Validate(ref point, filterResult)).ToList();
+            }
+            catch (Exception exception)
+            {
+                Console.WriteLine(exception);
+                throw;
+            }
 
             for (var i = 0; i < filterResult.Count; i++)
             {
@@ -145,7 +154,7 @@ namespace Neo.Services
         /// <param name="point">index of <see cref="filterResult"/></param>
         /// <param name="filterResult">parsed data from Tesseract OCR</param>
         /// <returns></returns>
-        private static bool Validate(ref int point, IReadOnlyList<string> filterResult)
+        private static bool Validate(ref int point, List<string> filterResult)
         {
             if (point == filterResult.Count)
                 return false;

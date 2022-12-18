@@ -16,7 +16,6 @@ public partial class MainPage
     {
         try
         {
-            var input = new OcrInput();
             if (!CrossMedia.Current.IsCameraAvailable || !CrossMedia.Current.IsTakePhotoSupported)
             {
                 await DisplayAlert("Exception",
@@ -24,6 +23,7 @@ public partial class MainPage
                     $"\n{nameof(CrossMedia.Current.IsTakePhotoSupported)}: {CrossMedia.Current.IsTakePhotoSupported}",
                     "OK");
             }
+
 
             if (!await SavePhotoAsync())
             {
