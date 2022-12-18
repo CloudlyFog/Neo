@@ -74,11 +74,11 @@ namespace Neo.Services
             // like an iterator
             var point = 0;
 
-            for (var i = 0; i < targetArray.GetLength(0);)
+            for (var i = 0; i < targetArray.GetLength(0); i++)
             {
                 // on every iteration we increasing point instead of j
-                // because we have to iterate filterResult but not columns of sourceArray
-                for (var j = 0; j < targetArray.GetLength(1); point++)
+                // because we have to appeal to filterResult index instead of targetArray's index
+                for (var j = 0; j < targetArray.GetLength(1); point++, j++)
                 {
                     if (!Validate(ref point, filterResult))
                         break;
@@ -96,11 +96,7 @@ namespace Neo.Services
                         Console.WriteLine(exception);
                         throw new Exception(exception.Message, exception.InnerException);
                     }
-
-                    j++;
                 }
-
-                i++;
             }
 
             return Matrix<double>.Build.DenseOfArray(targetArray);
