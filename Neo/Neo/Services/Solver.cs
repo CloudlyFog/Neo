@@ -47,6 +47,7 @@ namespace Neo.Services
             {
                 using var reader = new Reader(_stream);
                 var readerOutput = await reader.ReadAsync();
+
                 if (readerOutput.Equals(string.Empty) || readerOutput is null)
                     throw new ArgumentException("output of the {reader} is empty string." +
                                                 "\nPlease check on valid passed to class " +
@@ -58,7 +59,7 @@ namespace Neo.Services
             catch (Exception exception)
             {
                 Console.WriteLine(exception);
-                throw new InvalidOperationException(exception.Message, exception.InnerException);
+                throw;
             }
             finally
             {

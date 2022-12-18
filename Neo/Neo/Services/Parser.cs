@@ -70,6 +70,12 @@ namespace Neo.Services
         /// <param name="filterResult">data from ocr output</param>
         private static Matrix<double> GetMatrixValue(double[,] targetArray, List<string> filterResult)
         {
+            if (targetArray is null)
+                throw new ArgumentNullException(nameof(targetArray));
+
+            if (targetArray.Length <= 0)
+                throw new ArgumentException($"length of {nameof(targetArray)} less or equals than 0");
+
             // start point for input text
             // like an iterator
             var point = 0;
@@ -80,7 +86,7 @@ namespace Neo.Services
                 // because we have to appeal to filterResult index instead of targetArray's index
                 for (var j = 0; j < targetArray.GetLength(1); point++, j++)
                 {
-                    if (!Validate(ref point, filterResult))
+                    if (!ValidIteration(ref point, filterResult))
                         break;
                     try
                     {
@@ -109,13 +115,13 @@ namespace Neo.Services
         /// <param name="filterResult">parsed data from Tesseract OCR</param>
         private static Vector<double> GetVectorValue(double[] targetArray, List<string> filterResult)
         {
-            // start point for input text
-            // like an iterator
+            ValidArray(targetArray);
+            // start point for input text as iterator
             var point = 0;
             try
             {
                 filterResult =
-                    filterResult.TakeWhile(item => Validate(ref point, filterResult)).ToList();
+                    filterResult.TakeWhile(item => ValidIteration(ref point, filterResult)).ToList();
             }
             catch (Exception exception)
             {
@@ -150,14 +156,24 @@ namespace Neo.Services
         /// <param name="point">index of <see cref="filterResult"/></param>
         /// <param name="filterResult">parsed data from Tesseract OCR</param>
         /// <returns></returns>
-        private static bool Validate(ref int point, List<string> filterResult)
+        private static bool ValidIteration(ref int point, List<string> filterResult)
         {
+            ValidArray(filterResult.ToArray());
             if (point == filterResult.Count)
                 return false;
             if (filterResult[point] != string.Empty)
                 return true;
             point++;
             return false;
+        }
+
+        internal static void ValidArray<T>(T[] array)
+        {
+            if (array is null)
+                throw new ArgumentNullException(nameof(array));
+
+            if (array.Length <= 0)
+                throw new ArgumentException($"length of {nameof(array)} less or equals than 0");
         }
     }
 
@@ -173,6 +189,7 @@ namespace Neo.Services
         /// <returns></returns>
         public static List<string> RemoveEvery(this List<string> input, int every, int rows)
         {
+            Parser.ValidArray(input.ToArray());
             for (var i = 1; i <= rows; i++)
                 input.RemoveAt((every - 1) * i - 1);
 
@@ -188,13 +205,13 @@ namespace Neo.Services
         /// <returns></returns>
         public static List<string> AddEvery(this List<string> input, int every, int rows)
         {
+            Parser.ValidArray(input.ToArray());
             var output = new List<string>();
             for (var i = 1; i <= rows; i++)
             {
                 if (i == 1)
                 {
-                    output.Add(input[--every * i]);
-                    every++;
+                    output.Add(input[(every - 1) * i]);
                     continue;
                 }
 
