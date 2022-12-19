@@ -11,7 +11,7 @@ namespace Neo.Services
         public const char SplitSymbol = ';';
 
         /// <summary>
-        /// output of Tesseract OCR
+        /// output of ocr
         /// </summary>
         private readonly string _input;
 
@@ -66,41 +66,39 @@ namespace Neo.Services
         /// <summary>
         /// Adding data to <see cref="targetArray"/> from <see cref="filterResult"/>
         /// </summary>
-        /// <param name="targetArray">array which will contain parsed data from <see cref="filterResult"/></param>
-        /// <param name="filterResult">parsed data from Tesseract OCR</param>
-        private static Matrix<double> GetMatrixValue(double[,] targetArray, IReadOnlyList<string> filterResult)
+        /// <param name="targetArray"> describe only size of array</param>
+        /// <param name="filterResult">data from ocr output</param>
+        private static Matrix<double> GetMatrixValue(double[,] targetArray, List<string> filterResult)
         {
+            if (targetArray is null)
+                throw new ArgumentNullException(nameof(targetArray));
+
+            if (targetArray.Length <= 0)
+                throw new ArgumentException($"length of {nameof(targetArray)} less or equals than 0");
+
+            ValidArray(filterResult.ToArray());
             // start point for input text
             // like an iterator
             var point = 0;
 
-            for (var i = 0; i < targetArray.GetLength(0);)
+            for (var i = 0; i < targetArray.GetLength(0); i++)
             {
                 // on every iteration we increasing point instead of j
-                // because we have to iterate filterResult but not columns of sourceArray
-                for (var j = 0; j < targetArray.GetLength(1); point++)
+                // because we have to appeal to filterResult index instead of targetArray's index
+                for (var j = 0; j < targetArray.GetLength(1); point++, j++)
                 {
-                    if (!Validate(ref point, filterResult))
+                    if (!ValidIteration(ref point, filterResult))
                         break;
                     try
                     {
                         targetArray[i, j] = double.Parse(filterResult[point]);
                     }
-                    catch (ParserException exception)
-                    {
-                        Console.WriteLine(exception);
-                        throw new ParserException(exception.Message, filterResult[point]);
-                    }
                     catch (Exception exception)
                     {
                         Console.WriteLine(exception);
-                        throw new Exception(exception.Message, exception.InnerException);
+                        throw;
                     }
-
-                    j++;
                 }
-
-                i++;
             }
 
             return Matrix<double>.Build.DenseOfArray(targetArray);
@@ -110,13 +108,25 @@ namespace Neo.Services
         /// Adding data to <see cref="targetArray"/> from <see cref="filterResult"/>
         /// </summary>
         /// <param name="targetArray">array which will contain parsed data from <see cref="filterResult"/></param>
-        /// <param name="filterResult">parsed data from Tesseract OCR</param>
+        /// <param name="filterResult">parsed data from ocr</param>
         private static Vector<double> GetVectorValue(double[] targetArray, List<string> filterResult)
         {
-            // start point for input text
-            // like an iterator
+            ValidArray(targetArray);
+            ValidArray(filterResult.ToArray());
+
+            // start point for input text as iterator
             var point = 0;
-            filterResult = filterResult.TakeWhile(item => Validate(ref point, filterResult)).ToList();
+            try
+            {
+                filterResult =
+                    filterResult.TakeWhile(item => ValidIteration(ref point, filterResult)).ToList();
+            }
+            catch (Exception exception)
+            {
+                Console.WriteLine(exception);
+                throw;
+            }
+
 
             for (var i = 0; i < filterResult.Count; i++)
             {
@@ -145,7 +155,7 @@ namespace Neo.Services
         /// <param name="point">index of <see cref="filterResult"/></param>
         /// <param name="filterResult">parsed data from Tesseract OCR</param>
         /// <returns></returns>
-        private static bool Validate(ref int point, IReadOnlyList<string> filterResult)
+        private static bool ValidIteration(ref int point, List<string> filterResult)
         {
             if (point == filterResult.Count)
                 return false;
@@ -153,6 +163,15 @@ namespace Neo.Services
                 return true;
             point++;
             return false;
+        }
+
+        internal static void ValidArray<T>(T[] array)
+        {
+            if (array is null)
+                throw new ArgumentNullException(nameof(array));
+
+            if (array.Length <= 0)
+                throw new ArgumentException($"length of {nameof(array)} less or equals than 0");
         }
     }
 
@@ -168,6 +187,7 @@ namespace Neo.Services
         /// <returns></returns>
         public static List<string> RemoveEvery(this List<string> input, int every, int rows)
         {
+            Parser.ValidArray(input.ToArray());
             for (var i = 1; i <= rows; i++)
                 input.RemoveAt((every - 1) * i - 1);
 
@@ -183,17 +203,17 @@ namespace Neo.Services
         /// <returns></returns>
         public static List<string> AddEvery(this List<string> input, int every, int rows)
         {
-            var output = new List<string>();
+            Parser.ValidArray(input.ToArray());
+            var output = Enumerable.Empty<string>();
             for (var i = 1; i <= rows; i++)
             {
                 if (i == 1)
                 {
-                    output.Add(input[--every * i]);
-                    every++;
+                    output = output.Append(input[(every - 1) * i]);
                     continue;
                 }
 
-                output.Add(input[every * i - 1]);
+                output = output.Append(input[every * i - 1]);
             }
 
             return output.Where(s => !string.IsNullOrWhiteSpace(s)).AsEnumerable().ToList();

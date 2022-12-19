@@ -50,8 +50,45 @@ internal sealed class Reader : IDisposable
         try
         {
             using var input = ConfigureOcrInput(_stream, dpi, deviation);
+
+            // here we delete \r and \n from output
             var output = _ocr.Read(input)
                 .Text.Replace("\r", "").RemoveSplitSymbol();
+
+
+            _output =
+                Regex.Replace(output, "[^0-9 _]", ";").RemoveSplitSymbol();
+        }
+        catch (Exception exception)
+        {
+            Console.WriteLine(exception);
+            throw new InvalidOperationException(exception.Message, exception.InnerException);
+        }
+
+        return _output;
+    }
+
+    /// <summary>
+    /// read matrix from image by Tesseract OCR
+    /// </summary>
+    /// <param name="stream">stream for read</param>
+    /// <param name="dpi">dpi of output image</param>
+    /// <exception cref="ArgumentNullException">if ocr wasn't initialized</exception>
+    /// <exception cref="InvalidOperationException">if executable path was wrong</exception>
+    /// <returns></returns>
+    public async Task<string> ReadAsync(int dpi = 300, double deviation = 1.7d)
+    {
+        if (_ocr is null)
+            throw new ArgumentNullException(_ocr.ToString());
+        string _output;
+        try
+        {
+            using var input = ConfigureOcrInput(_stream, dpi, deviation);
+            var ocrResult = await _ocr.ReadAsync(input);
+
+
+            var output =
+                ocrResult.Text.Replace("\r", "").RemoveSplitSymbol();
             _output =
                 Regex.Replace(output, "[^0-9 _]", ";").RemoveSplitSymbol();
         }
@@ -86,7 +123,7 @@ internal sealed class Reader : IDisposable
     }
 
     private void ReleaseUnmanagedResources()
-    { 
+    {
         _ocr = null;
     }
 
@@ -194,9 +231,7 @@ public static class BitmapExtension
         for (var i = 0; i < w; ++i)
         {
             for (var j = 0; j < h; ++j)
-            {
                 sharpenImage.SetPixel(i, j, result[i, j]);
-            }
         }
 
         return sharpenImage;
