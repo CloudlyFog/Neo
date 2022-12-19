@@ -11,9 +11,9 @@ namespace Neo.Services
     public sealed class Solver : IDisposable
     {
         private readonly Stream _stream;
+        private readonly bool _solveInsideConstructor;
         private Parser _parser;
         private Solver _solver;
-        private bool _solveInsideConstructor;
 
         public Solver(Stream stream, bool solveInsideConstructor = false)
         {
@@ -124,8 +124,8 @@ namespace Neo.Services
         public override string ToString()
         {
             var sb = new StringBuilder();
-            sb = Result.Aggregate(sb, (current, t)
-                => current.Append($"{Result.IndexOf(t)}: {t}\n"));
+            foreach (var d in Result)
+                sb = sb.Append($"{Result.IndexOf(d)}: {d}\n");
             return sb.ToString();
         }
 

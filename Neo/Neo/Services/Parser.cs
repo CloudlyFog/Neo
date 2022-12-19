@@ -76,6 +76,7 @@ namespace Neo.Services
             if (targetArray.Length <= 0)
                 throw new ArgumentException($"length of {nameof(targetArray)} less or equals than 0");
 
+            ValidArray(filterResult.ToArray());
             // start point for input text
             // like an iterator
             var point = 0;
@@ -92,15 +93,10 @@ namespace Neo.Services
                     {
                         targetArray[i, j] = double.Parse(filterResult[point]);
                     }
-                    catch (ParserException exception)
-                    {
-                        Console.WriteLine(exception);
-                        throw new ParserException(exception.Message, filterResult[point]);
-                    }
                     catch (Exception exception)
                     {
                         Console.WriteLine(exception);
-                        throw new Exception(exception.Message, exception.InnerException);
+                        throw;
                     }
                 }
             }
@@ -112,10 +108,12 @@ namespace Neo.Services
         /// Adding data to <see cref="targetArray"/> from <see cref="filterResult"/>
         /// </summary>
         /// <param name="targetArray">array which will contain parsed data from <see cref="filterResult"/></param>
-        /// <param name="filterResult">parsed data from Tesseract OCR</param>
+        /// <param name="filterResult">parsed data from ocr</param>
         private static Vector<double> GetVectorValue(double[] targetArray, List<string> filterResult)
         {
             ValidArray(targetArray);
+            ValidArray(filterResult.ToArray());
+
             // start point for input text as iterator
             var point = 0;
             try
@@ -128,6 +126,7 @@ namespace Neo.Services
                 Console.WriteLine(exception);
                 throw;
             }
+
 
             for (var i = 0; i < filterResult.Count; i++)
             {
@@ -158,7 +157,6 @@ namespace Neo.Services
         /// <returns></returns>
         private static bool ValidIteration(ref int point, List<string> filterResult)
         {
-            ValidArray(filterResult.ToArray());
             if (point == filterResult.Count)
                 return false;
             if (filterResult[point] != string.Empty)
@@ -206,16 +204,16 @@ namespace Neo.Services
         public static List<string> AddEvery(this List<string> input, int every, int rows)
         {
             Parser.ValidArray(input.ToArray());
-            var output = new List<string>();
+            var output = Enumerable.Empty<string>();
             for (var i = 1; i <= rows; i++)
             {
                 if (i == 1)
                 {
-                    output.Add(input[(every - 1) * i]);
+                    output = output.Append(input[(every - 1) * i]);
                     continue;
                 }
 
-                output.Add(input[every * i - 1]);
+                output = output.Append(input[every * i - 1]);
             }
 
             return output.Where(s => !string.IsNullOrWhiteSpace(s)).AsEnumerable().ToList();

@@ -231,9 +231,7 @@ public static class BitmapExtension
         for (var i = 0; i < w; ++i)
         {
             for (var j = 0; j < h; ++j)
-            {
                 sharpenImage.SetPixel(i, j, result[i, j]);
-            }
         }
 
         return sharpenImage;
