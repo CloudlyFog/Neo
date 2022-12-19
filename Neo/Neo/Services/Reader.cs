@@ -35,7 +35,7 @@ internal sealed class Reader : IDisposable
     }
 
     /// <summary>
-    /// read matrix from image by Tesseract OCR
+    /// read matrix from image by ocr
     /// </summary>
     /// <param name="stream">stream for read</param>
     /// <param name="dpi">dpi of output image</param>
@@ -55,13 +55,13 @@ internal sealed class Reader : IDisposable
             var output = _ocr.Read(input)
                 .Text.Replace("\r", "").RemoveSplitSymbol();
 
-
             _output =
                 Regex.Replace(output, "[^0-9 _]", ";").RemoveSplitSymbol();
         }
         catch (Exception exception)
         {
             Console.WriteLine(exception);
+            Dispose();
             throw new InvalidOperationException(exception.Message, exception.InnerException);
         }
 
@@ -69,7 +69,7 @@ internal sealed class Reader : IDisposable
     }
 
     /// <summary>
-    /// read matrix from image by Tesseract OCR
+    /// read matrix from image by ocr
     /// </summary>
     /// <param name="stream">stream for read</param>
     /// <param name="dpi">dpi of output image</param>
@@ -86,7 +86,6 @@ internal sealed class Reader : IDisposable
             using var input = ConfigureOcrInput(_stream, dpi, deviation);
             var ocrResult = await _ocr.ReadAsync(input);
 
-
             var output =
                 ocrResult.Text.Replace("\r", "").RemoveSplitSymbol();
             _output =
@@ -95,6 +94,7 @@ internal sealed class Reader : IDisposable
         catch (Exception exception)
         {
             Console.WriteLine(exception);
+            Dispose();
             throw new InvalidOperationException(exception.Message, exception.InnerException);
         }
 

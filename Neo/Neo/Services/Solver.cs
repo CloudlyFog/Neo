@@ -59,11 +59,8 @@ namespace Neo.Services
             catch (Exception exception)
             {
                 Console.WriteLine(exception);
-                throw;
-            }
-            finally
-            {
                 Dispose();
+                throw;
             }
 
             return new Solver(LeftSide, RightSide, Result);
@@ -88,14 +85,12 @@ namespace Neo.Services
             catch (Exception exception)
             {
                 Console.WriteLine(exception);
+                Dispose();
                 throw new InvalidOperationException(exception.Message, exception.InnerException);
             }
-            finally
-            {
-                Dispose();
-            }
 
-            return new Solver(LeftSide, RightSide, Result);
+            _solver = new Solver(LeftSide, RightSide, Result);
+            return _solver;
         }
 
         private void Solve()
@@ -109,11 +104,8 @@ namespace Neo.Services
             catch (Exception exception)
             {
                 Console.WriteLine(exception);
-                throw new InvalidOperationException(exception.Message, exception.InnerException);
-            }
-            finally
-            {
                 Dispose();
+                throw new InvalidOperationException(exception.Message, exception.InnerException);
             }
         }
 
@@ -124,8 +116,8 @@ namespace Neo.Services
         public override string ToString()
         {
             var sb = new StringBuilder();
-            foreach (var d in Result)
-                sb = sb.Append($"{Result.IndexOf(d)}: {d}\n");
+            for (int i = 0; i < Result.Count; i++)
+                sb = sb.Append($"{i}: {Result[i]}\n");
             return sb.ToString();
         }
 
