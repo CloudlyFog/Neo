@@ -19,8 +19,8 @@ public partial class MainPage
             if (!CrossMedia.Current.IsCameraAvailable || !CrossMedia.Current.IsTakePhotoSupported)
             {
                 await DisplayAlert("Exception",
-                    $"{nameof(CrossMedia.Current.IsCameraAvailable)}: {CrossMedia.Current.IsCameraAvailable}" +
-                    $"\n{nameof(CrossMedia.Current.IsTakePhotoSupported)}: {CrossMedia.Current.IsTakePhotoSupported}",
+                    @$"{nameof(CrossMedia.Current.IsCameraAvailable)}: {CrossMedia.Current.IsCameraAvailable}
+                                {nameof(CrossMedia.Current.IsTakePhotoSupported)}: {CrossMedia.Current.IsTakePhotoSupported}",
                     "OK");
             }
 
@@ -31,8 +31,9 @@ public partial class MainPage
                 return;
             }
 
-            var solverResult = new Solver(Photo?.GetStream()).ReadAsync().ToString();
-            await DisplayAlert("Result", solverResult, "Ok");
+            var solver = new Solver(Photo?.GetStream());
+            var result = await solver.ReadAsync();
+            await DisplayAlert("Result", result.ToString(), "Ok");
         }
         catch (Exception ex)
         {
