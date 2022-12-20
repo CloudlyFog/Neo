@@ -113,7 +113,7 @@ internal sealed class Reader : IDisposable
 
         // pass bitmap to OcrInput's constructor instead of stream 
         // and here the bitmap 'll smoothed and increased sharpness for next reading
-        return new OcrInput(prevInput.Pages[0].ToBitmap()
+        return new OcrInput(prevInput.Pages.GetEnumerator().Current.ToBitmap()
                 .ImageGaussianSmooth(deviation).Sharpen())
             {
                 TargetDPI = dpi

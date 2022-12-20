@@ -8,6 +8,9 @@
         <RepositoryUrl>https://github.com/CloudlyFog/Neo</RepositoryUrl>
         <TargetFrameworks>net6.0-windows;netstandard2.0</TargetFrameworks>
         <NeutralLanguage>en</NeutralLanguage>
+        <Authors>CloudlyFog</Authors>
+        <Company>thewatercoolers</Company>
+        <BaseIntermediateOutputPath>obj\</BaseIntermediateOutputPath>
     </PropertyGroup>
 
     <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -24,8 +27,17 @@
         <WarningLevel>7</WarningLevel>
     </PropertyGroup>
 
+    <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|netstandard2.0|AnyCPU'">
+      <WarningLevel>7</WarningLevel>
+    </PropertyGroup>
+
+    <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|netstandard2.0|AnyCPU'">
+      <WarningLevel>7</WarningLevel>
+    </PropertyGroup>
+
     <ItemGroup>
-        <PackageReference Include="IronOcr" Version="2022.11.10109" />
+        <PackageReference Include="IronOcr" Version="2022.8.7804" />
+        <PackageReference Include="IronOcr.Linux" Version="2022.8.7804" />
         <PackageReference Include="LiveXAML" Version="2.1.73" />
         <PackageReference Include="MathNet.Numerics" Version="5.0.0" />
         <PackageReference Include="Microsoft.Extensions.Configuration" Version="7.0.0" />

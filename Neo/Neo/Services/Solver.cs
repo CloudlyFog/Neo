@@ -116,7 +116,7 @@ namespace Neo.Services
         public override string ToString()
         {
             var sb = new StringBuilder();
-            for (int i = 0; i < Result.Count; i++)
+            for (var i = 0; i < Result.Count; i++)
                 sb = sb.Append($"x{i + 1}: {Result[i]}\n");
             return sb.ToString();
         }

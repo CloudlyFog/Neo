@@ -76,7 +76,7 @@ namespace Neo.Services
             if (targetArray.Length <= 0)
                 throw new ArgumentException($"length of {nameof(targetArray)} less or equals than 0");
 
-            ValidArray(filterResult.ToArray());
+            ValidArray(filterResult.ToArray(), nameof(filterResult));
             // start point for input text
             // like an iterator
             var point = 0;
@@ -108,18 +108,18 @@ namespace Neo.Services
         /// Adding data to <see cref="targetArray"/> from <see cref="filterResult"/>
         /// </summary>
         /// <param name="targetArray">array which will contain parsed data from <see cref="filterResult"/></param>
-        /// <param name="filterResult">parsed data from ocr</param>
+        /// <param name="filterResult">parsed filtered data from ocr</param>
         private static Vector<double> GetVectorValue(double[] targetArray, List<string> filterResult)
         {
-            ValidArray(targetArray);
-            ValidArray(filterResult.ToArray());
+            ValidArray(targetArray, nameof(targetArray));
+            ValidArray(filterResult.ToArray(), nameof(filterResult));
 
             // start point for input text as iterator
             var point = 0;
             try
             {
-                filterResult =
-                    filterResult.TakeWhile(item => ValidIteration(ref point, filterResult)).ToList();
+                filterResult = filterResult
+                    .TakeWhile(item => ValidIteration(ref point, filterResult)).ToList();
             }
             catch (Exception exception)
             {
@@ -165,13 +165,13 @@ namespace Neo.Services
             return false;
         }
 
-        internal static void ValidArray<T>(T[] array)
+        internal static void ValidArray<T>(T[] array, string arrayName)
         {
             if (array is null)
-                throw new ArgumentNullException(nameof(array));
+                throw new ArgumentNullException(arrayName);
 
             if (array.Length <= 0)
-                throw new ArgumentException($"length of {nameof(array)} less or equals than 0");
+                throw new ArgumentException($"length of {arrayName} less or equals than 0");
         }
     }
 
@@ -187,7 +187,7 @@ namespace Neo.Services
         /// <returns></returns>
         public static List<string> RemoveEvery(this List<string> input, int every, int rows)
         {
-            Parser.ValidArray(input.ToArray());
+            Parser.ValidArray(input.ToArray(), nameof(input));
             for (var i = 1; i <= rows; i++)
                 input.RemoveAt((every - 1) * i - 1);
 
@@ -203,7 +203,7 @@ namespace Neo.Services
         /// <returns></returns>
         public static List<string> AddEvery(this List<string> input, int every, int rows)
         {
-            Parser.ValidArray(input.ToArray());
+            Parser.ValidArray(input.ToArray(), nameof(input));
             var output = Enumerable.Empty<string>();
             for (var i = 1; i <= rows; i++)
             {
