@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Neo.Android", "Neo\Neo.Andr
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Neo", "Neo\Neo\Neo.csproj", "{E353A019-F154-4A68-8915-CEF2DA0EB7D3}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SoftwareDeployment", "SoftwareDeployment\SoftwareDeployment.csproj", "{286E57CD-154E-4E6D-A535-3C798B0B74D5}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -47,6 +49,18 @@ Global
 		{E353A019-F154-4A68-8915-CEF2DA0EB7D3}.Release|iPhone.Build.0 = Release|Any CPU
 		{E353A019-F154-4A68-8915-CEF2DA0EB7D3}.Release|iPhoneSimulator.ActiveCfg = Release|Any CPU
 		{E353A019-F154-4A68-8915-CEF2DA0EB7D3}.Release|iPhoneSimulator.Build.0 = Release|Any CPU
+		{286E57CD-154E-4E6D-A535-3C798B0B74D5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{286E57CD-154E-4E6D-A535-3C798B0B74D5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{286E57CD-154E-4E6D-A535-3C798B0B74D5}.Debug|iPhone.ActiveCfg = Debug|Any CPU
+		{286E57CD-154E-4E6D-A535-3C798B0B74D5}.Debug|iPhone.Build.0 = Debug|Any CPU
+		{286E57CD-154E-4E6D-A535-3C798B0B74D5}.Debug|iPhoneSimulator.ActiveCfg = Debug|Any CPU
+		{286E57CD-154E-4E6D-A535-3C798B0B74D5}.Debug|iPhoneSimulator.Build.0 = Debug|Any CPU
+		{286E57CD-154E-4E6D-A535-3C798B0B74D5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{286E57CD-154E-4E6D-A535-3C798B0B74D5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{286E57CD-154E-4E6D-A535-3C798B0B74D5}.Release|iPhone.ActiveCfg = Release|Any CPU
+		{286E57CD-154E-4E6D-A535-3C798B0B74D5}.Release|iPhone.Build.0 = Release|Any CPU
+		{286E57CD-154E-4E6D-A535-3C798B0B74D5}.Release|iPhoneSimulator.ActiveCfg = Release|Any CPU
+		{286E57CD-154E-4E6D-A535-3C798B0B74D5}.Release|iPhoneSimulator.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

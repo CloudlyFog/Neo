@@ -124,6 +124,10 @@
     <Folder Include="Services\" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\SoftwareDeployment\SoftwareDeployment.csproj">
+      <Project>{286e57cd-154e-4e6d-a535-3c798b0b74d5}</Project>
+      <Name>SoftwareDeployment</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Neo\Neo.csproj">
       <Project>{6F92FD4D-9B6C-4925-8A52-63AF29B629D0}</Project>
       <Name>Neo</Name>

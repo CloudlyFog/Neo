@@ -104,6 +104,10 @@ internal sealed class Reader : IDisposable
     private static OcrInput ConfigureOcrInput(Stream stream, int dpi, double deviation)
     {
         // init for the next cast from stream to bitmap
+        typeof(Installation)
+            .GetProperty(nameof(Installation.InstallationPath))
+            .SetValue(Installation.InstallationPath, Environment
+                .GetFolderPath(Environment.SpecialFolder.Personal));
         var prevInput = new OcrInput(stream)
             {
                 TargetDPI = dpi

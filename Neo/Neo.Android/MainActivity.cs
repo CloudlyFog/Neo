@@ -1,10 +1,9 @@
 ﻿using Android.App;
-using Android.Content;
 using Android.Content.PM;
 using Android.Runtime;
 using Android.OS;
 using Neo.Services;
-using Tesseract.Droid;
+using SoftwareDeployment.Deployment;
 using Xamarin.Forms;
 using Xamarin.Forms.Platform.Android;
 
@@ -18,6 +17,10 @@ namespace Neo.Droid
         public MainActivity()
         {
             DependencyService.Register<IMediaService, MediaService>();
+            DependencyService.Register<IEngineDeployment, EngineDeployment>();
+
+            DependencyService.Get<IEngineDeployment>()
+                .Deploy(IEngineDeployment.TessdataDirectory, IEngineDeployment.InstallationPath);
         }
 
         protected override void OnCreate(Bundle savedInstanceState)
