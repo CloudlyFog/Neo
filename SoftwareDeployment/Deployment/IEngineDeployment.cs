@@ -10,6 +10,6 @@ namespace SoftwareDeployment.Deployment
         public static string InstallationPath { get; set; } =
             Environment.GetFolderPath(Environment.SpecialFolder.Personal);
 
-        Task<bool> Deploy(string sourceDirectory, string destinationDirectory);
+        Task Deploy(string sourceDirectory, string destinationDirectory, bool recursive);
     }
 }

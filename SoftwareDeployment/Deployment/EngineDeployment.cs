@@ -4,14 +4,9 @@ using System.Threading.Tasks;
 
 namespace SoftwareDeployment.Deployment
 {
-    public sealed class EngineDeployment : IEngineDeployment
+    public abstract class EngineDeployment : IEngineDeployment
     {
-        private const string TessDirectory = "G:/TessDirectory";
-
-        public string InstallationPath { get; set; } =
-            Environment.GetFolderPath(Environment.SpecialFolder.Personal);
-
-        public async Task<bool> Deploy(string sourceDirectory, string destinationDirectory)
+        public async Task Deploy(string sourceDirectory, string destinationDirectory, bool recursive)
         {
             // Get information about the source directory
             var dir = new DirectoryInfo(sourceDirectory);
@@ -34,16 +29,14 @@ namespace SoftwareDeployment.Deployment
             }
 
             // If recursive and copying subdirectories, recursively call this method
-            if (true)
+            if (recursive)
             {
                 foreach (var subDir in dirs)
                 {
                     var newDestinationDir = Path.Combine(destinationDirectory, subDir.Name);
-                    Deploy(subDir.FullName, newDestinationDir);
+                    Deploy(subDir.FullName, newDestinationDir, true);
                 }
             }
-
-            return true;
         }
     }
 }

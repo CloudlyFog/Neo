@@ -20,7 +20,7 @@ namespace Neo.Droid
             DependencyService.Register<IEngineDeployment, EngineDeployment>();
 
             DependencyService.Get<IEngineDeployment>()
-                .Deploy(IEngineDeployment.TessdataDirectory, IEngineDeployment.InstallationPath);
+                .Deploy(IEngineDeployment.TessdataDirectory, IEngineDeployment.InstallationPath, true);
         }
 
         protected override void OnCreate(Bundle savedInstanceState)
