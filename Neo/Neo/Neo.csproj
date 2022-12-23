@@ -28,11 +28,11 @@
     </PropertyGroup>
 
     <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|netstandard2.0|AnyCPU'">
-      <WarningLevel>7</WarningLevel>
+        <WarningLevel>7</WarningLevel>
     </PropertyGroup>
 
     <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|netstandard2.0|AnyCPU'">
-      <WarningLevel>7</WarningLevel>
+        <WarningLevel>7</WarningLevel>
     </PropertyGroup>
 
     <ItemGroup>
@@ -53,6 +53,10 @@
         <PackageReference Include="Xamarin.CommunityToolkit" Version="2.0.5" />
         <PackageReference Include="Xamarin.Forms" Version="5.0.0.2545" />
         <PackageReference Include="Xamarin.Essentials" Version="1.7.4" />
+        <PackageReference Include="Xamarin.Tesseract" Version="0.3.4" />
+        <PackageReference Include="XLabs.IoC" Version="2.3.0-pre05" />
+        <PackageReference Include="XLabs.IoC.TinyIOC" Version="2.3.0-pre05" />
+        <PackageReference Include="XLabs.Platform" Version="2.3.0-pre05" />
     </ItemGroup>
 
     <ItemGroup>
@@ -60,5 +64,9 @@
             <Link>%(RecursiveDir)%(Filename)%(Extension)</Link>
             <Visible>false</Visible>
         </Content>
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\..\SoftwareDeployment\SoftwareDeployment.csproj" />
     </ItemGroup>
 </Project>

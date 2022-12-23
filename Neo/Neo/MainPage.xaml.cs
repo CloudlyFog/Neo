@@ -2,12 +2,16 @@
 using System.Text;
 using MathNet.Numerics.LinearAlgebra;
 using Neo.Services;
+using SoftwareDeployment.Deployment;
+using Tesseract;
 using Xamarin.Forms;
+using XLabs.Ioc;
 
 namespace Neo;
 
 public partial class MainPage
 {
+    private readonly ITesseractApi _tesseractApi;
     private int _columns;
     private int _rows;
     private const int TakePhotoSizeBtn = 80;
@@ -28,6 +32,20 @@ public partial class MainPage
 
         // StackLayout
         ConfigureStackLayout();
+
+        _tesseractApi = Resolver.Resolve<ITesseractApi>();
+
+
+        // try
+        // {
+        //     DependencyService.Get<IEngineDeployment>()
+        //         .Deploy(IEngineDeployment.TessdataDirectory, IEngineDeployment.InstallationPath, true);
+        // }
+        // catch (Exception e)
+        // {
+        //     Console.WriteLine(e);
+        //     throw;
+        // }
     }
 
     private void Exp_OnClick(object sender, EventArgs e)

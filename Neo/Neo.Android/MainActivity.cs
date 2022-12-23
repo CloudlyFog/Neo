@@ -1,11 +1,20 @@
-﻿using Android.App;
+﻿using System;
+using Android.App;
 using Android.Content.PM;
 using Android.Runtime;
 using Android.OS;
+using Neo.Droid.Services;
 using Neo.Services;
 using SoftwareDeployment.Deployment;
+using Tesseract;
+using Tesseract.Droid;
+using TinyIoC;
 using Xamarin.Forms;
 using Xamarin.Forms.Platform.Android;
+using XLabs.Ioc;
+using XLabs.Ioc.TinyIOC;
+using XLabs.Platform.Device;
+using IDevice = Carbon.Kit.Xamarin.Abstractions.Device.Bluetooth.Contracts.IDevice;
 
 namespace Neo.Droid
 {
@@ -17,10 +26,7 @@ namespace Neo.Droid
         public MainActivity()
         {
             DependencyService.Register<IMediaService, MediaService>();
-            DependencyService.Register<IEngineDeployment, EngineDeployment>();
-
-            DependencyService.Get<IEngineDeployment>()
-                .Deploy(IEngineDeployment.TessdataDirectory, IEngineDeployment.InstallationPath, true);
+            DependencyService.Register<ITesseractApi>();
         }
 
         protected override void OnCreate(Bundle savedInstanceState)
@@ -28,6 +34,11 @@ namespace Neo.Droid
             base.OnCreate(savedInstanceState);
             Xamarin.Essentials.Platform.Init(this, savedInstanceState);
             Forms.Init(this, savedInstanceState);
+
+            var container = TinyIoCContainer.Current;
+            container.Register<ITesseractApi>((cont, parameters)
+                => new TesseractApi(ApplicationContext, AssetsDeployment.OncePerInitialization));
+            Resolver.SetResolver(new TinyResolver(container));
             LoadApplication(new App());
         }
 

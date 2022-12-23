@@ -4,6 +4,7 @@ using IronOcr;
 using Neo.Services;
 using Plugin.Media;
 using Plugin.Media.Abstractions;
+using Tesseract;
 using Xamarin.Forms;
 
 namespace Neo;
@@ -31,9 +32,20 @@ public partial class MainPage
                 return;
             }
 
-            var solver = new Solver(Photo?.GetStream());
-            var result = await solver.ReadAsync();
-            await DisplayAlert("Result", result.ToString(), "Ok");
+            if (!_tesseractApi.Initialized)
+                await _tesseractApi.Init("eng");
+
+            var tessResult = _tesseractApi.SetImage(Photo?.GetStream()).Result;
+            if (tessResult)
+            {
+                var solved = new Solver()
+            }
+
+            var a = 1;
+
+            // var solver = new Solver(Photo?.GetStream());
+            // var result = await solver.ReadAsync();
+            // await DisplayAlert("Result", result.ToString(), "Ok");
         }
         catch (Exception ex)
         {

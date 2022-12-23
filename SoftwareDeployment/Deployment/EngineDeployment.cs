@@ -4,8 +4,12 @@ using System.Threading.Tasks;
 
 namespace SoftwareDeployment.Deployment
 {
-    public abstract class EngineDeployment : IEngineDeployment
+    public sealed class EngineDeployment : IEngineDeployment
     {
+        public EngineDeployment()
+        {
+        }
+
         public async Task Deploy(string sourceDirectory, string destinationDirectory, bool recursive)
         {
             // Get information about the source directory

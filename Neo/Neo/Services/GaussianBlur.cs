@@ -3,7 +3,7 @@ using System.Drawing;
 
 namespace Neo.Services
 {
-    internal sealed class GaussianBlur
+    public sealed class GaussianBlur
     {
         /// <summary>
         /// blur image by Gaussian algorithm

@@ -6,7 +6,7 @@ using Neo.Exceptions;
 
 namespace Neo.Services
 {
-    internal class Parser
+    public class Parser
     {
         public const char SplitSymbol = ';';
 
