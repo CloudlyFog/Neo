@@ -6,11 +6,11 @@
         <LangVersion>latestmajor</LangVersion>
         <GenerateDocumentationFile>True</GenerateDocumentationFile>
         <RepositoryUrl>https://github.com/CloudlyFog/Neo</RepositoryUrl>
-        <TargetFrameworks>net6.0-windows;netstandard2.0</TargetFrameworks>
         <NeutralLanguage>en</NeutralLanguage>
         <Authors>CloudlyFog</Authors>
         <Company>thewatercoolers</Company>
         <BaseIntermediateOutputPath>obj\</BaseIntermediateOutputPath>
+        <TargetFrameworks>net6.0-windows;netstandard2.0</TargetFrameworks>
     </PropertyGroup>
 
     <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -64,9 +64,5 @@
             <Link>%(RecursiveDir)%(Filename)%(Extension)</Link>
             <Visible>false</Visible>
         </Content>
-    </ItemGroup>
-
-    <ItemGroup>
-        <ProjectReference Include="..\..\SoftwareDeployment\SoftwareDeployment.csproj" />
     </ItemGroup>
 </Project>

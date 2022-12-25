@@ -3,11 +3,9 @@ using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using __livexaml;
 using Android.App;
 using IronOcr;
 using Neo.Services;
-using SoftwareDeployment.Deployment;
 using Tesseract;
 using Tesseract.Droid;
 using XLabs.Ioc;
@@ -109,10 +107,6 @@ internal sealed class Reader : IDisposable
     private static OcrInput ConfigureOcrInput(Stream stream, int dpi, double deviation)
     {
         // init for the next cast from stream to bitmap
-        var name = nameof(Installation.InstallationPath);
-        typeof(Installation)
-            .GetProperty(nameof(Installation.InstallationPath))
-            .SetValue(Installation.InstallationPath, IEngineDeployment.InstallationPath);
         var prevInput = new OcrInput(stream)
             {
                 TargetDPI = dpi

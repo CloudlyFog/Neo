@@ -2,10 +2,10 @@
 using System.Text;
 using MathNet.Numerics.LinearAlgebra;
 using Neo.Services;
-using SoftwareDeployment.Deployment;
 using Tesseract;
 using Xamarin.Forms;
 using XLabs.Ioc;
+
 
 namespace Neo;
 
@@ -33,19 +33,7 @@ public partial class MainPage
         // StackLayout
         ConfigureStackLayout();
 
-        _tesseractApi = Resolver.Resolve<ITesseractApi>();
-
-
-        // try
-        // {
-        //     DependencyService.Get<IEngineDeployment>()
-        //         .Deploy(IEngineDeployment.TessdataDirectory, IEngineDeployment.InstallationPath, true);
-        // }
-        // catch (Exception e)
-        // {
-        //     Console.WriteLine(e);
-        //     throw;
-        // }
+        // _tesseractApi = Resolver.Resolve<ITesseractApi>();
     }
 
     private void Exp_OnClick(object sender, EventArgs e)
@@ -230,7 +218,7 @@ public partial class MainPage
             CornerRadius = TakePhotoSizeBtn,
             BorderColor = Color.DimGray,
             BorderWidth = 5,
-            BackgroundColor = System.Drawing.Color.Bisque,
+            BackgroundColor = new Color(252, 186, 3),
             WidthRequest = 60,
             HeightRequest = 60,
             HorizontalOptions = LayoutOptions.CenterAndExpand,

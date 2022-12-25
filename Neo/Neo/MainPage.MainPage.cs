@@ -32,16 +32,21 @@ public partial class MainPage
                 return;
             }
 
-            if (!_tesseractApi.Initialized)
+            var api = DependencyService.Get<ITesseractApi>();
+            var api2 = DependencyService.Resolve<ITesseractApi>();
+
+            if (!api.Initialized) // tesseract isnt initialized
                 await _tesseractApi.Init("eng");
 
-            var tessResult = _tesseractApi.SetImage(Photo?.GetStream()).Result;
-            if (tessResult)
+            var tessResult = api.SetImage(Photo?.GetStream()).Result;
+            if (!tessResult)
             {
-                var solved = new Solver()
+                await DisplayAlert("Exception", "cant get result of tesseract", "ok");
+                return;
             }
 
-            var a = 1;
+            var result = api.Text;
+            var a = 2;
 
             // var solver = new Solver(Photo?.GetStream());
             // var result = await solver.ReadAsync();

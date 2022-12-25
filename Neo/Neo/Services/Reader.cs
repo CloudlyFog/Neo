@@ -7,9 +7,6 @@ using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using IronOcr;
-using SoftwareDeployment.Deployment;
-using Tesseract;
-using XLabs.Ioc;
 using Color = System.Drawing.Color;
 using Rectangle = System.Drawing.Rectangle;
 
@@ -108,10 +105,6 @@ internal sealed class Reader : IDisposable
     private static OcrInput ConfigureOcrInput(Stream stream, int dpi, double deviation)
     {
         // init for the next cast from stream to bitmap
-        var name = nameof(Installation.InstallationPath);
-        typeof(Installation)
-            .GetProperty(nameof(Installation.InstallationPath))
-            .SetValue(Installation.InstallationPath, IEngineDeployment.InstallationPath);
         var prevInput = new OcrInput(stream)
             {
                 TargetDPI = dpi

@@ -20174,6 +20174,10 @@ namespace Neo.Droid
 			global::Xamarin.Forms.Platform.Resource.Xml.standalone_badge_gravity_bottom_start = global::Neo.Droid.Resource.Xml.standalone_badge_gravity_bottom_start;
 			global::Xamarin.Forms.Platform.Resource.Xml.standalone_badge_gravity_top_start = global::Neo.Droid.Resource.Xml.standalone_badge_gravity_top_start;
 			global::Xamarin.Forms.Platform.Resource.Xml.standalone_badge_offset = global::Neo.Droid.Resource.Xml.standalone_badge_offset;
+			global::XLabs.IOC.TinyIOC.Droid.Resource.String.ApplicationName = global::Neo.Droid.Resource.String.ApplicationName;
+			global::XLabs.IOC.TinyIOC.Droid.Resource.String.Hello = global::Neo.Droid.Resource.String.Hello;
+			global::XLabs.Platform.Resource.String.ApplicationName = global::Neo.Droid.Resource.String.ApplicationName;
+			global::XLabs.Platform.Resource.String.Hello = global::Neo.Droid.Resource.String.Hello;
 		}
 		
 		public partial class Animation
