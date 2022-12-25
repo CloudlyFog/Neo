@@ -26,31 +26,8 @@ public partial class MainPage
             }
 
 
-            if (!await SavePhotoAsync())
-            {
+            if (await SavePhotoAsync())
                 await DisplayAlert("Exception", "didn't save photo.", "ok");
-                return;
-            }
-
-            var api = DependencyService.Get<ITesseractApi>();
-            var api2 = DependencyService.Resolve<ITesseractApi>();
-
-            if (!api.Initialized) // tesseract isnt initialized
-                await _tesseractApi.Init("eng");
-
-            var tessResult = api.SetImage(Photo?.GetStream()).Result;
-            if (!tessResult)
-            {
-                await DisplayAlert("Exception", "cant get result of tesseract", "ok");
-                return;
-            }
-
-            var result = api.Text;
-            var a = 2;
-
-            // var solver = new Solver(Photo?.GetStream());
-            // var result = await solver.ReadAsync();
-            // await DisplayAlert("Result", result.ToString(), "Ok");
         }
         catch (Exception ex)
         {

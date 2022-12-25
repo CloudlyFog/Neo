@@ -1,4 +1,5 @@
-﻿using Android.App;
+﻿using System.Net.Mime;
+using Android.App;
 using Android.Widget;
 using Android.OS;
 using Android.Views;
@@ -22,6 +23,8 @@ namespace NeoSoftware
         private TextView txtView;
         private CameraSource cameraSource;
 
+        public TextView TextView { get; set; }
+
         private
             const int RequestCameraPermissionID = 1001;
 
@@ -40,7 +43,7 @@ namespace NeoSoftware
             else
             {
                 cameraSource = new CameraSource.Builder(ApplicationContext, txtRecognizer).SetFacing(CameraFacing.Back)
-                    .SetRequestedPreviewSize(2340, 1080).SetRequestedFps(0.5f).SetAutoFocusEnabled(true).Build();
+                    .SetRequestedPreviewSize(2340, 1080).SetRequestedFps(0.3f).SetAutoFocusEnabled(true).Build();
                 cameraView.Holder.AddCallback(this);
                 txtRecognizer.SetProcessor(this);
             }
@@ -64,7 +67,7 @@ namespace NeoSoftware
                 Android.Content.PM.Permission.Granted)
             {
                 //Request permission  
-                ActivityCompat.RequestPermissions(this, new string[]
+                ActivityCompat.RequestPermissions(this, new[]
                 {
                     Android.Manifest.Permission.Camera
                 }, RequestCameraPermissionID);

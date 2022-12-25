@@ -17,7 +17,6 @@ namespace Neo.Droid
         public MainActivity()
         {
             DependencyService.Register<IMediaService, MediaService>();
-            DependencyService.Register<ITesseractApi, Services.Tesseract>();
         }
 
         protected override void OnCreate(Bundle savedInstanceState)
@@ -25,11 +24,6 @@ namespace Neo.Droid
             base.OnCreate(savedInstanceState);
             Xamarin.Essentials.Platform.Init(this, savedInstanceState);
             Forms.Init(this, savedInstanceState);
-
-            // var container = TinyIoCContainer.Current;
-            // container.Register<ITesseractApi>((cont, parameters)
-            //     => new TesseractApi(ApplicationContext, AssetsDeployment.OncePerInitialization));
-            // Resolver.SetResolver(new TinyResolver(container));
             LoadApplication(new App());
         }
 
