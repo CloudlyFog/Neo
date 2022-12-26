@@ -15,6 +15,20 @@ namespace Neo.Services
         private Parser _parser;
         private Solver _solver;
 
+        public Solver(string input)
+        {
+            _parser = new Parser(input.Replace("\n", Parser.SplitSymbol.ToString()));
+            try
+            {
+                Solve();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
+        }
+
         public Solver(Stream stream, bool solveInsideConstructor = false)
         {
             _stream = stream;

@@ -26,7 +26,7 @@ public partial class MainPage
             }
 
 
-            if (await SavePhotoAsync())
+            if (!await SavePhotoAsync())
                 await DisplayAlert("Exception", "didn't save photo.", "ok");
         }
         catch (Exception ex)

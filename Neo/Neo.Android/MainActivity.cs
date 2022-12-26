@@ -3,7 +3,6 @@ using Android.Content.PM;
 using Android.Runtime;
 using Android.OS;
 using Neo.Services;
-using Tesseract;
 using Xamarin.Forms;
 using Xamarin.Forms.Platform.Android;
 

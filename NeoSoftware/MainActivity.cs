@@ -1,4 +1,5 @@
-﻿using System.Net.Mime;
+﻿using System;
+using System.Threading.Tasks;
 using Android.App;
 using Android.Widget;
 using Android.OS;
@@ -9,21 +10,33 @@ using Android.Util;
 using Android.Graphics;
 using Android.Runtime;
 using Android;
-using static Android.Gms.Vision.Detector;
-using System.Text;
 using AndroidX.AppCompat.App;
 using AndroidX.Core.App;
+using Java.Lang;
+using Java.Interop;
+using Kotlin.Text;
+using Neo.Services;
+using Plugin.Media;
+using Plugin.Media.Abstractions;
+using Xamarin.Forms;
+using XLabs.Platform;
+using StringBuilder = System.Text.StringBuilder;
+using static Android.Gms.Vision.Detector;
+using Exception = Java.Lang.Exception;
+using View = Android.Views.View;
 
 namespace NeoSoftware
 {
-    [Activity(Label = "Neo", Theme = "@style/AppTheme", MainLauncher = true)]
+    [Activity(Label = "Recognize", Theme = "@style/AppTheme", MainLauncher = true)]
     public class MainActivity : AppCompatActivity, ISurfaceHolderCallback, IProcessor
     {
-        private SurfaceView cameraView;
-        private TextView txtView;
-        private CameraSource cameraSource;
+        private SurfaceView _cameraView;
+        private TextView _txtView;
+        private CameraSource _cameraSource;
+        private TextRecognizer _textRecognizer;
+        private TextView _output;
+        public MediaFile Photo { get; set; }
 
-        public TextView TextView { get; set; }
 
         private
             const int RequestCameraPermissionID = 1001;
@@ -33,20 +46,22 @@ namespace NeoSoftware
             base.OnCreate(savedInstanceState);
             // Set our view from the "main" layout resource  
             SetContentView(Resource.Layout.activity_main);
-            cameraView = FindViewById<SurfaceView>(Resource.Id.surface_view);
-            txtView = FindViewById<TextView>(Resource.Id.txtview);
-            var txtRecognizer = new TextRecognizer.Builder(ApplicationContext).Build();
-            if (!txtRecognizer.IsOperational)
+            _cameraView = FindViewById<SurfaceView>(Resource.Id.surface_view);
+            _txtView = FindViewById<TextView>(Resource.Id.txtview);
+            _output = FindViewById<TextView>(Resource.Id.output);
+            _textRecognizer = new TextRecognizer.Builder(ApplicationContext).Build();
+
+
+            if (!_textRecognizer.IsOperational)
             {
                 Log.Error("Main Activity", "Detector dependencies are not yet available");
+                throw new Exception($"{nameof(_textRecognizer.IsOperational)} is {_textRecognizer.IsOperational}");
             }
-            else
-            {
-                cameraSource = new CameraSource.Builder(ApplicationContext, txtRecognizer).SetFacing(CameraFacing.Back)
-                    .SetRequestedPreviewSize(2340, 1080).SetRequestedFps(0.3f).SetAutoFocusEnabled(true).Build();
-                cameraView.Holder.AddCallback(this);
-                txtRecognizer.SetProcessor(this);
-            }
+
+            _cameraSource = new CameraSource.Builder(ApplicationContext, _textRecognizer).SetFacing(CameraFacing.Back)
+                .SetRequestedPreviewSize(2340, 1080).SetRequestedFps(60f).SetAutoFocusEnabled(true).Build();
+            _cameraView.Holder.AddCallback(this);
+            _textRecognizer.SetProcessor(this);
         }
 
         public override void OnRequestPermissionsResult(int requestCode, string[] permissions,
@@ -69,40 +84,75 @@ namespace NeoSoftware
                 //Request permission  
                 ActivityCompat.RequestPermissions(this, new[]
                 {
-                    Android.Manifest.Permission.Camera
+                    Manifest.Permission.Camera
                 }, RequestCameraPermissionID);
                 return;
             }
 
-            cameraSource.Start(cameraView.Holder);
+            _cameraSource.Start(_cameraView.Holder);
         }
 
         public void SurfaceDestroyed(ISurfaceHolder holder)
         {
-            cameraSource.Stop();
+            _cameraSource.Stop();
         }
 
         public void ReceiveDetections(Detections detections)
         {
             var items = detections.DetectedItems;
-            if (items.Size() != 0)
+            if (items.Size() == 0)
+                return;
+            _txtView.Post(() =>
             {
-                txtView.Post(() =>
+                var strBuilder = new StringBuilder();
+                for (var i = 0; i < items.Size(); ++i)
                 {
-                    var strBuilder = new StringBuilder();
-                    for (var i = 0; i < items.Size(); ++i)
-                    {
-                        strBuilder.Append(((TextBlock)items.ValueAt(i)).Value);
-                        strBuilder.Append("\n");
-                    }
+                    strBuilder.Append(((TextBlock)items.ValueAt(i)).Value);
+                    strBuilder.Append("\n");
+                }
 
-                    txtView.Text = strBuilder.ToString();
-                });
-            }
+                _txtView.Text = strBuilder.ToString();
+                Thread.Sleep(500);
+            });
         }
 
         public void Release()
         {
+        }
+
+        [Export("Solve")]
+        public async void Solve(View view)
+        {
+            try
+            {
+                _output.Text = new Solver(_txtView.Text).ToString();
+            }
+            catch (Exception ex)
+            {
+                // await DisplayAlert("Oh... something went wrong :(",
+                //     $"inner: {ex.InnerException?.Message}\nmessage: {ex.Message}",
+                //     "OK");
+                throw new Exception(ex);
+            }
+        }
+
+        private async Task<bool> SavePhotoAsync()
+        {
+            var photo = await CrossMedia.Current.TakePhotoAsync(new StoreCameraMediaOptions
+            {
+                Name = Guid.NewGuid().ToString(),
+                DefaultCamera = CameraDevice.Rear,
+                SaveToAlbum = false,
+                SaveMetaData = false,
+            });
+
+            if (photo is null)
+                return false;
+            Photo = photo;
+            DependencyService.Get<IMediaService>()
+                .SavePicture(photo.OriginalFilename, photo.GetStream(), "Pictures");
+
+            return true;
         }
     }
 }

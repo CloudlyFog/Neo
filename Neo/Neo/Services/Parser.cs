@@ -35,13 +35,13 @@ namespace Neo.Services
             var targetArray = new double[
                 // read count of ";" and therefore count will one less than actually
                 _input.Count(x => x == SplitSymbol) + 1,
-                // read count of spaces and divide it on count of symbol ";" and subtract 1
-                _input.Count(x => x == ' ') / _input.Count(x => x == SplitSymbol) - 1];
+                // read count of spaces and divide it on count of symbol ";"
+                _input.Count(x => x == ' ') / _input.Count(x => x == SplitSymbol)];
 
             _every = targetArray.GetLength(1);
 
             // removing white space and commas
-            var filterResult = _input.Split(' ', SplitSymbol).Where(x => x != " " || x != string.Empty).ToList()
+            var filterResult = _input.Split(' ', SplitSymbol).Where(x => x is not (" " and "")).ToList()
                 .RemoveEvery(_every, targetArray.GetLength(0));
 
             return GetMatrixValue(targetArray, filterResult);
