@@ -2,25 +2,27 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 xmlns:tools="http://schemas.android.com/tools" android:padding="16dp"
                 android:layout_width="match_parent" android:layout_height="match_parent">
-    <SurfaceView android:id="@+id/surface_view" android:layout_width="395dp"
+    <SurfaceView android:id="@+id/surface_view" android:layout_width="379dp"
 
-                 android:layout_height="575dp" android:layout_centerHorizontal="true"
+                 android:layout_height="536dp" android:layout_centerHorizontal="true"
                  android:layout_marginBottom="68dp" android:layout_alignBottom="@+id/button"/>
     <TextView android:id="@+id/txtview" android:text="No Text" android:textSize="20sp"
-              android:textColor="@android:color/white" android:layout_width="206dp"
-              android:layout_height="109dp" android:layout_alignParentBottom="true"/>
+              android:textColor="@android:color/white" android:layout_width="152dp"
+              android:layout_height="70dp" android:layout_alignParentBottom="true"
+              android:layout_marginBottom="47dp"
+              android:layout_marginStart="1dp" android:layout_alignStart="@+id/surface_view"
+              android:layout_marginTop="-6dp" android:layout_below="@+id/surface_view"/>
     <Button
             android:text="Solve"
             android:layout_width="141dp"
             android:layout_height="60dp"
             android:onClick="Solve"
-            android:layout_alignParentBottom="true" android:layout_marginBottom="51dp" android:id="@+id/takePhotoBtn"
-            tools:ignore="TextContrastCheck" android:layout_alignParentEnd="true" android:layout_marginEnd="16dp"/>
+            android:layout_alignParentBottom="true" android:layout_marginBottom="97dp" android:id="@+id/takePhotoBtn"
+            tools:ignore="TextContrastCheck" android:layout_alignParentEnd="true" android:layout_marginEnd="15dp"/>
     <TextView
             android:text="Output"
-            android:layout_width="141dp"
-            android:layout_height="40dp" android:layout_marginEnd="0dp"
-            android:layout_alignParentBottom="true" android:layout_marginBottom="3dp" android:id="@+id/output"
-            android:layout_toEndOf="@+id/txtview" android:layout_marginStart="16dp"
-            android:layout_alignEnd="@+id/takePhotoBtn"/>
+            android:layout_width="197dp"
+            android:layout_height="106dp" android:layout_marginEnd="2dp"
+            android:layout_marginBottom="-60dp" android:id="@+id/output"
+            android:layout_alignEnd="@+id/takePhotoBtn" android:layout_alignBottom="@+id/txtview"/>
 </RelativeLayout>  
