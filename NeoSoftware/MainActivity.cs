@@ -14,12 +14,7 @@ using AndroidX.AppCompat.App;
 using AndroidX.Core.App;
 using Java.Lang;
 using Java.Interop;
-using Kotlin.Text;
 using Neo.Services;
-using Plugin.Media;
-using Plugin.Media.Abstractions;
-using Xamarin.Forms;
-using XLabs.Platform;
 using StringBuilder = System.Text.StringBuilder;
 using static Android.Gms.Vision.Detector;
 using Exception = Java.Lang.Exception;
@@ -35,7 +30,6 @@ namespace NeoSoftware
         private CameraSource _cameraSource;
         private TextRecognizer _textRecognizer;
         private TextView _output;
-        public MediaFile Photo { get; set; }
 
 
         private
@@ -134,25 +128,6 @@ namespace NeoSoftware
                 //     "OK");
                 throw new Exception(ex);
             }
-        }
-
-        private async Task<bool> SavePhotoAsync()
-        {
-            var photo = await CrossMedia.Current.TakePhotoAsync(new StoreCameraMediaOptions
-            {
-                Name = Guid.NewGuid().ToString(),
-                DefaultCamera = CameraDevice.Rear,
-                SaveToAlbum = false,
-                SaveMetaData = false,
-            });
-
-            if (photo is null)
-                return false;
-            Photo = photo;
-            DependencyService.Get<IMediaService>()
-                .SavePicture(photo.OriginalFilename, photo.GetStream(), "Pictures");
-
-            return true;
         }
     }
 }
