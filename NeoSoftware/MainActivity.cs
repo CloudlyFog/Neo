@@ -17,6 +17,7 @@ using Java.Interop;
 using Neo.Services;
 using StringBuilder = System.Text.StringBuilder;
 using static Android.Gms.Vision.Detector;
+using AlertDialog = AndroidX.AppCompat.App.AlertDialog;
 using Exception = Java.Lang.Exception;
 using View = Android.Views.View;
 
@@ -30,6 +31,10 @@ namespace NeoSoftware
         private CameraSource _cameraSource;
         private TextRecognizer _textRecognizer;
         private TextView _output;
+        private View _confirmDataInput;
+        private AlertDialog _confirmationAlertDialog;
+        private string _confirmedText;
+        private TextView _actualInput;
 
 
         private
@@ -40,6 +45,12 @@ namespace NeoSoftware
             base.OnCreate(savedInstanceState);
             // Set our view from the "main" layout resource  
             SetContentView(Resource.Layout.activity_main);
+            ConfigureRecognizer();
+            ConfigureConfirmation();
+        }
+
+        private void ConfigureRecognizer()
+        {
             _cameraView = FindViewById<SurfaceView>(Resource.Id.surface_view);
             _txtView = FindViewById<TextView>(Resource.Id.txtview);
             _output = FindViewById<TextView>(Resource.Id.output);
@@ -53,9 +64,19 @@ namespace NeoSoftware
             }
 
             _cameraSource = new CameraSource.Builder(ApplicationContext, _textRecognizer).SetFacing(CameraFacing.Back)
-                .SetRequestedPreviewSize(2340, 1080).SetRequestedFps(60f).SetAutoFocusEnabled(true).Build();
+                .SetRequestedPreviewSize(1555, 1080).SetRequestedFps(25f).SetAutoFocusEnabled(true).Build();
             _cameraView.Holder.AddCallback(this);
             _textRecognizer.SetProcessor(this);
+        }
+
+        private void ConfigureConfirmation()
+        {
+            _confirmDataInput = LayoutInflater.Inflate(Resource.Layout.confirm_data, null);
+            _confirmationAlertDialog = new AlertDialog.Builder(this).Create();
+            _confirmationAlertDialog.SetTitle("Confirm input");
+            _confirmationAlertDialog.SetView(_confirmDataInput);
+
+            _actualInput = FindViewById<TextView>(Resource.Id.actual_input);
         }
 
         public override void OnRequestPermissionsResult(int requestCode, string[] permissions,
@@ -106,7 +127,7 @@ namespace NeoSoftware
                 }
 
                 _txtView.Text = strBuilder.ToString();
-                Thread.Sleep(500);
+                Thread.Sleep(700);
             });
         }
 
@@ -115,19 +136,29 @@ namespace NeoSoftware
         }
 
         [Export("Solve")]
-        public async void Solve(View view)
+        public void OpenConfirmation(View view)
+        {
+            _confirmationAlertDialog.Show();
+            _confirmedText = _txtView.Text;
+        }
+
+        private void Solve()
         {
             try
             {
-                _output.Text = new Solver(_txtView.Text).ToString();
+                _output.Text = new Solver(_confirmedText).ToString();
             }
             catch (Exception ex)
             {
-                // await DisplayAlert("Oh... something went wrong :(",
-                //     $"inner: {ex.InnerException?.Message}\nmessage: {ex.Message}",
-                //     "OK");
-                throw new Exception(ex);
+                Console.WriteLine(ex);
+                throw;
             }
+        }
+
+        [Export("confirm")]
+        public void ConfirmDataInput(View view)
+        {
+            Solve();
         }
     }
 }

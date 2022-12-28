@@ -4,9 +4,12 @@ using MathNet.Numerics.LinearAlgebra;
 
 namespace Neo.Services
 {
+    /// <summary>
+    /// class finds unknown variables of equation
+    /// </summary>
     public sealed class Solver : IDisposable
     {
-        private readonly Parser _parser;
+        private Parser _parser;
 
         public Solver(string input)
         {
@@ -55,6 +58,7 @@ namespace Neo.Services
             LeftSide = null;
             RightSide = null;
             Result = null;
+            _parser = null;
         }
 
         private void Dispose(bool disposing)

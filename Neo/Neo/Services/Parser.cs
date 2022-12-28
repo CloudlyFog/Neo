@@ -54,7 +54,7 @@ namespace Neo.Services
         public Vector<double> ParseToVector()
         {
             // remove white space and commas
-            var filterResult = _input.Split(' ', SplitSymbol).Where(x => x != " " || x != string.Empty).ToList();
+            var filterResult = _input.Split(' ', SplitSymbol).Where(x => x is not (" " and "")).ToList();
 
             // remove empty space
             filterResult = filterResult.Where(s => !string.IsNullOrWhiteSpace(s)).AsEnumerable().ToList()

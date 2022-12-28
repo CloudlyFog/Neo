@@ -3,7 +3,7 @@
     <PropertyGroup>
         <ProduceReferenceAssembly>true</ProduceReferenceAssembly>
         <Nullable>disable</Nullable>
-        <LangVersion>latestmajor</LangVersion>
+        <LangVersion>preview</LangVersion>
         <GenerateDocumentationFile>True</GenerateDocumentationFile>
         <RepositoryUrl>https://github.com/CloudlyFog/Neo</RepositoryUrl>
         <NeutralLanguage>en</NeutralLanguage>
