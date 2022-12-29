@@ -4,6 +4,7 @@ using Neo.Services;
 using Xamarin.Forms;
 
 [assembly: Dependency(typeof(MediaService))]
+
 namespace Neo.Services
 {
     public class MediaService : IMediaService
@@ -14,15 +15,16 @@ namespace Neo.Services
             documentsPath = Path.Combine(documentsPath, location);
             Directory.CreateDirectory(documentsPath);
 
-            string filePath = Path.Combine(documentsPath, name);
+            var filePath = Path.Combine(documentsPath, name);
 
-            byte[] bArray = new byte[data.Length];
-            using FileStream fs = new FileStream(filePath , FileMode.OpenOrCreate);
+            var bArray = new byte[data.Length];
+            using var fs = new FileStream(filePath, FileMode.OpenOrCreate);
             using (data)
             {
                 data.Read(bArray, 0, (int)data.Length);
             }
-            int length = bArray.Length;
+
+            var length = bArray.Length;
             fs.Write(bArray, 0, length);
         }
     }

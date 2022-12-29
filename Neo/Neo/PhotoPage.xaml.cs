@@ -1,11 +1,8 @@
 ﻿using System;
-using System.IO;
 using System.Threading.Tasks;
-using IronOcr;
 using Neo.Services;
 using Plugin.Media;
 using Plugin.Media.Abstractions;
-using Xamarin.Essentials;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 using Color = Xamarin.Forms.Color;
@@ -18,47 +15,65 @@ namespace Neo
     {
         public Button TakePhoto { get; set; }
 
+        public static MediaFile Photo { get; set; }
+
         public Grid GridTakePhoto { get; set; }
 
         private const int TakePhotoSizeBtn = 80;
-        
+
         public PhotoPage()
         {
             InitializeComponent();
-            
+
             SetStylesTakePhotoButton();
             ConfigureTakePhotoButton();
         }
-        
- 
+
+
         private async void TakePhotoAsync(object sender, EventArgs e)
         {
             try
             {
                 if (!CrossMedia.Current.IsCameraAvailable || !CrossMedia.Current.IsTakePhotoSupported)
                 {
-                    await DisplayAlert("Exception", $"{nameof(CrossMedia.Current.IsCameraAvailable)}: CrossMedia.Current.IsCameraAvailable\n{nameof(CrossMedia.Current.IsTakePhotoSupported)}: {CrossMedia.Current.IsTakePhotoSupported}","OK");
+                    await DisplayAlert("Exception",
+                        $"{nameof(CrossMedia.Current.IsCameraAvailable)}: CrossMedia.Current.IsCameraAvailable" +
+                        $"\n{nameof(CrossMedia.Current.IsTakePhotoSupported)}: {CrossMedia.Current.IsTakePhotoSupported}",
+                        "OK");
                 }
-                
-                var photo = await CrossMedia.Current.TakePhotoAsync(new StoreCameraMediaOptions
-                {
-                    Name = "tessImage.png",
-                    Directory = "Pictures",
-                    DefaultCamera = CameraDevice.Rear,
-                });
-                DependencyService.Get<IMediaService>().SavePicture("text.png", photo.GetStream(), "Pictures");
+
+                if (!await SavePhotoAsync())
+                    await DisplayAlert("Exception", $"didn't save photo.", "ok");
+
                 Content = new Image
                 {
-                    Source = ImageSource.FromStream(() => photo.GetStream()),
+                    Source = ImageSource.FromStream(() => Photo?.GetStream()),
                 };
-                
             }
             catch (Exception ex)
             {
                 await DisplayAlert("Oh... something went wrong :(",
-                    $"inner: {ex.InnerException?.Message}\nmessage: {ex.Message}", 
+                    $"inner: {ex.InnerException?.Message}\nmessage: {ex.Message}",
                     "OK");
             }
+        }
+
+        private static async Task<bool> SavePhotoAsync()
+        {
+            var photo = await CrossMedia.Current.TakePhotoAsync(new StoreCameraMediaOptions
+            {
+                Name = "tessImage.png",
+                DefaultCamera = CameraDevice.Rear,
+                SaveToAlbum = false,
+                SaveMetaData = false,
+            });
+
+            if (photo is null)
+                return false;
+            Photo = photo;
+            DependencyService.Get<IMediaService>().SavePicture("tessImage.png", photo.GetStream(), "Pictures");
+
+            return true;
         }
 
         private void SetStylesTakePhotoButton()
@@ -71,7 +86,7 @@ namespace Neo
                 BorderWidth = 5,
                 BackgroundColor = System.Drawing.Color.Bisque
             };
-            
+
             GridTakePhoto = new Grid
             {
                 HorizontalOptions = LayoutOptions.Center,
@@ -96,15 +111,15 @@ namespace Neo
                 }
             };
         }
-        
+
         private void ConfigureTakePhotoButton()
         {
             // take photo
             TakePhoto.Clicked += TakePhotoAsync;
-            
+
             Content = new StackLayout
             {
-                Children = 
+                Children =
                 {
                     GridTakePhoto
                 },

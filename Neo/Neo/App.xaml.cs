@@ -1,6 +1,5 @@
-﻿using System;
+﻿using IronOcr;
 using Xamarin.Forms;
-using Xamarin.Forms.Xaml;
 
 namespace Neo
 {
@@ -9,9 +8,9 @@ namespace Neo
         public App()
         {
             InitializeComponent();
-            MainPage = new PhotoPage
+            MainPage = new MainPage
             {
-                BackgroundColor = new Color(0, 0, 0, 0.7)
+                BackgroundColor = new Color(0, 0, 0, 0.7),
             };
         }
 

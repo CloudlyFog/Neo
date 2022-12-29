@@ -11,8 +11,8 @@ namespace Neo.Services
     internal class MatrixEquation
     {
         public const char SplitSymbol = ';';
-        public Vector<double> RightSide { get; set; } 
-        public Matrix<double> LeftSide { get; set; } 
+        public Vector<double> RightSide { get; set; }
+        public Matrix<double> LeftSide { get; set; }
 
         /// <summary>
         /// parse data from Tesseract OCR and convert it to MatrixEquation
@@ -23,7 +23,7 @@ namespace Neo.Services
         {
             var rightSideMatrix = new StringBuilder();
             var leftSideMatrix = new StringBuilder();
-            for (int i = 0; i < input.Length; i++)
+            for (var i = 0; i < input.Length; i++)
             {
                 var point = i;
                 if (++point >= input.Length)
@@ -92,11 +92,11 @@ namespace Neo.Services
             // like an iterator
             var point = 0;
 
-            for (int i = 0; i < targetArray.GetLength(0);)
+            for (var i = 0; i < targetArray.GetLength(0);)
             {
                 // on every iteration we increasing point instead of j
                 // because we have to iterate filterResult but not columns of sourceArray
-                for (int j = 0; j < targetArray.GetLength(1); point++)
+                for (var j = 0; j < targetArray.GetLength(1); point++)
                 {
                     targetArray[i, j] = double.Parse(filterResult[point]);
                     j++;

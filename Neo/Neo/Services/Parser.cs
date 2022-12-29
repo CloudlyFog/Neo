@@ -1,110 +1,152 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using MathNet.Numerics.LinearAlgebra;
+using Neo.Exceptions;
 
 namespace Neo.Services
 {
-    internal class Parser
+    public class Parser
     {
         public const char SplitSymbol = ';';
 
         /// <summary>
+        /// output of ocr
+        /// </summary>
+        private readonly string _input;
+
+        /// <summary>
         /// every what iteration 'll doing something
         /// </summary>
-        public static int Every { get; private set; } = 1;
+        private int _every = 1;
+
+        public Parser(string input)
+        {
+            _input = input;
+        }
 
         /// <summary>
-        /// output of Tesseract OCR
-        /// </summary>
-        public static string Input { get; internal set; } = string.Empty;
-
-        /// <summary>
-        /// Parse data from <see cref="Input"/> to <see cref="Matrix{T}"/>
+        /// Take data from <see cref="_input"/> and put it to <see cref="Matrix{T}"/>
+        /// Uses <see cref="_input"/> like 
         /// </summary>
         /// <returns></returns>
-        public static Matrix<double> ParseToMatrix()
+        public Matrix<double> ParseToMatrix()
         {
             var targetArray = new double[
                 // read count of ";" and therefore count will one less than actually
-                Input.Count(x => x == SplitSymbol) + 1,
-                // read count of spaces and divide it on count of symbol ";" and subtract 1
-                Input.Count(x => x == ' ') / Input.Count(x => x == SplitSymbol) - 1];
+                _input.Count(x => x == SplitSymbol) + 1,
+                // read count of spaces and divide it on count of symbol ";"
+                _input.Count(x => x == ' ') / _input.Count(x => x == SplitSymbol)];
 
-            Every = targetArray.GetLength(1);
+            _every = targetArray.GetLength(1);
 
             // removing white space and commas
-            var filterResult = Input.Split(' ', SplitSymbol).Where(x => x != " " || x != string.Empty).ToList()
-                .RemoveEvery(Every, targetArray.GetLength(0));
+            var filterResult = _input.Split(' ', SplitSymbol).Where(x => x is not (" " and "")).ToList()
+                .RemoveEvery(_every, targetArray.GetLength(0));
 
-            return Matrix<double>.Build.DenseOfArray(AddToMatrix(targetArray, filterResult));
+            return GetMatrixValue(targetArray, filterResult);
         }
 
         /// <summary>
-        /// Parse data from <see cref="Input"/> to <see cref="Vector{T}"/>
+        /// Take data from <see cref="_input"/> and put it to <see cref="Vector{T}"/>
         /// </summary>
         /// <returns></returns>
-        public static Vector<double> ParseToVector()
+        public Vector<double> ParseToVector()
         {
             // remove white space and commas
-            var filterResult = Input.Split(' ', SplitSymbol).Where(x => x != " " || x != string.Empty).ToList();
+            var filterResult = _input.Split(' ', SplitSymbol).Where(x => x is not (" " and "")).ToList();
 
             // remove empty space
             filterResult = filterResult.Where(s => !string.IsNullOrWhiteSpace(s)).AsEnumerable().ToList()
-                .AddEvery(Every, Input.Count(x => x == SplitSymbol) + 1);
+                .AddEvery(_every, _input.Count(x => x == SplitSymbol) + 1);
 
-            var targetArray = new double[filterResult.Count];
-
-            return Vector<double>.Build.DenseOfArray(AddToVector(targetArray, filterResult));
+            return GetVectorValue(new double[filterResult.Count], filterResult);
         }
 
         /// <summary>
         /// Adding data to <see cref="targetArray"/> from <see cref="filterResult"/>
         /// </summary>
-        /// <param name="targetArray">array which will contain parsed data from <see cref="filterResult"/></param>
-        /// <param name="filterResult">parsed data from Tesseract OCR</param>
-        private static double[,] AddToMatrix(double[,] targetArray, List<string> filterResult)
+        /// <param name="targetArray"> describe only size of array</param>
+        /// <param name="filterResult">data from ocr output</param>
+        private static Matrix<double> GetMatrixValue(double[,] targetArray, List<string> filterResult)
         {
+            if (targetArray is null)
+                throw new ArgumentNullException(nameof(targetArray));
+
+            if (targetArray.Length <= 0)
+                throw new ArgumentException($"length of {nameof(targetArray)} less or equals than 0");
+
+            ValidArray(filterResult.ToArray(), nameof(filterResult));
             // start point for input text
             // like an iterator
             var point = 0;
 
-            for (int i = 0; i < targetArray.GetLength(0);)
+            for (var i = 0; i < targetArray.GetLength(0); i++)
             {
                 // on every iteration we increasing point instead of j
-                // because we have to iterate filterResult but not columns of sourceArray
-                for (int j = 0; j < targetArray.GetLength(1); point++)
+                // because we have to appeal to filterResult index instead of targetArray's index
+                for (var j = 0; j < targetArray.GetLength(1); point++, j++)
                 {
-                    if (!Validate(ref point, filterResult))
+                    if (!ValidIteration(ref point, filterResult))
                         break;
-                    targetArray[i, j] = double.Parse(filterResult[point]);
-                    j++;
+                    try
+                    {
+                        targetArray[i, j] = double.Parse(filterResult[point]);
+                    }
+                    catch (Exception exception)
+                    {
+                        Console.WriteLine(exception);
+                        throw;
+                    }
                 }
-                i++;
             }
-            return targetArray;
+
+            return Matrix<double>.Build.DenseOfArray(targetArray);
         }
 
         /// <summary>
         /// Adding data to <see cref="targetArray"/> from <see cref="filterResult"/>
         /// </summary>
         /// <param name="targetArray">array which will contain parsed data from <see cref="filterResult"/></param>
-        /// <param name="filterResult">parsed data from Tesseract OCR</param>
-        private static double[] AddToVector(double[] targetArray, List<string> filterResult)
+        /// <param name="filterResult">parsed filtered data from ocr</param>
+        private static Vector<double> GetVectorValue(double[] targetArray, List<string> filterResult)
         {
-            // start point for input text
-            // like an iterator
-            var point = 0;
-            var x = 0;
-            for (int i = 0; i < filterResult.Count; i++)
-            {
-                // on every iteration we increasing point instead of j
-                // because we have to iterate filterResult but not columns of sourceArray
-                if (!Validate(ref point, filterResult))
-                    break;
+            ValidArray(targetArray, nameof(targetArray));
+            ValidArray(filterResult.ToArray(), nameof(filterResult));
 
-                targetArray[x] = double.Parse(filterResult[i]);
+            // start point for input text as iterator
+            var point = 0;
+            try
+            {
+                filterResult = filterResult
+                    .TakeWhile(item => ValidIteration(ref point, filterResult)).ToList();
             }
-            return targetArray;
+            catch (Exception exception)
+            {
+                Console.WriteLine(exception);
+                throw;
+            }
+
+
+            for (var i = 0; i < filterResult.Count; i++)
+            {
+                try
+                {
+                    targetArray[i] = double.Parse(filterResult[i]);
+                }
+                catch (ParserException exception)
+                {
+                    Console.WriteLine(exception);
+                    throw new ParserException(exception.Message, filterResult[i]);
+                }
+                catch (Exception exception)
+                {
+                    Console.WriteLine(exception);
+                    throw new InvalidOperationException(exception.Message, exception.InnerException);
+                }
+            }
+
+            return Vector<double>.Build.DenseOfArray(targetArray);
         }
 
         /// <summary>
@@ -113,24 +155,30 @@ namespace Neo.Services
         /// <param name="point">index of <see cref="filterResult"/></param>
         /// <param name="filterResult">parsed data from Tesseract OCR</param>
         /// <returns></returns>
-        private static bool Validate(ref int point, List<string> filterResult)
+        private static bool ValidIteration(ref int point, List<string> filterResult)
         {
             if (point == filterResult.Count)
                 return false;
-            if (filterResult[point] == string.Empty)
-            {
-                point++;
-                return false;
-            }
+            if (filterResult[point] != string.Empty)
+                return true;
+            point++;
+            return false;
+        }
 
-            return true;
+        internal static void ValidArray<T>(T[] array, string arrayName)
+        {
+            if (array is null)
+                throw new ArgumentNullException(arrayName);
+
+            if (array.Length <= 0)
+                throw new ArgumentException($"length of {arrayName} less or equals than 0");
         }
     }
 
     public static class ListExtension
     {
         /// <summary>
-        /// remove elements every time when i in cycle will divide witout a trace by every' value
+        /// remove elements every time when i in cycle will divide without a trace by every' value
         /// after removes white spaces and empty strings from list
         /// </summary>
         /// <param name="input">parsed string (expected from <see cref="Matrix{T}"/>)</param>
@@ -139,11 +187,10 @@ namespace Neo.Services
         /// <returns></returns>
         public static List<string> RemoveEvery(this List<string> input, int every, int rows)
         {
-            for (int i = 1; i <= rows; i++)
-            {
-                input.RemoveAt((--every * i) - 1);
-                every++;
-            }
+            Parser.ValidArray(input.ToArray(), nameof(input));
+            for (var i = 1; i <= rows; i++)
+                input.RemoveAt((every - 1) * i - 1);
+
             return input.Where(s => !string.IsNullOrWhiteSpace(s)).AsEnumerable().ToList();
         }
 
@@ -156,17 +203,19 @@ namespace Neo.Services
         /// <returns></returns>
         public static List<string> AddEvery(this List<string> input, int every, int rows)
         {
-            var output = new List<string>();
-            for (int i = 1; i <= rows; i++)
+            Parser.ValidArray(input.ToArray(), nameof(input));
+            var output = Enumerable.Empty<string>();
+            for (var i = 1; i <= rows; i++)
             {
                 if (i == 1)
                 {
-                    output.Add(input[--every * i]);
-                    every++;
+                    output = output.Append(input[(every - 1) * i]);
                     continue;
                 }
-                output.Add(input[(every * i) - 1]);
+
+                output = output.Append(input[every * i - 1]);
             }
+
             return output.Where(s => !string.IsNullOrWhiteSpace(s)).AsEnumerable().ToList();
         }
     }

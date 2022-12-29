@@ -1,44 +1,46 @@
-﻿using System.Drawing;
-using System.IO;
+﻿using System;
 using System.Text;
 using MathNet.Numerics.LinearAlgebra;
-using Neo.Services;
 
 namespace Neo.Services
 {
-    public sealed class Solver
+    /// <summary>
+    /// class finds unknown variables of equation
+    /// </summary>
+    public sealed class Solver : IDisposable
     {
-        public Solver(string path)
+        private Parser _parser;
+
+        public Solver(string input)
         {
-            Parser.Input = Reader.Read(path);
-            OnCreating();
+            _parser = new Parser(input.Replace("\n", Parser.SplitSymbol.ToString()));
+            try
+            {
+                Solve();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
         }
 
-        public Solver(Image image)
+        private void Solve()
         {
-            Parser.Input = Reader.Read(image);
-            OnCreating();
+            LeftSide = _parser.ParseToMatrix();
+            RightSide = _parser.ParseToVector();
+            try
+            {
+                Result = LeftSide.Solve(RightSide);
+            }
+            catch (Exception exception)
+            {
+                Console.WriteLine(exception);
+                Dispose();
+                throw new InvalidOperationException(exception.Message, exception.InnerException);
+            }
         }
 
-        public Solver(Stream stream)
-        {
-            Parser.Input = Reader.Read(stream);
-            OnCreating();
-        }
-
-        public Solver(byte[] bytes)
-        {
-            Parser.Input = Reader.Read(bytes);
-            OnCreating();
-        }
-
-        private void OnCreating()
-        {
-            LeftSide = Parser.ParseToMatrix();
-            RightSide = Parser.ParseToVector();
-            Result = LeftSide.Solve(RightSide);
-        }
-        
         public Matrix<double> LeftSide { get; private set; }
         public Vector<double> RightSide { get; private set; }
         public Vector<double> Result { get; private set; }
@@ -46,9 +48,36 @@ namespace Neo.Services
         public override string ToString()
         {
             var sb = new StringBuilder();
-            for (int i = 0; i < Result.Count; i++)
-                sb = sb.Append(Result[i]);
+            for (var i = 0; i < Result.Count; i++)
+                sb = sb.Append($"x{i + 1}: {Result[i]}\n");
             return sb.ToString();
+        }
+
+        private void ReleaseUnmanagedResources()
+        {
+            LeftSide = null;
+            RightSide = null;
+            Result = null;
+            _parser = null;
+        }
+
+        private void Dispose(bool disposing)
+        {
+            ReleaseUnmanagedResources();
+            if (disposing)
+            {
+            }
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        ~Solver()
+        {
+            Dispose(false);
         }
     }
 }
