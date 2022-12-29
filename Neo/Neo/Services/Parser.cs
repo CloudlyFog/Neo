@@ -34,7 +34,7 @@ namespace Neo.Services
         {
             var targetArray = new double[
                 // read count of ";" and therefore count will one less than actually
-                _input.Count(x => x == SplitSymbol) + 1,
+                _input.Count(x => x == SplitSymbol),
                 // read count of spaces and divide it on count of symbol ";"
                 _input.Count(x => x == ' ') / _input.Count(x => x == SplitSymbol)];
 
@@ -42,6 +42,7 @@ namespace Neo.Services
 
             // removing white space and commas
             var filterResult = _input.Split(' ', SplitSymbol).Where(x => x is not (" " and "")).ToList()
+                // get matrix
                 .RemoveEvery(_every, targetArray.GetLength(0));
 
             return GetMatrixValue(targetArray, filterResult);
@@ -56,9 +57,20 @@ namespace Neo.Services
             // remove white space and commas
             var filterResult = _input.Split(' ', SplitSymbol).Where(x => x is not (" " and "")).ToList();
 
+            // in first part we find length of matrix and consequently found last index of matrix
+            // as we know if we add 1 to the value of the last index of matrix we get length of all equation transformed to matrix
+            // and therefore we get index in array which 'll specify to the right side of matrix equation
+            // something like
+            // 1 2 3 = 4
+            // 5 6 7 = 8
+            // 9 10 11 = 12
+            // we get index of "3" and next add 1 for take index of "4"
+            _every = _input.Count(x => x == ' ') / _input.Count(x => x == SplitSymbol) + 1;
+
             // remove empty space
             filterResult = filterResult.Where(s => !string.IsNullOrWhiteSpace(s)).AsEnumerable().ToList()
-                .AddEvery(_every, _input.Count(x => x == SplitSymbol) + 1);
+                // get vector
+                .AddEvery(_every, _input.Count(x => x == SplitSymbol));
 
             return GetVectorValue(new double[filterResult.Count], filterResult);
         }
@@ -74,7 +86,7 @@ namespace Neo.Services
                 throw new ArgumentNullException(nameof(targetArray));
 
             if (targetArray.Length <= 0)
-                throw new ArgumentException($"length of {nameof(targetArray)} less or equals than 0");
+                throw new ArgumentException($"length of {nameof(targetArray)} less or equals 0");
 
             ValidArray(filterResult.ToArray(), nameof(filterResult));
             // start point for input text
@@ -171,7 +183,7 @@ namespace Neo.Services
                 throw new ArgumentNullException(arrayName);
 
             if (array.Length <= 0)
-                throw new ArgumentException($"length of {arrayName} less or equals than 0");
+                throw new ArgumentException($"length of {arrayName} less or equals 0");
         }
     }
 
@@ -189,7 +201,7 @@ namespace Neo.Services
         {
             Parser.ValidArray(input.ToArray(), nameof(input));
             for (var i = 1; i <= rows; i++)
-                input.RemoveAt((every - 1) * i - 1);
+                input.RemoveAt(every * i);
 
             return input.Where(s => !string.IsNullOrWhiteSpace(s)).AsEnumerable().ToList();
         }
@@ -209,7 +221,7 @@ namespace Neo.Services
             {
                 if (i == 1)
                 {
-                    output = output.Append(input[(every - 1) * i]);
+                    output = output.Append(input[every * i - 1]);
                     continue;
                 }
 

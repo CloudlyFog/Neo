@@ -45,6 +45,7 @@ namespace NeoSoftware
             base.OnCreate(savedInstanceState);
             // Set our view from the "main" layout resource  
             SetContentView(Resource.Layout.activity_main);
+
             ConfigureRecognizer();
             ConfigureConfirmation();
         }
@@ -75,6 +76,7 @@ namespace NeoSoftware
             _confirmationAlertDialog = new AlertDialog.Builder(this).Create();
             _confirmationAlertDialog.SetTitle("Confirm input");
             _confirmationAlertDialog.SetView(_confirmDataInput);
+
 
             _actualInput = FindViewById<TextView>(Resource.Id.actual_input);
         }
@@ -140,6 +142,8 @@ namespace NeoSoftware
         {
             _confirmationAlertDialog.Show();
             _confirmedText = _txtView.Text;
+            _actualInput = FindViewById<TextView>(Resource.Id.actual_input);
+            
         }
 
         private void Solve()
