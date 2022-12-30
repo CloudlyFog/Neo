@@ -14,6 +14,7 @@ using Google.Android.Material.Tabs.AppCompat.App;
 using Java.Interop;
 using Java.Lang;
 using Neo.Services;
+using Xamarin.Forms.Platform.Android;
 using StringBuilder = System.Text.StringBuilder;
 
 namespace Neo.Droid
@@ -21,7 +22,7 @@ namespace Neo.Droid
     [Activity(Label = "Neo", Icon = "@mipmap/icon", Theme = "@style/MainTheme", MainLauncher = true,
         ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation | ConfigChanges.UiMode |
                                ConfigChanges.ScreenLayout | ConfigChanges.SmallestScreenSize)]
-    public class MainActivity : AppCompatActivity, ISurfaceHolderCallback, Detector.IProcessor
+    public class MainActivity : FormsAppCompatActivity, ISurfaceHolderCallback, Detector.IProcessor
     {
         private SurfaceView _cameraView;
         private TextView _txtView;
