@@ -86,7 +86,10 @@
     <AndroidResource Include="Resources\layout\activity_main.xml">
       <SubType>Designer</SubType>
     </AndroidResource>
-    <AndroidResource Include="Resources\layout\confirm_data.xml" />
+    <AndroidResource Include="Resources\layout\confirmation.xml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:UpdateGeneratedFiles</Generator>
+    </AndroidResource>
     <AndroidResource Include="Resources\values\colors.xml" />
     <AndroidResource Include="Resources\values\ic_launcher_background.xml" />
     <AndroidResource Include="Resources\values\strings.xml" />
@@ -111,6 +114,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Resources\drawable\" />
+    <Folder Include="Resources\menu" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Carbon.Kit.Xamarin.Plugins" Version="2.1.0" />

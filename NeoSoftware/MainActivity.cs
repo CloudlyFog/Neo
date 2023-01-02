@@ -33,8 +33,6 @@ namespace NeoSoftware
         private TextView _output;
         private View _confirmDataInput;
         private AlertDialog _confirmationAlertDialog;
-        private string _confirmedText;
-        private TextView _actualInput;
 
 
         private
@@ -64,21 +62,28 @@ namespace NeoSoftware
                 throw new Exception($"{nameof(_textRecognizer.IsOperational)} is {_textRecognizer.IsOperational}");
             }
 
-            _cameraSource = new CameraSource.Builder(ApplicationContext, _textRecognizer).SetFacing(CameraFacing.Back)
-                .SetRequestedPreviewSize(1555, 1080).SetRequestedFps(25f).SetAutoFocusEnabled(true).Build();
-            _cameraView.Holder.AddCallback(this);
-            _textRecognizer.SetProcessor(this);
+            try
+            {
+                _cameraSource = new CameraSource.Builder(ApplicationContext, _textRecognizer)
+                    .SetFacing(CameraFacing.Back)
+                    .SetRequestedPreviewSize(1555, 1080).SetRequestedFps(25f).SetAutoFocusEnabled(true).Build();
+                _cameraView.Holder.AddCallback(this);
+                _textRecognizer.SetProcessor(this);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
         }
 
         private void ConfigureConfirmation()
         {
-            _confirmDataInput = LayoutInflater.Inflate(Resource.Layout.confirm_data, null);
+            _confirmDataInput = LayoutInflater.Inflate(Resource.Layout.confirmation, null);
             _confirmationAlertDialog = new AlertDialog.Builder(this).Create();
             _confirmationAlertDialog.SetTitle("Confirm input");
+            _confirmationAlertDialog.SetCancelable(true);
             _confirmationAlertDialog.SetView(_confirmDataInput);
-
-
-            _actualInput = FindViewById<TextView>(Resource.Id.actual_input);
         }
 
         public override void OnRequestPermissionsResult(int requestCode, string[] permissions,
@@ -141,16 +146,13 @@ namespace NeoSoftware
         public void OpenConfirmation(View view)
         {
             _confirmationAlertDialog.Show();
-            _confirmedText = _txtView.Text;
-            _actualInput = FindViewById<TextView>(Resource.Id.actual_input);
-            
         }
 
         private void Solve()
         {
             try
             {
-                _output.Text = new Solver(_confirmedText).ToString();
+                _output.Text = new Solver(_txtView.Text).ToString();
             }
             catch (Exception ex)
             {
@@ -159,9 +161,10 @@ namespace NeoSoftware
             }
         }
 
-        [Export("confirm")]
+        [Export("Confirm")]
         public void ConfirmDataInput(View view)
         {
+            _confirmationAlertDialog.Cancel();
             Solve();
         }
     }

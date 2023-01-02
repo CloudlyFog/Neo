@@ -6,7 +6,7 @@ using Neo.Exceptions;
 
 namespace Neo.Services
 {
-    public class Parser
+    public class MatrixParser
     {
         public const char SplitSymbol = ';';
 
@@ -20,7 +20,7 @@ namespace Neo.Services
         /// </summary>
         private int _every = 1;
 
-        public Parser(string input)
+        public MatrixParser(string input)
         {
             _input = input;
         }
@@ -199,7 +199,7 @@ namespace Neo.Services
         /// <returns></returns>
         public static List<string> RemoveEvery(this List<string> input, int every, int rows)
         {
-            Parser.ValidArray(input.ToArray(), nameof(input));
+            MatrixParser.ValidArray(input.ToArray(), nameof(input));
             for (var i = 1; i <= rows; i++)
                 input.RemoveAt(every * i);
 
@@ -215,7 +215,7 @@ namespace Neo.Services
         /// <returns></returns>
         public static List<string> AddEvery(this List<string> input, int every, int rows)
         {
-            Parser.ValidArray(input.ToArray(), nameof(input));
+            MatrixParser.ValidArray(input.ToArray(), nameof(input));
             var output = Enumerable.Empty<string>();
             for (var i = 1; i <= rows; i++)
             {

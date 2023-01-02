@@ -17,12 +17,12 @@
             android:layout_width="141dp"
             android:layout_height="60dp"
             android:onClick="Solve"
-            android:layout_alignParentBottom="true" android:layout_marginBottom="97dp" android:id="@+id/takePhotoBtn"
-            tools:ignore="TextContrastCheck" android:layout_alignParentEnd="true" android:layout_marginEnd="15dp"/>
+            android:layout_alignParentBottom="true" android:layout_marginBottom="177dp" android:id="@+id/solveBtn"
+            tools:ignore="TextContrastCheck" android:layout_alignParentEnd="true" android:layout_marginEnd="34dp"/>
     <TextView
             android:text="Output"
             android:layout_width="199dp"
-            android:layout_height="107dp" android:layout_marginEnd="0dp"
-            android:layout_marginBottom="-61dp" android:id="@+id/output"
-            android:layout_alignEnd="@+id/takePhotoBtn" android:layout_alignBottom="@+id/txtview"/>
+            android:layout_height="107dp" android:layout_marginEnd="-38dp"
+            android:layout_marginBottom="-65dp" android:id="@+id/output"
+            android:layout_alignEnd="@+id/solveBtn" android:layout_alignBottom="@+id/txtview"/>
 </RelativeLayout>  

@@ -5,12 +5,12 @@ namespace TestNeoSoftware;
 
 public class Tests
 {
-    private Parser _parser;
+    private MatrixParser _matrixParser;
 
     [SetUp]
     public void Setup()
     {
-        _parser = new Parser("1 2 3 4;5 6 7 8;9 10 11 12;");
+        _matrixParser = new MatrixParser("1 2 3 4;5 6 7 8;9 10 11 12;");
     }
 
     [Test]
@@ -24,7 +24,7 @@ public class Tests
         };
 
         var expectedMatrix = Matrix<double>.Build.DenseOfArray(correctMatrix);
-        var actualMatrix = _parser.ParseToMatrix();
+        var actualMatrix = _matrixParser.ParseToMatrix();
 
         Assert.AreEqual(expectedMatrix, actualMatrix);
     }
@@ -37,7 +37,7 @@ public class Tests
             4, 8, 12,
         };
         var expectedVector = Vector<double>.Build.DenseOfArray(correctVector);
-        var actualVector = _parser.ParseToVector();
+        var actualVector = _matrixParser.ParseToVector();
 
         Assert.AreEqual(expectedVector, actualVector);
     }

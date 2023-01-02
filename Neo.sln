@@ -9,7 +9,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Neo", "Neo\Neo\Neo.csproj",
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NeoSoftware", "NeoSoftware\NeoSoftware.csproj", "{3099FEA3-9FBC-4CDA-AF90-645D661DCD3E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestNeoSoftware", "TestNeoSoftware\TestNeoSoftware.csproj", "{1D35BE42-68B0-42B3-92FF-532426931AC9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestNeoSoftware", "TestNeoSoftware\TestNeoSoftware.csproj", "{1D35BE42-68B0-42B3-92FF-532426931AC9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
