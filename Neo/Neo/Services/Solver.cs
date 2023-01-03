@@ -51,7 +51,7 @@ public sealed class Solver : IDisposable
     {
         var sb = new StringBuilder();
         for (var i = 0; i < Result.Count; i++)
-            sb = sb.Append($"x{i + 1}: {Result[i]}\n");
+            sb.AppendLine($"x{i + 1}: {Result[i]}");
         return sb.ToString();
     }
 

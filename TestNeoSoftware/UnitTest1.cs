@@ -3,7 +3,7 @@ using Neo.Services;
 
 namespace TestNeoSoftware;
 
-public class Tests
+public class TestMatrixParser
 {
     private Parser _parser;
 

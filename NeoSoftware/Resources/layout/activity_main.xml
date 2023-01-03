@@ -6,7 +6,7 @@
 
                  android:layout_height="536dp" android:layout_centerHorizontal="true"
                  android:layout_marginBottom="68dp" android:layout_alignBottom="@+id/button"/>
-    <TextView android:id="@+id/txtview" android:text="No Text" android:textSize="20sp"
+    <TextView android:id="@+id/tess_output" android:text="No Text" android:textSize="20sp"
               android:textColor="@android:color/white" android:layout_width="190dp"
               android:layout_height="112dp"
               android:layout_marginBottom="47dp"
@@ -14,15 +14,15 @@
               android:layout_marginTop="-6dp" android:layout_below="@+id/surface_view"/>
     <Button
             android:text="Solve"
-            android:layout_width="141dp"
-            android:layout_height="60dp"
+            android:layout_width="142dp"
+            android:layout_height="55dp"
             android:onClick="Solve"
             android:id="@+id/solveBtn"
-            tools:ignore="TextContrastCheck" android:layout_marginEnd="109dp"
-            android:layout_alignEnd="@+id/surface_view" android:layout_marginStart="111dp"
+            tools:ignore="TextContrastCheck" android:layout_marginEnd="218dp"
+            android:layout_alignEnd="@+id/surface_view" android:layout_marginStart="1dp"
             android:layout_alignStart="@+id/surface_view"
-            android:layout_alignParentBottom="true" android:layout_marginBottom="41dp"
-            android:layout_centerHorizontal="true" android:layout_marginTop="25dp" android:layout_below="@+id/output"/>
+            android:layout_alignParentBottom="true" android:layout_marginBottom="30dp"
+            android:layout_centerHorizontal="true" android:layout_marginTop="40dp" android:layout_below="@+id/output"/>
     <TextView
             android:text="Output"
             android:layout_width="159dp"
@@ -30,5 +30,10 @@
             android:id="@+id/output"
             android:layout_marginEnd="3dp"
             android:layout_marginBottom="0dp" android:layout_alignEnd="@+id/surface_view"
-            android:layout_alignBottom="@+id/txtview"/>
+            android:layout_alignBottom="@+id/tess_output"/>
+    <Switch
+            android:text="Detecting"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" android:layout_alignParentEnd="true" android:layout_marginEnd="45dp"
+            android:layout_alignParentBottom="true" android:layout_marginBottom="73dp" android:id="@+id/detect_switch"/>
 </RelativeLayout>  
