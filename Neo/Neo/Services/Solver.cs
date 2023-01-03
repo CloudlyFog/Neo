@@ -10,6 +10,8 @@ namespace Neo.Services
     public sealed class Solver : IDisposable
     {
         private MatrixParser _matrixParser;
+        public static implicit operator string(Solver solver) => solver.ToString();
+        public static explicit operator Solver(string input) => new(input);
 
         public Solver(string input)
         {
@@ -27,8 +29,8 @@ namespace Neo.Services
 
         private void Solve()
         {
-            LeftSide = _matrixParser.ParseToMatrix();
-            RightSide = _matrixParser.ParseToVector();
+            LeftSide = _matrixParser.MatrixConversion();
+            RightSide = _matrixParser.VectorConversion();
             try
             {
                 Result = LeftSide.Solve(RightSide);

@@ -143,7 +143,7 @@ namespace NeoSoftware
         }
 
         [Export("Solve")]
-        public void OpenConfirmation(View view)
+        public void OpenConfirmationDialog(View view)
         {
             _confirmationAlertDialog.Show();
         }
@@ -152,7 +152,7 @@ namespace NeoSoftware
         {
             try
             {
-                _output.Text = new Solver(_txtView.Text).ToString();
+                _output.Text = new Solver(_txtView.Text);
             }
             catch (Exception ex)
             {

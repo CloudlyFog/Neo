@@ -1,20 +1,20 @@
-using MathNet.Numerics.LinearAlgebra;
+﻿using MathNet.Numerics.LinearAlgebra;
 using Neo.Services;
 
 namespace TestNeoSoftware;
 
-public class Tests
+public class TestEquationParser
 {
-    private MatrixParser _matrixParser;
+    private EquationParser _equationParser;
 
     [SetUp]
     public void Setup()
     {
-        _matrixParser = new MatrixParser("1 2 3 4;5 6 7 8;9 10 11 12;");
+        _equationParser = new EquationParser("1x + 2y + 3z = 4;5x + 6y + 7z = 8;9x + 10y + 11z = 12;");
     }
 
     [Test]
-    public void TestMatrixSizeCalculating()
+    public void TestMatrixConversion()
     {
         var correctMatrix = new double[,]
         {
@@ -24,20 +24,20 @@ public class Tests
         };
 
         var expectedMatrix = Matrix<double>.Build.DenseOfArray(correctMatrix);
-        var actualMatrix = _matrixParser.MatrixConversion();
+        var actualMatrix = _equationParser.MatrixConversion();
 
         Assert.AreEqual(expectedMatrix, actualMatrix);
     }
 
     [Test]
-    public void TestVectorSizeCalculating()
+    public void TestVectorConversion()
     {
         var correctVector = new double[]
         {
             4, 8, 12,
         };
         var expectedVector = Vector<double>.Build.DenseOfArray(correctVector);
-        var actualVector = _matrixParser.VectorConversion();
+        var actualVector = _equationParser.VectorConversion();
 
         Assert.AreEqual(expectedVector, actualVector);
     }

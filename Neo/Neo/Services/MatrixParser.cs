@@ -30,7 +30,7 @@ namespace Neo.Services
         /// Uses <see cref="_input"/> like 
         /// </summary>
         /// <returns></returns>
-        public Matrix<double> ParseToMatrix()
+        public Matrix<double> MatrixConversion()
         {
             var targetArray = new double[
                 // read count of ";" and therefore count will one less than actually
@@ -52,7 +52,7 @@ namespace Neo.Services
         /// Take data from <see cref="_input"/> and put it to <see cref="Vector{T}"/>
         /// </summary>
         /// <returns></returns>
-        public Vector<double> ParseToVector()
+        public Vector<double> VectorConversion()
         {
             // remove white space and commas
             var filterResult = _input.Split(' ', SplitSymbol).Where(x => x is not (" " and "")).ToList();
@@ -187,7 +187,7 @@ namespace Neo.Services
         }
     }
 
-    public static class ListExtension
+    public static partial class ListExtension
     {
         /// <summary>
         /// remove elements every time when i in cycle will divide without a trace by every' value
