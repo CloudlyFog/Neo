@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Threading.Tasks;
-using IronOcr;
 using Neo.Services;
 using Plugin.Media;
 using Plugin.Media.Abstractions;
-using Tesseract;
 using Xamarin.Forms;
 
 namespace Neo;

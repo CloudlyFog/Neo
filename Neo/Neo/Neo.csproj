@@ -36,8 +36,6 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="IronOcr" Version="2022.8.7804" />
-        <PackageReference Include="IronOcr.Linux" Version="2022.8.7804" />
         <PackageReference Include="LiveXAML" Version="2.1.73" />
         <PackageReference Include="MathNet.Numerics" Version="5.0.0" />
         <PackageReference Include="Microsoft.Extensions.Configuration" Version="7.0.0" />
