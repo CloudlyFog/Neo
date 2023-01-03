@@ -15,7 +15,7 @@ namespace Neo.Services
 
         public Solver(string input)
         {
-            _equationParser = new EquationParser(input.Replace("\n", MatrixParser.SplitSymbol.ToString()));
+            _equationParser = new EquationParser(input.Replace("\n", Parser.SplitSymbol.ToString()));
             try
             {
                 Solve();

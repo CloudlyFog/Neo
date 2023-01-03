@@ -161,7 +161,7 @@ public static class StringExtension
         var list = str.ToList();
         for (var i = 0; i < str.Length; i++)
         {
-            if (str[i] == MatrixParser.SplitSymbol && str[i] == str[++i])
+            if (str[i] == Parser.SplitSymbol && str[i] == str[++i])
                 list.RemoveAt(--i);
         }
 
