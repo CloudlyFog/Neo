@@ -26,13 +26,14 @@ namespace NeoSoftware
     public class MainActivity : AppCompatActivity, ISurfaceHolderCallback, IProcessor
     {
         private SurfaceView _cameraView;
-        private TextView _txtView;
+        private TextView _tessOutput;
         private CameraSource _cameraSource;
         private TextRecognizer _textRecognizer;
         private TextView _output;
         private View _confirmDataInput;
         private AlertDialog _confirmationAlertDialog;
-        private bool _detect = true;
+        private Switch _detectSwitch;
+        private bool _detect = false;
 
 
         private
@@ -44,18 +45,29 @@ namespace NeoSoftware
             // Set our view from the "main" layout resource  
             SetContentView(Resource.Layout.activity_main);
 
+            BuildUI();
+        }
+
+        private void BuildUI()
+        {
+            _cameraView = FindViewById<SurfaceView>(Resource.Id.surface_view);
+            _tessOutput = FindViewById<TextView>(Resource.Id.tess_output);
+            _output = FindViewById<TextView>(Resource.Id.output);
+            _detectSwitch = FindViewById<Switch>(Resource.Id.detect_switch);
+            _textRecognizer = new TextRecognizer.Builder(ApplicationContext).Build();
+
             ConfigureRecognizer();
             ConfigureConfirmationAlertDialog();
+            ConfigureDetectSwitch();
+        }
+
+        private void ConfigureDetectSwitch()
+        {
+            _detectSwitch.CheckedChange += delegate { _detect = !_detect; };
         }
 
         private void ConfigureRecognizer()
         {
-            _cameraView = FindViewById<SurfaceView>(Resource.Id.surface_view);
-            _txtView = FindViewById<TextView>(Resource.Id.txtview);
-            _output = FindViewById<TextView>(Resource.Id.output);
-            _textRecognizer = new TextRecognizer.Builder(ApplicationContext).Build();
-
-
             if (!_textRecognizer.IsOperational)
             {
                 Log.Error("Main Activity", "Detector dependencies are not yet available");
@@ -126,7 +138,7 @@ namespace NeoSoftware
                 return;
             if (!_detect)
                 return;
-            _txtView.Post(() =>
+            _tessOutput.Post(() =>
             {
                 var strBuilder = new StringBuilder();
                 for (var i = 0; i < items.Size(); ++i)
@@ -135,7 +147,7 @@ namespace NeoSoftware
                     strBuilder.Append("\n");
                 }
 
-                _txtView.Text = strBuilder.ToString();
+                _tessOutput.Text = strBuilder.ToString();
                 Thread.Sleep(700);
             });
         }
@@ -155,7 +167,7 @@ namespace NeoSoftware
         public void ConfirmDataInput(View view)
         {
             _confirmationAlertDialog.Cancel();
-            _output.Text = new Solver(_txtView.Text);
+            _output.Text = new Solver(_tessOutput.Text);
             _detect = true;
         }
     }
