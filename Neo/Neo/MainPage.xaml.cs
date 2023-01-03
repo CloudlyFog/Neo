@@ -225,7 +225,7 @@ public partial class MainPage
             VerticalOptions = LayoutOptions.CenterAndExpand,
         };
 
-        TakePhoto.Clicked += TakePhotoAsync;
+        //TakePhoto.Clicked += TakePhotoAsync;
 
         ButtonGrid.Children.Add(TakePhoto, 0, 2);
     }
