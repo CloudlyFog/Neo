@@ -6,7 +6,7 @@ using Neo.Exceptions;
 
 namespace Neo.Services
 {
-    public class MatrixParser
+    public class Parser
     {
         public const char SplitSymbol = ';';
 
@@ -20,7 +20,7 @@ namespace Neo.Services
         /// </summary>
         private int _every = 1;
 
-        public MatrixParser(string input)
+        public Parser(string input)
         {
             _input = input;
         }
@@ -30,7 +30,7 @@ namespace Neo.Services
         /// Uses <see cref="_input"/> like 
         /// </summary>
         /// <returns></returns>
-        public Matrix<double> ParseToMatrix()
+        public Matrix<double> MatrixConversion()
         {
             var targetArray = new double[
                 // read count of ";" and therefore count will one less than actually
@@ -52,7 +52,7 @@ namespace Neo.Services
         /// Take data from <see cref="_input"/> and put it to <see cref="Vector{T}"/>
         /// </summary>
         /// <returns></returns>
-        public Vector<double> ParseToVector()
+        public Vector<double> VectorConversion()
         {
             // remove white space and commas
             var filterResult = _input.Split(' ', SplitSymbol).Where(x => x is not (" " and "")).ToList();
@@ -187,7 +187,7 @@ namespace Neo.Services
         }
     }
 
-    public static class ListExtension
+    public static partial class ListExtension
     {
         /// <summary>
         /// remove elements every time when i in cycle will divide without a trace by every' value
@@ -199,7 +199,7 @@ namespace Neo.Services
         /// <returns></returns>
         public static List<string> RemoveEvery(this List<string> input, int every, int rows)
         {
-            MatrixParser.ValidArray(input.ToArray(), nameof(input));
+            Parser.ValidArray(input.ToArray(), nameof(input));
             for (var i = 1; i <= rows; i++)
                 input.RemoveAt(every * i);
 
@@ -215,7 +215,7 @@ namespace Neo.Services
         /// <returns></returns>
         public static List<string> AddEvery(this List<string> input, int every, int rows)
         {
-            MatrixParser.ValidArray(input.ToArray(), nameof(input));
+            Parser.ValidArray(input.ToArray(), nameof(input));
             var output = Enumerable.Empty<string>();
             for (var i = 1; i <= rows; i++)
             {

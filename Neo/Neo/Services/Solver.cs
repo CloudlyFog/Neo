@@ -9,11 +9,13 @@ namespace Neo.Services
     /// </summary>
     public sealed class Solver : IDisposable
     {
-        private MatrixParser _matrixParser;
+        private EquationParser _equationParser;
+        public static implicit operator string(Solver solver) => solver.ToString();
+        public static explicit operator Solver(string input) => new(input);
 
         public Solver(string input)
         {
-            _matrixParser = new MatrixParser(input.Replace("\n", MatrixParser.SplitSymbol.ToString()));
+            _equationParser = new EquationParser(input.Replace("\n", Parser.SplitSymbol.ToString()));
             try
             {
                 Solve();
@@ -27,8 +29,8 @@ namespace Neo.Services
 
         private void Solve()
         {
-            LeftSide = _matrixParser.ParseToMatrix();
-            RightSide = _matrixParser.ParseToVector();
+            LeftSide = _equationParser.MatrixConversion();
+            RightSide = _equationParser.VectorConversion();
             try
             {
                 Result = LeftSide.Solve(RightSide);
@@ -58,7 +60,7 @@ namespace Neo.Services
             LeftSide = null;
             RightSide = null;
             Result = null;
-            _matrixParser = null;
+            _equationParser = null;
         }
 
         private void Dispose(bool disposing)

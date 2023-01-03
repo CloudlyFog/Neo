@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Threading.Tasks;
 using Android.App;
 using Android.Widget;
 using Android.OS;
@@ -143,7 +142,7 @@ namespace NeoSoftware
         }
 
         [Export("Solve")]
-        public void OpenConfirmation(View view)
+        public void OpenConfirmationDialog(View view)
         {
             _confirmationAlertDialog.Show();
         }
@@ -152,7 +151,7 @@ namespace NeoSoftware
         {
             try
             {
-                _output.Text = new Solver(_txtView.Text).ToString();
+                _output.Text = new Solver(_txtView.Text);
             }
             catch (Exception ex)
             {

@@ -1,14 +1,4 @@
 ﻿using MathNet.Numerics.LinearAlgebra;
-using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Drawing.Drawing2D;
-using System.Drawing.Imaging;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using IronOcr;
-using MathNet.Numerics.LinearAlgebra.Double;
 
 namespace Neo.Services
 {
@@ -47,7 +37,7 @@ namespace Neo.Services
         public static Matrix<decimal> Exponentiation(Matrix<decimal> matrix, int n)
         {
             var tempMatrix = matrix;
-            for (var i = 1; i < n; i++)
+            for (int i = 1; i < n; i++)
                 matrix = matrix.Multiply(tempMatrix);
             return matrix;
         }
