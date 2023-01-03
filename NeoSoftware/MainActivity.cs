@@ -147,24 +147,11 @@ namespace NeoSoftware
             _confirmationAlertDialog.Show();
         }
 
-        private void Solve()
-        {
-            try
-            {
-                _output.Text = new Solver(_txtView.Text);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex);
-                throw;
-            }
-        }
-
         [Export("Confirm")]
         public void ConfirmDataInput(View view)
         {
             _confirmationAlertDialog.Cancel();
-            Solve();
+            _output.Text = new Solver(_txtView.Text);
         }
     }
 }
