@@ -64,6 +64,7 @@ namespace NeoSoftware
         private void ConfigureDetectSwitch()
         {
             _detectSwitch.CheckedChange += delegate { _detect = !_detect; };
+            _detectSwitch.Checked = _detect;
         }
 
         private void ConfigureRecognizer()
@@ -160,15 +161,16 @@ namespace NeoSoftware
         public void OpenConfirmationDialog(View view)
         {
             _detect = false;
+            _detectSwitch.Checked = _detect;
             _confirmationAlertDialog.Show();
         }
 
         [Export("Confirm")]
         public void ConfirmDataInput(View view)
         {
+            _detectSwitch.Checked = _detect;
             _confirmationAlertDialog.Cancel();
             _output.Text = new Solver(_tessOutput.Text);
-            _detect = true;
         }
     }
 }
