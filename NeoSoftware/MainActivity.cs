@@ -32,6 +32,7 @@ namespace NeoSoftware
         private TextView _output;
         private View _confirmDataInput;
         private AlertDialog _confirmationAlertDialog;
+        private bool _detect = true;
 
 
         private
@@ -44,7 +45,7 @@ namespace NeoSoftware
             SetContentView(Resource.Layout.activity_main);
 
             ConfigureRecognizer();
-            ConfigureConfirmation();
+            ConfigureConfirmationAlertDialog();
         }
 
         private void ConfigureRecognizer()
@@ -76,7 +77,7 @@ namespace NeoSoftware
             }
         }
 
-        private void ConfigureConfirmation()
+        private void ConfigureConfirmationAlertDialog()
         {
             _confirmDataInput = LayoutInflater.Inflate(Resource.Layout.confirmation, null);
             _confirmationAlertDialog = new AlertDialog.Builder(this).Create();
@@ -123,6 +124,8 @@ namespace NeoSoftware
             var items = detections.DetectedItems;
             if (items.Size() == 0)
                 return;
+            if (!_detect)
+                return;
             _txtView.Post(() =>
             {
                 var strBuilder = new StringBuilder();
@@ -144,6 +147,7 @@ namespace NeoSoftware
         [Export("Solve")]
         public void OpenConfirmationDialog(View view)
         {
+            _detect = false;
             _confirmationAlertDialog.Show();
         }
 
@@ -152,6 +156,7 @@ namespace NeoSoftware
         {
             _confirmationAlertDialog.Cancel();
             _output.Text = new Solver(_txtView.Text);
+            _detect = true;
         }
     }
 }
