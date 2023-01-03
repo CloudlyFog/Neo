@@ -3,18 +3,11 @@ using MathNet.Numerics.LinearAlgebra;
 
 namespace Neo.Services;
 
-public sealed class EquationParser
+public sealed class EquationParser : MatrixParser
 {
-    private readonly MatrixParser _matrixParser;
-
-    public EquationParser(string input)
+    public EquationParser(string input) : base(input.GetDigits())
     {
-        _matrixParser = new MatrixParser(input.GetDigits());
     }
-
-    public Matrix<double> MatrixConversion() => _matrixParser.MatrixConversion();
-
-    public Vector<double> VectorConversion() => _matrixParser.VectorConversion();
 }
 
 public static partial class ListExtension

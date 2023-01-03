@@ -10,7 +10,9 @@ public class TestEquationParser
     [SetUp]
     public void Setup()
     {
-        _equationParser = new EquationParser("1x + 2y + 3z = 4;5x + 6y + 7z = 8;9x + 10y + 11z = 12;");
+        var equationInput = "1x + 2y + 3z = 4;5x + 6y + 7z = 8;9x + 10y + 11z = 12;";
+        const string matrixInput = "1 2 3 4;5 6 7 8;9 10 11 12;";
+        _equationParser = new EquationParser(matrixInput);
     }
 
     [Test]
