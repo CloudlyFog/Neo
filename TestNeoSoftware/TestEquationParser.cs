@@ -10,9 +10,9 @@ public class TestEquationParser
     [SetUp]
     public void Setup()
     {
-        var equationInput = "1x + 2y + 3z = 4;5x + 6y + 7z = 8;9x + 10y + 11z = 12;";
+        var equationInput = "1x - 2y + 3z = 4;5x - 6y + 7z = 8;9x + 10y + 11z = - 12;";
         const string matrixInput = "1 2 3 4;5 6 7 8;9 10 11 12;";
-        _parser = new Parser(matrixInput);
+        _parser = new Parser(equationInput);
     }
 
     [Test]
@@ -20,8 +20,8 @@ public class TestEquationParser
     {
         var correctMatrix = new double[,]
         {
-            { 1, 2, 3 },
-            { 5, 6, 7 },
+            { 1, -2, 3 },
+            { 5, -6, 7 },
             { 9, 10, 11 },
         };
 
@@ -36,7 +36,7 @@ public class TestEquationParser
     {
         var correctVector = new double[]
         {
-            4, 8, 12,
+            4, 8, -12,
         };
         var expectedVector = Vector<double>.Build.DenseOfArray(correctVector);
         var actualVector = _parser.VectorConversion();
