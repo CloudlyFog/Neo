@@ -306,7 +306,6 @@ public static partial class ListExtension
 
         for (var j = i; j < input.Length; j++)
         {
-            var indexj = input[j];
             if (input[i] != Parser.FloatSymbolDot && input[i] != Parser.FloatSymbolComma)
                 continue;
             sb.Append(input[i]);
