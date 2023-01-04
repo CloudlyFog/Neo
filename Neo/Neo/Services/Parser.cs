@@ -245,14 +245,11 @@ public static partial class ListExtension
             if (OnNegativeSymbol(input, sb, i) || OnFloatSymbol(input, sb, i))
                 continue;
 
-            // if input[i] neither is digit nor is split symbol ";"
-            // cycle is iterating
+            // if input[i] neither is digit nor is split symbol ";" cycle 'll iterate
             if (!char.IsDigit(input[i]) && input[i] != Parser.SplitSymbol)
                 continue;
 
-            // else adds to string builder input[i] 
-            if (char.IsDigit(input[i]) || input[i] == Parser.SplitSymbol)
-                sb.Append(input[i]);
+            sb.Append(input[i]);
 
             // stop cycle if "i" more than length of input string
             if (i >= input.Length - 1)
@@ -263,7 +260,9 @@ public static partial class ListExtension
             if (!char.IsDigit(input[i + 1]) && input[i + 1] != Parser.SplitSymbol
                                             && input[i + 1] != Parser.FloatSymbolDot
                                             && input[i + 1] != Parser.FloatSymbolComma)
+            {
                 sb.Append(' ');
+            }
         }
 
         return sb.ToString();
@@ -292,6 +291,13 @@ public static partial class ListExtension
         return true;
     }
 
+    /// <summary>
+    /// add to <see cref="StringBuilder"/> float symbols if they are
+    /// </summary>
+    /// <param name="input">parsed string (expected from <see cref="Matrix{T}"/>)</param>
+    /// <param name="sb">used <see cref="StringBuilder"/></param>
+    /// <param name="i">current index</param>
+    /// <returns></returns>
     private static bool OnFloatSymbol(string input, StringBuilder sb, int i)
     {
         var index = input[i];
