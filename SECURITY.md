@@ -15,3 +15,7 @@ If you reported a vulnerability us you will notified about result of fixing on s
 
 We give you a lot of thanks with your reports, because it's important for us.
 We together fix bugs and vulnerabilities, you are part of project!
+
+## Commercial using
+Me and team **The Water Coolers** decline anybody using this project for commercial purposes, impersonate the owner and earn money with project Neo without
+agreement of team **The Water Coolers**.
