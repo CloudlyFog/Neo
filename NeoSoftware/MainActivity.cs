@@ -69,6 +69,11 @@ namespace NeoSoftware
 
         private void ConfigureRecognizer()
         {
+            _cameraView = FindViewById<SurfaceView>(Resource.Id.surface_view);
+            _tessOutput = FindViewById<TextView>(Resource.Id.tess_output);
+            _output = FindViewById<TextView>(Resource.Id.output);
+            _textRecognizer = new TextRecognizer.Builder(ApplicationContext).Build();
+
             if (!_textRecognizer.IsOperational)
             {
                 Log.Error("Main Activity", "Detector dependencies are not yet available");

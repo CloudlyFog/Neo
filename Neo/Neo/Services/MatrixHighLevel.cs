@@ -37,7 +37,7 @@ namespace Neo.Services
         public static Matrix<decimal> Exponentiation(Matrix<decimal> matrix, int n)
         {
             var tempMatrix = matrix;
-            for (int i = 1; i < n; i++)
+            for (var i = 1; i < n; i++)
                 matrix = matrix.Multiply(tempMatrix);
             return matrix;
         }

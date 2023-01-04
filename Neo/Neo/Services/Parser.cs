@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using MathNet.Numerics.LinearAlgebra;
@@ -10,6 +11,7 @@ namespace Neo.Services;
 public class Parser
 {
     public const char SplitSymbol = ';';
+    public const char NegativeSymbol = '-';
 
     /// <summary>
     /// conversed string of equation
@@ -188,6 +190,9 @@ public class Parser
     }
 }
 
+/// <summary>
+/// describe extension class for <see cref="List<T>"/> and <see cref="string"/>
+/// </summary>
 public static partial class ListExtension
 {
     /// <summary>
@@ -219,15 +224,7 @@ public static partial class ListExtension
         Parser.ValidArray(input.ToArray(), nameof(input));
         var output = Enumerable.Empty<string>();
         for (var i = 1; i <= rows; i++)
-        {
-            if (i == 1)
-            {
-                output = output.Append(input[every * i - 1]);
-                continue;
-            }
-
             output = output.Append(input[every * i - 1]);
-        }
 
         return output.Where(s => !string.IsNullOrWhiteSpace(s)).AsEnumerable().ToList();
     }
@@ -243,6 +240,9 @@ public static partial class ListExtension
         var sb = new StringBuilder();
         for (var i = 0; i < input.Length; i++)
         {
+            if (OnNegativeDigit(input, sb, ref i))
+                continue;
+
             // if input[i] neither is digit nor is split symbol ";"
             // cycle is iterating
             if (!char.IsDigit(input[i]) && input[i] != Parser.SplitSymbol)
@@ -263,5 +263,21 @@ public static partial class ListExtension
         }
 
         return sb.ToString();
+    }
+
+    private static bool OnNegativeDigit(string input, StringBuilder sb, ref int i)
+    {
+        if (input[i] != Parser.NegativeSymbol)
+            return false;
+
+        for (var j = i; j < input.Length; j++)
+        {
+            if (!char.IsDigit(input[j]))
+                continue;
+            sb.Append(input[i]);
+            break;
+        }
+
+        return true;
     }
 }
