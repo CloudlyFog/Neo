@@ -240,24 +240,13 @@ public static partial class ListExtension
         var sb = new StringBuilder();
         for (var i = 0; i < input.Length; i++)
         {
-            if (input[i] == Parser.NegativeSymbol)
-            {
-                for (var j = i; j < input.Length; j++)
-                {
-                    if (!char.IsDigit(input[j]))
-                        continue;
-                    sb.Append(input[i]);
-                    break;
-                }
-
+            if (OnNegativeDigit(input, sb, ref i))
                 continue;
-            }
 
             // if input[i] neither is digit nor is split symbol ";"
             // cycle is iterating
             if (!char.IsDigit(input[i]) && input[i] != Parser.SplitSymbol)
                 continue;
-
 
             // else adds to string builder input[i] 
             if (char.IsDigit(input[i]) || input[i] == Parser.SplitSymbol)
@@ -274,5 +263,21 @@ public static partial class ListExtension
         }
 
         return sb.ToString();
+    }
+
+    private static bool OnNegativeDigit(string input, StringBuilder sb, ref int i)
+    {
+        if (input[i] != Parser.NegativeSymbol)
+            return false;
+
+        for (var j = i; j < input.Length; j++)
+        {
+            if (!char.IsDigit(input[j]))
+                continue;
+            sb.Append(input[i]);
+            break;
+        }
+
+        return true;
     }
 }
