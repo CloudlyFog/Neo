@@ -300,7 +300,6 @@ public static partial class ListExtension
     /// <returns></returns>
     private static bool OnFloatSymbol(string input, StringBuilder sb, int i)
     {
-        var index = input[i];
         if (input[i] != Parser.FloatSymbolDot && input[i] != Parser.FloatSymbolComma)
             return false;
 
