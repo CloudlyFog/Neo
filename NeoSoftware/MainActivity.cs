@@ -26,12 +26,14 @@ namespace NeoSoftware
     public class MainActivity : AppCompatActivity, ISurfaceHolderCallback, IProcessor
     {
         private SurfaceView _cameraView;
-        private TextView _txtView;
+        private TextView _tessOutput;
         private CameraSource _cameraSource;
         private TextRecognizer _textRecognizer;
         private TextView _output;
         private View _confirmDataInput;
         private AlertDialog _confirmationAlertDialog;
+        private Switch _detectSwitch;
+        private bool _detect = false;
 
 
         private
@@ -43,17 +45,34 @@ namespace NeoSoftware
             // Set our view from the "main" layout resource  
             SetContentView(Resource.Layout.activity_main);
 
+            BuildUI();
+        }
+
+        private void BuildUI()
+        {
+            _cameraView = FindViewById<SurfaceView>(Resource.Id.surface_view);
+            _tessOutput = FindViewById<TextView>(Resource.Id.tess_output);
+            _output = FindViewById<TextView>(Resource.Id.output);
+            _detectSwitch = FindViewById<Switch>(Resource.Id.detect_switch);
+            _textRecognizer = new TextRecognizer.Builder(ApplicationContext).Build();
+
             ConfigureRecognizer();
-            ConfigureConfirmation();
+            ConfigureConfirmationAlertDialog();
+            ConfigureDetectSwitch();
+        }
+
+        private void ConfigureDetectSwitch()
+        {
+            _detectSwitch.CheckedChange += delegate { _detect = !_detect; };
+            _detectSwitch.Checked = _detect;
         }
 
         private void ConfigureRecognizer()
         {
             _cameraView = FindViewById<SurfaceView>(Resource.Id.surface_view);
-            _txtView = FindViewById<TextView>(Resource.Id.tess_output);
+            _tessOutput = FindViewById<TextView>(Resource.Id.tess_output);
             _output = FindViewById<TextView>(Resource.Id.output);
             _textRecognizer = new TextRecognizer.Builder(ApplicationContext).Build();
-
 
             if (!_textRecognizer.IsOperational)
             {
@@ -76,7 +95,7 @@ namespace NeoSoftware
             }
         }
 
-        private void ConfigureConfirmation()
+        private void ConfigureConfirmationAlertDialog()
         {
             _confirmDataInput = LayoutInflater.Inflate(Resource.Layout.confirmation, null);
             _confirmationAlertDialog = new AlertDialog.Builder(this).Create();
@@ -123,7 +142,9 @@ namespace NeoSoftware
             var items = detections.DetectedItems;
             if (items.Size() == 0)
                 return;
-            _txtView.Post(() =>
+            if (!_detect)
+                return;
+            _tessOutput.Post(() =>
             {
                 var strBuilder = new StringBuilder();
                 for (var i = 0; i < items.Size(); ++i)
@@ -132,7 +153,7 @@ namespace NeoSoftware
                     strBuilder.Append("\n");
                 }
 
-                _txtView.Text = strBuilder.ToString();
+                _tessOutput.Text = strBuilder.ToString();
                 Thread.Sleep(700);
             });
         }
@@ -144,27 +165,17 @@ namespace NeoSoftware
         [Export("Solve")]
         public void OpenConfirmationDialog(View view)
         {
+            _detect = false;
+            _detectSwitch.Checked = _detect;
             _confirmationAlertDialog.Show();
-        }
-
-        private void Solve()
-        {
-            try
-            {
-                _output.Text = new Solver(_txtView.Text);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex);
-                throw;
-            }
         }
 
         [Export("Confirm")]
         public void ConfirmDataInput(View view)
         {
+            _detectSwitch.Checked = _detect;
             _confirmationAlertDialog.Cancel();
-            Solve();
+            _output.Text = new Solver(_tessOutput.Text);
         }
     }
 }
