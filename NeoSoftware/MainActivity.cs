@@ -50,7 +50,7 @@ namespace NeoSoftware
         private void ConfigureRecognizer()
         {
             _cameraView = FindViewById<SurfaceView>(Resource.Id.surface_view);
-            _txtView = FindViewById<TextView>(Resource.Id.txtview);
+            _txtView = FindViewById<TextView>(Resource.Id.tess_output);
             _output = FindViewById<TextView>(Resource.Id.output);
             _textRecognizer = new TextRecognizer.Builder(ApplicationContext).Build();
 
