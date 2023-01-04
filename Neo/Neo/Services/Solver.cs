@@ -1,54 +1,92 @@
-﻿using System.Drawing;
-using System.IO;
+﻿using System;
 using System.Text;
 using MathNet.Numerics.LinearAlgebra;
-using Neo.Services;
 
-namespace Neo.Services
+namespace Neo.Services;
+
+/// <summary>
+/// class finds unknown variables of equation
+/// </summary>
+public sealed class Solver : IDisposable
 {
-    public sealed class Solver
+    private Parser _parser;
+    public static implicit operator string(Solver solver) => solver.ToString();
+    public static explicit operator Solver(string input) => new(input);
+
+    public Solver(string input)
     {
-        public Solver(string path)
+        _parser = new Parser(input.Replace("\n", Parser.SplitSymbol.ToString()));
+        try
         {
-            Parser.Input = Reader.Read(path);
-            OnCreating();
+            Solve();
         }
-
-        public Solver(Image image)
+        catch (Exception e)
         {
-            Parser.Input = Reader.Read(image);
-            OnCreating();
+            Console.WriteLine(e);
+            throw;
         }
+    }
 
-        public Solver(Stream stream)
+    private void Solve()
+    {
+        LeftSide = _parser.MatrixConversion();
+        RightSide = _parser.VectorConversion();
+        try
         {
-            Parser.Input = Reader.Read(stream);
-            OnCreating();
-        }
-
-        public Solver(byte[] bytes)
-        {
-            Parser.Input = Reader.Read(bytes);
-            OnCreating();
-        }
-
-        private void OnCreating()
-        {
-            LeftSide = Parser.ParseToMatrix();
-            RightSide = Parser.ParseToVector();
             Result = LeftSide.Solve(RightSide);
         }
-        
-        public Matrix<double> LeftSide { get; private set; }
-        public Vector<double> RightSide { get; private set; }
-        public Vector<double> Result { get; private set; }
-
-        public override string ToString()
+        catch (Exception exception)
         {
-            var sb = new StringBuilder();
-            for (int i = 0; i < Result.Count; i++)
-                sb = sb.Append(Result[i]);
-            return sb.ToString();
+            Console.WriteLine(exception);
+            Dispose();
+            throw new InvalidOperationException(exception.Message, exception.InnerException);
         }
+    }
+
+    public Matrix<double> LeftSide { get; private set; }
+    public Vector<double> RightSide { get; private set; }
+    public Vector<double> Result { get; private set; }
+
+    public override string ToString()
+    {
+        var sb = new StringBuilder();
+        for (var i = 0; i < Result.Count; i++)
+            sb.AppendLine($"x{i + 1}: {Result[i]}");
+        return sb.ToString();
+    }
+
+    private void ReleaseUnmanagedResources()
+    {
+        LeftSide = null;
+        RightSide = null;
+        Result = null;
+        _parser = null;
+    }
+
+    private void Dispose(bool disposing)
+    {
+        ReleaseUnmanagedResources();
+        if (disposing)
+        {
+        }
+    }
+
+    public void Dispose()
+    {
+        Dispose(true);
+        GC.SuppressFinalize(this);
+    }
+
+    ~Solver()
+    {
+        Dispose(false);
+    }
+}
+
+public static partial class ListExtension
+{
+    public static string RemoveTrash(this string str)
+    {
+        return "";
     }
 }

@@ -2,7 +2,19 @@
 	<s:Boolean x:Key="/Default/AddReferences/RecentPaths/=H_003A_005CNeoServices_005CNeoServices_005Cbin_005CRelease_005Cnet7_002E0_005CNeoServices_002Edll/@EntryIndexedValue">True</s:Boolean>
 	<s:Boolean x:Key="/Default/AddReferences/RecentPaths/=H_003A_005CNeo_005CNeoMatrixServices_005Cbin_005CDebug_005Cnet7_002E0_005CNeoMatrixServices_002Edll/@EntryIndexedValue">True</s:Boolean>
 	<s:String x:Key="/Default/CodeInspection/ExcludedFiles/FilesAndFoldersToSkip2/=7020124F_002D9FFC_002D4AC3_002D8F3D_002DAAB8E0240759_002Ff_003AGrid_002Ecs_002Fl_003AC_0021_003FUsers_003Fmaxim_003FAppData_003FRoaming_003FJetBrains_003FRider2022_002E1_003Fresharper_002Dhost_003FSourcesCache_003F34c5ef529e38b5944225b734f63abc4778dd70d683fe4545999978aafd46_003FGrid_002Ecs/@EntryIndexedValue">ForceIncluded</s:String>
-	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=3aefd969_002D47e4_002D4f25_002Da185_002Dcbdb5d4f40dc/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" IsActive="True" Name="All tests from Solution #2" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
+	<s:String x:Key="/Default/Environment/AssemblyExplorer/XmlDocument/@EntryValue">&lt;AssemblyExplorer&gt;&#xD;
+  &lt;Assembly Path="G:\Apps\VisualStudio\Common7\IDE\ReferenceAssemblies\Microsoft\Framework\MonoAndroid\v4.4\Mono.Android.Export.dll" /&gt;&#xD;
+&lt;/AssemblyExplorer&gt;</s:String>
+	
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=3fbb8555_002D0011_002D4e18_002D91a9_002D491056e6a5b0/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" Name="Test equation parser" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
   &lt;Solution /&gt;&#xD;
 &lt;/SessionState&gt;</s:String>
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=c1980a0c_002D6a1f_002D4c40_002Daf2a_002D62c884f1a7ba/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" Name="All tests from Solution" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
+  &lt;Solution /&gt;&#xD;
+&lt;/SessionState&gt;</s:String>
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=c6bc43a2_002D2c98_002D4435_002D865f_002D6de0fdef2bfd/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" IsActive="True" Name="All tests from Solution #2" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
+  &lt;Solution /&gt;&#xD;
+&lt;/SessionState&gt;</s:String>
+	
+	<s:Boolean x:Key="/Default/ResxEditorPersonal/Initialized/@EntryValue">True</s:Boolean>
 	</wpf:ResourceDictionary>
