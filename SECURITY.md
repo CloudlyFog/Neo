@@ -19,3 +19,5 @@ We together fix bugs and vulnerabilities, you are part of project!
 ## Commercial using
 Me and team **The Water Coolers** decline anybody using this project for commercial purposes, impersonate the owner and earn money with project Neo without
 agreement of team **The Water Coolers**.
+Anybody can use our code in own purposes, our developments, use this project in studing purposes but notify about it team "**The Water Coolers**" by wrote 
+to **cloudyfg@gmail.com**.
