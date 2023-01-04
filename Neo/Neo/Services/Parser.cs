@@ -12,6 +12,8 @@ public class Parser
 {
     public const char SplitSymbol = ';';
     public const char NegativeSymbol = '-';
+    public const char FloatSymbolDot = '.';
+    public const char FloatSymbolComma = ',';
 
     /// <summary>
     /// conversed string of equation
@@ -240,7 +242,7 @@ public static partial class ListExtension
         var sb = new StringBuilder();
         for (var i = 0; i < input.Length; i++)
         {
-            if (OnNegativeDigit(input, sb, ref i))
+            if (OnNegativeSymbol(input, sb, i) || OnFloatSymbol(input, sb, i))
                 continue;
 
             // if input[i] neither is digit nor is split symbol ";"
@@ -256,16 +258,25 @@ public static partial class ListExtension
             if (i >= input.Length - 1)
                 break;
 
-            // if next element of input neither is digit nor is split symbol ";"
+            // if the next input element is neither ";", nor ",", nor ".", nor a digit
             // adds whitespace
-            if (!char.IsDigit(input[i + 1]) && input[i + 1] != Parser.SplitSymbol)
+            if (!char.IsDigit(input[i + 1]) && input[i + 1] != Parser.SplitSymbol
+                                            && input[i + 1] != Parser.FloatSymbolDot
+                                            && input[i + 1] != Parser.FloatSymbolComma)
                 sb.Append(' ');
         }
 
         return sb.ToString();
     }
 
-    private static bool OnNegativeDigit(string input, StringBuilder sb, ref int i)
+    /// <summary>
+    /// add to <see cref="StringBuilder"/> negative symbols if they are
+    /// </summary>
+    /// <param name="input">parsed string (expected from <see cref="Matrix{T}"/>)</param>
+    /// <param name="sb">used <see cref="StringBuilder"/></param>
+    /// <param name="i">current index</param>
+    /// <returns></returns>
+    private static bool OnNegativeSymbol(string input, StringBuilder sb, int i)
     {
         if (input[i] != Parser.NegativeSymbol)
             return false;
@@ -273,6 +284,24 @@ public static partial class ListExtension
         for (var j = i; j < input.Length; j++)
         {
             if (!char.IsDigit(input[j]))
+                continue;
+            sb.Append(input[i]);
+            break;
+        }
+
+        return true;
+    }
+
+    private static bool OnFloatSymbol(string input, StringBuilder sb, int i)
+    {
+        var index = input[i];
+        if (input[i] != Parser.FloatSymbolDot && input[i] != Parser.FloatSymbolComma)
+            return false;
+
+        for (var j = i; j < input.Length; j++)
+        {
+            var indexj = input[j];
+            if (input[i] != Parser.FloatSymbolDot && input[i] != Parser.FloatSymbolComma)
                 continue;
             sb.Append(input[i]);
             break;

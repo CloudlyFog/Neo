@@ -10,7 +10,7 @@ public class TestEquationParser
     [SetUp]
     public void Setup()
     {
-        var equationInput = "1x - 2y + 3z = 4;5x - 6y + 7z = 8;9x + 10y + 11z = - 12;";
+        var equationInput = "1.3x - 2y + 3z = 4;5x - 6y + 7z = 8;9x + 10y + 11.5z = - 12;";
         const string matrixInput = "1 2 3 4;5 6 7 8;9 10 11 12;";
         _parser = new Parser(equationInput);
     }
@@ -20,9 +20,9 @@ public class TestEquationParser
     {
         var correctMatrix = new double[,]
         {
-            { 1, -2, 3 },
+            { 1.3d, -2, 3 },
             { 5, -6, 7 },
-            { 9, 10, 11 },
+            { 9, 10, 11.5d },
         };
 
         var expectedMatrix = Matrix<double>.Build.DenseOfArray(correctMatrix);
