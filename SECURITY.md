@@ -5,7 +5,7 @@
 | Version | Supported          |
 | ------- | ------------------ |
 | 1.0.x   | :white_check_mark: |
-| < 1.0   | :x:                |
+| < 1.0.0 | :x:                |
 
 ## Reporting a Vulnerability
 If you found vulnerability, please, write to **cloudyfg@gmail.com** with title **NEO REPORT VULNERABILITY** 
