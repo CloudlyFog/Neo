@@ -1,7 +1,7 @@
 ﻿using System;
-using System.Linq;
 using System.Text;
 using MathNet.Numerics.LinearAlgebra;
+using Neo.Utilits;
 
 namespace Neo.Services;
 
@@ -50,8 +50,19 @@ public sealed class Solver : IDisposable
         }
     }
 
+    /// <summary>
+    /// describe left side (matrix) of equation
+    /// </summary>
     public Matrix<double> LeftSide { get; private set; }
+
+    /// <summary>
+    /// descrive right side (results) of equation
+    /// </summary>
     public Vector<double> RightSide { get; private set; }
+
+    /// <summary>
+    /// desribe results of unkown variables of system linear equations
+    /// </summary>
     public Vector<double> Result { get; private set; }
 
     public override string ToString()
@@ -88,18 +99,5 @@ public sealed class Solver : IDisposable
     ~Solver()
     {
         Dispose(false);
-    }
-}
-
-public static partial class ListExtension
-{
-    /// <summary>
-    /// return string with unknown variables from system linear equations
-    /// </summary>
-    /// <param name="input">parsed string (expected from <see cref="Matrix{T}"/>)</param>
-    /// <returns></returns>
-    public static string GetUnknownVariables(this string input)
-    {
-        return new string(input.Where(char.IsLetter).Distinct().ToArray());
     }
 }

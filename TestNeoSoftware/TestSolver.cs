@@ -1,11 +1,14 @@
 ﻿using Neo.Services;
+using Neo.Utilits;
 
 namespace TestNeoSoftware;
 
 public class TestSolver
 {
     private Parser _parser;
+
     const string equationInput = "x - 2y + 3z = 4;5x - 6y + z = 8;9x + y + 11.5z =-  12.5;";
+
     // const string equationInput = "1.3x - 2y + 3z = 4;5x - 6y + 7z = 8;9x + 10y + 11.5z =-  12.5;";
     const string matrixInput = "1.3 -2 3 4;5 -6 7 8;9 10 11.5 -12.5;";
 
