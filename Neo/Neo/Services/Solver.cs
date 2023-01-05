@@ -89,6 +89,11 @@ public sealed class Solver : IDisposable
 
 public static partial class ListExtension
 {
+    /// <summary>
+    /// return string with unknown variables from system linear equations
+    /// </summary>
+    /// <param name="input">parsed string (expected from <see cref="Matrix{T}"/>)</param>
+    /// <returns></returns>
     public static string GetUnknownVariables(this string input)
     {
         return new string(input.Where(char.IsLetter).Distinct().ToArray());
