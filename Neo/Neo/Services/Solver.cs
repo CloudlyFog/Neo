@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Text;
 using MathNet.Numerics.LinearAlgebra;
 
@@ -9,13 +10,15 @@ namespace Neo.Services;
 /// </summary>
 public sealed class Solver : IDisposable
 {
+    private readonly string _input;
     private Parser _parser;
     public static implicit operator string(Solver solver) => solver.ToString();
     public static explicit operator Solver(string input) => new(input);
 
     public Solver(string input)
     {
-        _parser = new Parser(input.Replace("\n", Parser.SplitSymbol.ToString()));
+        _input = input.Replace("\n", Parser.SplitSymbol.ToString());
+        _parser = new Parser(_input);
         try
         {
             Solve();
@@ -51,7 +54,8 @@ public sealed class Solver : IDisposable
     {
         var sb = new StringBuilder();
         for (var i = 0; i < Result.Count; i++)
-            sb.AppendLine($"x{i + 1}: {Result[i]}");
+            sb.AppendLine($"{_input.GetUnknownVariables()[i]}: {Result[i]}");
+
         return sb.ToString();
     }
 
@@ -85,8 +89,8 @@ public sealed class Solver : IDisposable
 
 public static partial class ListExtension
 {
-    public static string RemoveTrash(this string str)
+    public static string GetUnknownVariables(this string input)
     {
-        return "";
+        return new string(input.Where(char.IsLetter).Distinct().ToArray());
     }
 }
