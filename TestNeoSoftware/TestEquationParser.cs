@@ -6,12 +6,12 @@ namespace TestNeoSoftware;
 public class TestEquationParser
 {
     private Parser _parser;
+    const string equationInput = "x - 2y + 3z = 4;5x - 6y + z = 8;9x + y + 11.5z =-  12.5;";
+    const string matrixInput = "1.3 -2 3 4;5 -6 7 8;9 10 11.5 -12.5;";
 
     [SetUp]
     public void Setup()
     {
-        const string equationInput = "1.3x - 2y + 3z = 4;5x - 6y + 7z = 8;9x + 10y + 11.5z =-  12.5;";
-        const string matrixInput = "1.3 -2 3 4;5 -6 7 8;9 10 11.5 -12.5;";
         _parser = new Parser(equationInput);
     }
 
@@ -20,9 +20,9 @@ public class TestEquationParser
     {
         var correctMatrix = new[,]
         {
-            { 1.3d, -2, 3 },
-            { 5, -6, 7 },
-            { 9, 10, 11.5d },
+            { 1d, -2, 3 },
+            { 5, -6, 1 },
+            { 9, 1, 11.5d },
         };
 
         var expectedMatrix = Matrix<double>.Build.DenseOfArray(correctMatrix);
@@ -42,5 +42,20 @@ public class TestEquationParser
         var actualVector = _parser.VectorConversion();
 
         Assert.AreEqual(expectedVector, actualVector);
+    }
+
+    [Test]
+    public void TestOnUnitVariable()
+    {
+        var correctMatrix = new[,]
+        {
+            { 1d, -2, 3 },
+            { 5, -6, 1 },
+            { 9, 1, 11.5d },
+        };
+        var expected = Matrix<double>.Build.DenseOfArray(correctMatrix);
+        var actual = new Parser(equationInput);
+
+        Assert.AreEqual(expected, actual.MatrixConversion());
     }
 }

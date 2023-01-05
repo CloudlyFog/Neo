@@ -12,12 +12,16 @@ public sealed class Solver : IDisposable
 {
     private readonly string _input;
     private Parser _parser;
+
+    public static string Input { get; private set; }
+
     public static implicit operator string(Solver solver) => solver.ToString();
     public static explicit operator Solver(string input) => new(input);
 
     public Solver(string input)
     {
-        _input = input.Replace("\n", Parser.SplitSymbol.ToString());
+        _input = input.Replace("\n", Parser.SplitSymbol.ToString()).ToLower();
+        Input = _input;
         _parser = new Parser(_input);
         try
         {

@@ -245,6 +245,9 @@ public static partial class ListExtension
             if (OnNegativeSymbol(input, sb, i) || OnFloatSymbol(input, sb, i))
                 continue;
 
+            if (OnUnitVariable(input, sb, i))
+                continue;
+
             // if input[i] neither is digit nor is split symbol ";" cycle 'll iterate
             if (!char.IsDigit(input[i]) && input[i] != Parser.SplitSymbol)
                 continue;
@@ -284,7 +287,7 @@ public static partial class ListExtension
         {
             if (!char.IsDigit(input[j]))
                 continue;
-            sb.Append(input[i]);
+            sb.Append(Parser.NegativeSymbol);
             break;
         }
 
@@ -303,14 +306,27 @@ public static partial class ListExtension
         if (input[i] != Parser.FloatSymbolDot && input[i] != Parser.FloatSymbolComma)
             return false;
 
-        for (var j = i; j < input.Length; j++)
-        {
-            if (input[i] != Parser.FloatSymbolDot && input[i] != Parser.FloatSymbolComma)
-                continue;
-            sb.Append(input[i]);
-            break;
-        }
+        sb.Append(Parser.FloatSymbolDot);
 
         return true;
+    }
+
+    private static bool OnUnitVariable(string input, StringBuilder sb, int i)
+    {
+        for (var j = 0; j < input.GetUnknownVariables().Length; j++)
+        {
+            if (input[i] == input.GetUnknownVariables()[j] && i == 0)
+            {
+                sb.Append("1 ");
+                return true;
+            }
+
+            if (input[i] != Solver.Input.GetUnknownVariables()[j] || char.IsDigit(input[i - 1]))
+                continue;
+            sb.Append("1 ");
+            return true;
+        }
+
+        return false;
     }
 }
