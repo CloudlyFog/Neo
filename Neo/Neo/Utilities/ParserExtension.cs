@@ -4,7 +4,7 @@ using System.Text;
 using MathNet.Numerics.LinearAlgebra;
 using Neo.Services;
 
-namespace Neo.Utilits;
+namespace Neo.Utilities;
 
 /// <summary>
 /// describe extension class for <see cref="Parser"/>
@@ -12,7 +12,7 @@ namespace Neo.Utilits;
 public static class ParserExtension
 {
     /// <summary>
-    /// return string with unknown variables from system linear equations
+    /// returns string with unknown variables from system linear equations
     /// </summary>
     /// <param name="input">parsed string (expected from <see cref="Matrix{T}"/>)</param>
     /// <returns></returns>
@@ -22,7 +22,7 @@ public static class ParserExtension
     }
 
     /// <summary>
-    /// remove elements every time when i in cycle will divide without a trace by every' value
+    /// removes elements every time when i in cycle will divide without a trace by every' value
     /// after removes white spaces and empty strings from list
     /// </summary>
     /// <param name="input">parsed string (expected from <see cref="Matrix{T}"/>)</param>
@@ -39,7 +39,7 @@ public static class ParserExtension
     }
 
     /// <summary>
-    /// return new <see cref="List{T}"/> with elements which were at point equals every' value
+    /// returns new <see cref="List{T}"/> with elements which were at point equals every' value
     /// </summary>
     /// <param name="input">parsed string (expected from <see cref="Matrix{T}"/>)</param>
     /// <param name="every">position to get</param>
@@ -56,7 +56,7 @@ public static class ParserExtension
     }
 
     /// <summary>
-    /// get as arg string with/without other symbols like words, punctuations marks etc
+    /// gets as arg string with/without other symbols like words, punctuations marks etc
     /// return new <see cref="string"/> only with digits
     /// </summary>
     /// <param name="input">parsed string (expected from <see cref="Matrix{T}"/>)</param>
@@ -96,7 +96,7 @@ public static class ParserExtension
     }
 
     /// <summary>
-    /// add to <see cref="StringBuilder"/> negative symbols if they are
+    /// adds to <see cref="StringBuilder"/> negative symbols if they are
     /// </summary>
     /// <param name="input">parsed string (expected from <see cref="Matrix{T}"/>)</param>
     /// <param name="sb">used <see cref="StringBuilder"/></param>
@@ -119,7 +119,7 @@ public static class ParserExtension
     }
 
     /// <summary>
-    /// add to <see cref="StringBuilder"/> float symbols if they are
+    /// adds to <see cref="StringBuilder"/> float symbols if they are
     /// </summary>
     /// <param name="input">parsed string (expected from <see cref="Matrix{T}"/>)</param>
     /// <param name="sb">used <see cref="StringBuilder"/></param>
@@ -135,6 +135,13 @@ public static class ParserExtension
         return true;
     }
 
+    /// <summary>
+    /// adds to <see cref="StringBuilder"/> "1 " if there isn't coefficient of the nearest unknown variable 
+    /// </summary>
+    /// <param name="input">parsed string (expected from <see cref="Matrix{T}"/>)</param>
+    /// <param name="sb">used <see cref="StringBuilder"/></param>
+    /// <param name="i">current index</param>
+    /// <returns></returns>
     private static bool OnUnitVariable(string input, StringBuilder sb, int i)
     {
         for (var j = 0; j < input.GetUnknownVariables().Length; j++)

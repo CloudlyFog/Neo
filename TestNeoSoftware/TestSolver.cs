@@ -1,5 +1,5 @@
 ﻿using Neo.Services;
-using Neo.Utilits;
+using Neo.Utilities;
 
 namespace TestNeoSoftware;
 

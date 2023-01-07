@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using MathNet.Numerics.LinearAlgebra;
 using Neo.Exceptions;
-using Neo.Utilits;
+using Neo.Utilities;
 
 namespace Neo.Services;
 
@@ -87,10 +87,17 @@ public class Parser
     private static Matrix<double> GetMatrixValue(double[,] targetArray, List<string> filterResult)
     {
         if (targetArray is null)
-            throw new ArgumentNullException(nameof(targetArray));
+        {
+            Error.Message = $"{nameof(targetArray)} is null";
+            Error.ArgValues = $"{nameof(targetArray)}: {targetArray}";
+            return null;
+        }
 
         if (targetArray.Length <= 0)
-            throw new ArgumentException($"length of {nameof(targetArray)} less or equals 0");
+        {
+            Error.Message = $"length of {nameof(targetArray)} less or equals 0";
+            return null;
+        }
 
         ValidArray(filterResult.ToArray(), nameof(filterResult));
         // start point for input text
@@ -111,8 +118,9 @@ public class Parser
                 }
                 catch (Exception exception)
                 {
-                    Console.WriteLine(exception);
-                    throw;
+                    Error.Message = exception.Message;
+                    Error.InnerMessage = exception.InnerException?.Message;
+                    return null;
                 }
             }
         }
@@ -127,8 +135,9 @@ public class Parser
     /// <param name="filterResult">parsed filtered data from ocr</param>
     private static Vector<double> GetVectorValue(double[] targetArray, List<string> filterResult)
     {
-        ValidArray(targetArray, nameof(targetArray));
-        ValidArray(filterResult.ToArray(), nameof(filterResult));
+        if (ValidArray(targetArray, nameof(targetArray)) is null ||
+            ValidArray(filterResult.ToArray(), nameof(filterResult)) is null)
+            return null;
 
         // start point for input text as iterator
         var point = 0;
@@ -139,8 +148,9 @@ public class Parser
         }
         catch (Exception exception)
         {
-            Console.WriteLine(exception);
-            throw;
+            Error.Message = exception.Message;
+            Error.InnerMessage = exception.InnerException?.Message;
+            return null;
         }
 
 
@@ -150,15 +160,11 @@ public class Parser
             {
                 targetArray[i] = double.Parse(filterResult[i]);
             }
-            catch (ParserException exception)
-            {
-                Console.WriteLine(exception);
-                throw new ParserException(exception.Message, filterResult[i]);
-            }
             catch (Exception exception)
             {
-                Console.WriteLine(exception);
-                throw new InvalidOperationException(exception.Message, exception.InnerException);
+                Error.Message = exception.Message;
+                Error.InnerMessage = exception.InnerException?.Message;
+                return null;
             }
         }
 
@@ -181,12 +187,20 @@ public class Parser
         return false;
     }
 
-    internal static void ValidArray<T>(T[] array, string arrayName)
+    internal static Error ValidArray<T>(T[] array, string arrayName)
     {
         if (array is null)
-            throw new ArgumentNullException(arrayName);
+        {
+            Error.Message = $"{arrayName} is null.";
+            return null;
+        }
 
         if (array.Length <= 0)
-            throw new ArgumentException($"length of {arrayName} less or equals 0");
+        {
+            Error.Message = $"length of {arrayName} less or equals 0";
+            return null;
+        }
+
+        return new Error(null);
     }
 }

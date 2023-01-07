@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Text;
 using MathNet.Numerics.LinearAlgebra;
-using Neo.Utilits;
+using Neo.Utilities;
 
 namespace Neo.Services;
 
@@ -27,10 +27,10 @@ public sealed class Solver : IDisposable
         {
             Solve();
         }
-        catch (Exception e)
+        catch (Exception exception)
         {
-            Console.WriteLine(e);
-            throw;
+            Error.Message = exception.Message;
+            Error.InnerMessage = exception.InnerException?.Message;
         }
     }
 
@@ -44,9 +44,9 @@ public sealed class Solver : IDisposable
         }
         catch (Exception exception)
         {
-            Console.WriteLine(exception);
+            Error.Message = exception.Message;
+            Error.InnerMessage = exception.InnerException?.Message;
             Dispose();
-            throw new InvalidOperationException(exception.Message, exception.InnerException);
         }
     }
 
@@ -56,17 +56,22 @@ public sealed class Solver : IDisposable
     public Matrix<double> LeftSide { get; private set; }
 
     /// <summary>
-    /// descrive right side (results) of equation
+    /// describe right side (results) of equation
     /// </summary>
     public Vector<double> RightSide { get; private set; }
 
     /// <summary>
-    /// desribe results of unkown variables of system linear equations
+    /// describe results of unknown variables of system linear equations
     /// </summary>
     public Vector<double> Result { get; private set; }
 
     public override string ToString()
     {
+        if (Error.Message is not null)
+            return Error.Message;
+        if (Error.InnerMessage is not null)
+            return Error.InnerMessage;
+
         var sb = new StringBuilder();
         for (var i = 0; i < Result.Count; i++)
             sb.AppendLine($"{_input.GetUnknownVariables()[i]}: {Result[i]}");
