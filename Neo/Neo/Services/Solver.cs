@@ -21,6 +21,14 @@ public sealed class Solver : IDisposable
     public Solver(string input)
     {
         _input = input.Replace("\n", Parser.SplitSymbol.ToString()).ToLower();
+
+        if (_input is "no text" or "" || _input.IsTrash())
+        {
+            Error.Message = "didn't read anything.";
+            Error.ArgValues = input;
+            return;
+        }
+
         Input = _input;
         _parser = new Parser(_input);
         try
@@ -68,9 +76,7 @@ public sealed class Solver : IDisposable
     public override string ToString()
     {
         if (Error.Message is not null)
-            return Error.Message;
-        if (Error.InnerMessage is not null)
-            return Error.InnerMessage;
+            return $"{Error.Message}\n{Error.InnerMessage}\n{Error.ArgValues}";
 
         var sb = new StringBuilder();
         for (var i = 0; i < Result.Count; i++)

@@ -11,6 +11,8 @@ namespace Neo.Utilities;
 /// </summary>
 public static class ParserExtension
 {
+    private const string Numerics = "1234567890";
+
     /// <summary>
     /// returns string with unknown variables from system linear equations
     /// </summary>
@@ -96,6 +98,51 @@ public static class ParserExtension
     }
 
     /// <summary>
+    /// check passed string of input it's trash input or not
+    /// </summary>
+    /// <param name="input">read text</param>
+    /// <returns><see cref="bool"/></returns>
+    public static bool IsTrash(this string input)
+    {
+        if (!input.Any(item => Numerics.Any(numeric => item == numeric)))
+            return true;
+        var len = input.Count(x => x == Parser.SplitSymbol);
+        if (len is <= 0 or > 5)
+            return true;
+        return input.GetUnknownVariables().Length != input.ConvertToDigits().Count() / len - 1;
+    }
+
+    /// <summary>
+    /// returns sequence of float digits which was parsed from <see cref="input"/>
+    /// </summary>
+    /// <param name="input">parsed string (expected from <see cref="Matrix{T}"/>)</param>
+    /// <returns></returns>
+    private static IEnumerable<double> ConvertToDigits(this string input)
+    {
+        input = input.GetDigits()
+            .Replace(Parser.SplitSymbol.ToString(), " ")
+            .Replace(Parser.NegativeSymbol.ToString(), "");
+
+        var sb = new StringBuilder();
+        var array = new List<double>();
+
+        for (var i = 0; i < input.Length; i++)
+        {
+            if (input[i] == ' ')
+                continue;
+            sb.Append(input[i]);
+
+            if (input[i + 1] != ' ')
+                continue;
+
+            array.Add(double.Parse(sb.ToString()));
+            sb.Clear();
+        }
+
+        return array;
+    }
+
+    /// <summary>
     /// adds to <see cref="StringBuilder"/> negative symbols if they are
     /// </summary>
     /// <param name="input">parsed string (expected from <see cref="Matrix{T}"/>)</param>
@@ -147,12 +194,14 @@ public static class ParserExtension
         for (var j = 0; j < input.GetUnknownVariables().Length; j++)
         {
             if (input[i] == input.GetUnknownVariables()[j] && i == 0)
-            {
-                sb.Append("1 ");
-                return true;
-            }
+                if (input[i] == input.GetUnknownVariables()[j] && i == 0)
+                {
+                    sb.Append("1 ");
+                    return true;
+                }
 
-            if (input[i] != Solver.Input.GetUnknownVariables()[j] || char.IsDigit(input[i - 1]))
+            //if (input[i] != Solver.Input.GetUnknownVariables()[j] || char.IsDigit(input[i - 1]))
+            if (input[i] != input.GetUnknownVariables()[j] || char.IsDigit(input[i - 1]))
                 continue;
             sb.Append("1 ");
             return true;
