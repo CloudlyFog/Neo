@@ -12,6 +12,7 @@ public sealed class Solver : IDisposable
 {
     private readonly string _input;
     private Parser _parser;
+    public static string Input { get; private set; }
 
     public static implicit operator string(Solver solver) => solver.ToString();
     public static implicit operator Vector<double>(Solver solver) => solver.Result;
@@ -20,6 +21,7 @@ public sealed class Solver : IDisposable
     public Solver(string input)
     {
         _input = input.Replace("\n", Parser.SplitSymbol.ToString()).ToLower();
+        Input = _input;
 
         if (_input is "no text" or "" || _input.IsTrash())
         {
@@ -27,6 +29,7 @@ public sealed class Solver : IDisposable
             Error.ArgValues = input;
             return;
         }
+
 
         _parser = new Parser(_input);
         try
@@ -83,7 +86,7 @@ public sealed class Solver : IDisposable
     /// <summary>
     /// describe results of unknown variables of system linear equations
     /// </summary>
-    public Vector<double> Result { get; private set; }
+    private Vector<double> Result { get; set; }
 
     public override string ToString()
     {

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -18,6 +19,15 @@ public static class ParserExtension
     /// <returns></returns>
     public static string GetUnknownVariables(this string input)
     {
+        try
+        {
+            var s = new string(input.Where(char.IsLetter).Distinct().ToArray());
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
         return new string(input.Where(char.IsLetter).Distinct().ToArray());
     }
 
@@ -200,7 +210,7 @@ public static class ParserExtension
             }
 
             //if (input[i] != Solver.Input.GetUnknownVariables()[j] || char.IsDigit(input[i - 1]))
-            if (input[i] != input.GetUnknownVariables()[j] || char.IsDigit(input[i - 1]))
+            if (input[i] != Solver.Input.GetUnknownVariables()[j] || char.IsDigit(input[i - 1]))
                 continue;
             sb.Append("1 ");
             return true;

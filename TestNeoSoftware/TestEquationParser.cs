@@ -92,4 +92,5 @@ public class TestEquationParser
             Assert.That(expected[2], Is.EqualTo(actual[2]));
         });
     }
+    
 }
