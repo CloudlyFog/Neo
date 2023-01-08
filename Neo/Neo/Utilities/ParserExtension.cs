@@ -11,8 +11,6 @@ namespace Neo.Utilities;
 /// </summary>
 public static class ParserExtension
 {
-    private const string Numerics = "1234567890";
-
     /// <summary>
     /// returns string with unknown variables from system linear equations
     /// </summary>
@@ -104,7 +102,7 @@ public static class ParserExtension
     /// <returns><see cref="bool"/></returns>
     public static bool IsTrash(this string input)
     {
-        if (!input.Any(item => Numerics.Any(numeric => item == numeric)))
+        if (!input.Any(item => "1234567890".Any(numeric => item == numeric)))
             return true;
         var len = input.Count(x => x == Parser.SplitSymbol);
         if (len is <= 0 or > 5)
