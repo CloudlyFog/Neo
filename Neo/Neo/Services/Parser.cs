@@ -8,13 +8,28 @@ namespace Neo.Services;
 
 public class Parser
 {
+    /// <summary>
+    /// splits equations of system in string
+    /// </summary>
     public const char SplitSymbol = ';';
+
+    /// <summary>
+    /// needs for determining negative digits
+    /// </summary>
     public const char NegativeSymbol = '-';
+
+    /// <summary>
+    /// needs for determining float digits with split symbol "." (dot)
+    /// </summary>
     public const char FloatSymbolDot = '.';
+
+    /// <summary>
+    /// needs for determining float digits with split symbol "," (comma)
+    /// </summary>
     public const char FloatSymbolComma = ',';
 
     /// <summary>
-    /// conversed string of equation
+    /// conversed string of system equations
     /// </summary>
     private readonly string _input;
 
@@ -23,6 +38,10 @@ public class Parser
     /// </summary>
     private int _every = 1;
 
+    /// <summary>
+    /// returns instance of <see cref="Parser"/> with valid value of <see cref="_input"/>
+    /// </summary>
+    /// <param name="input"><see cref="_input"/></param>
     public Parser(string input)
     {
         _input = input.GetDigits();

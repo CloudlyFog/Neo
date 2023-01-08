@@ -10,14 +10,46 @@ namespace Neo.Services;
 /// </summary>
 public sealed class Solver : IDisposable
 {
+    /// <summary>
+    /// passed recognized string (expected system linear equation)
+    /// </summary>
     private readonly string _input;
+
+    /// <summary>
+    /// instance of <see cref="Parser"/>
+    /// </summary>
     private Parser _parser;
+
+    /// <summary>
+    /// public instance of passed <see cref="_input"/>
+    /// </summary>
     public static string Input { get; private set; }
 
+    /// <summary>
+    /// implicitly converts instance of <see cref="Solver"/> to string by method <see cref="ToString"/>
+    /// </summary>
+    /// <param name="solver">instance of <see cref="Solver"/></param>
+    /// <returns>converted to <see cref="string"/> instance of <see cref="Solver"/></returns>
     public static implicit operator string(Solver solver) => solver.ToString();
+
+    /// <summary>
+    /// implicitly converts instance of <see cref="Solver"/> to <see cref="Vector{T}"/>
+    /// </summary>
+    /// <param name="solver">instance of <see cref="Solver"/></param>
+    /// <returns>converted to <see cref="Vector{T}"/> instance of <see cref="Solver"/></returns>
     public static implicit operator Vector<double>(Solver solver) => solver.Result;
+
+    /// <summary>
+    /// explicitly converts passed <see cref="_input"/> to <see cref="Solver"/>
+    /// </summary>
+    /// <param name="solver">instance of <see cref="Solver"/></param>
+    /// <returns>instance of <see cref="Solver"/></returns>
     public static explicit operator Solver(string input) => new(input);
 
+    /// <summary>
+    /// returns instance of <see cref="Solver"/> with different implicit and explicit operators
+    /// </summary>
+    /// <param name="input"><see cref="_input"/></param>
     public Solver(string input)
     {
         _input = input.Replace("\n", Parser.SplitSymbol.ToString()).ToLower();
