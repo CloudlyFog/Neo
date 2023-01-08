@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using MathNet.Numerics.LinearAlgebra;
-using Neo.Exceptions;
 using Neo.Utilities;
 
 namespace Neo.Services;
@@ -99,7 +98,9 @@ public class Parser
             return null;
         }
 
-        ValidArray(filterResult.ToArray(), nameof(filterResult));
+        if (ValidArray(filterResult.ToArray(), nameof(filterResult)) is null)
+            return null;
+
         // start point for input text
         // like an iterator
         var point = 0;

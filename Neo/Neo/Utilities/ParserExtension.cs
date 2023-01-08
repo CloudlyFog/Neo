@@ -31,7 +31,8 @@ public static class ParserExtension
     /// <returns></returns>
     public static List<string> RemoveEvery(this List<string> input, int every, int rows)
     {
-        Parser.ValidArray(input.ToArray(), nameof(input));
+        if (Parser.ValidArray(input.ToArray(), nameof(input)) is null)
+            return null;
         for (var i = 1; i <= rows; i++)
             input.RemoveAt(every * i);
 
@@ -47,7 +48,8 @@ public static class ParserExtension
     /// <returns></returns>
     public static List<string> AddEvery(this List<string> input, int every, int rows)
     {
-        Parser.ValidArray(input.ToArray(), nameof(input));
+        if (Parser.ValidArray(input.ToArray(), nameof(input)) is null)
+            return null;
         var output = Enumerable.Empty<string>();
         for (var i = 1; i <= rows; i++)
             output = output.Append(input[every * i - 1]);
@@ -192,11 +194,10 @@ public static class ParserExtension
         for (var j = 0; j < input.GetUnknownVariables().Length; j++)
         {
             if (input[i] == input.GetUnknownVariables()[j] && i == 0)
-                if (input[i] == input.GetUnknownVariables()[j] && i == 0)
-                {
-                    sb.Append("1 ");
-                    return true;
-                }
+            {
+                sb.Append("1 ");
+                return true;
+            }
 
             //if (input[i] != Solver.Input.GetUnknownVariables()[j] || char.IsDigit(input[i - 1]))
             if (input[i] != input.GetUnknownVariables()[j] || char.IsDigit(input[i - 1]))

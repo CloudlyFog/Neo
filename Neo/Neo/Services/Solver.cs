@@ -43,7 +43,21 @@ public sealed class Solver : IDisposable
     private void Solve()
     {
         LeftSide = _parser.MatrixConversion();
+        if (LeftSide is null)
+        {
+            Error.Message = $"{nameof(LeftSide)} is null.";
+            Dispose();
+            return;
+        }
+
         RightSide = _parser.VectorConversion();
+        if (RightSide is null)
+        {
+            Error.Message = $"{nameof(RightSide)} is null.";
+            Dispose();
+            return;
+        }
+
         try
         {
             Result = LeftSide.Solve(RightSide);
