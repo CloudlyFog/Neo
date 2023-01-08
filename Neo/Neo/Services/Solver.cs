@@ -13,9 +13,8 @@ public sealed class Solver : IDisposable
     private readonly string _input;
     private Parser _parser;
 
-    public static string Input { get; private set; }
-
     public static implicit operator string(Solver solver) => solver.ToString();
+    public static implicit operator Vector<double>(Solver solver) => solver.Result;
     public static explicit operator Solver(string input) => new(input);
 
     public Solver(string input)
@@ -29,7 +28,6 @@ public sealed class Solver : IDisposable
             return;
         }
 
-        Input = _input;
         _parser = new Parser(_input);
         try
         {
