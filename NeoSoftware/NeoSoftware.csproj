@@ -115,7 +115,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Resources\drawable\" />
-    <Folder Include="Resources\menu" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Carbon.Kit.Xamarin.Plugins" Version="2.1.0" />

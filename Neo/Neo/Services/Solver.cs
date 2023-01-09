@@ -75,6 +75,9 @@ public sealed class Solver : IDisposable
         }
     }
 
+    /// <summary>
+    /// solves system linear equations. set values to <see cref="Result"/>, <see cref="LeftSide"/>, <see cref="RightSide"/>
+    /// </summary>
     private void Solve()
     {
         LeftSide = _parser.MatrixConversion();
