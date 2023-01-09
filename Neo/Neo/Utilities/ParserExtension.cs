@@ -19,15 +19,6 @@ public static class ParserExtension
     /// <returns></returns>
     public static string GetUnknownVariables(this string input)
     {
-        try
-        {
-            var s = new string(input.Where(char.IsLetter).Distinct().ToArray());
-        }
-        catch (Exception e)
-        {
-            Console.WriteLine(e);
-            throw;
-        }
         return new string(input.Where(char.IsLetter).Distinct().ToArray());
     }
 
