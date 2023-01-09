@@ -11,6 +11,9 @@
         <Company>thewatercoolers</Company>
         <BaseIntermediateOutputPath>obj\</BaseIntermediateOutputPath>
         <TargetFrameworks>net6.0-windows;netstandard2.0</TargetFrameworks>
+        <PackageVersion>1.0.5</PackageVersion>
+        <AssemblyVersion></AssemblyVersion>
+        <FileVersion>1.0.5-alpha</FileVersion>
     </PropertyGroup>
 
     <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -62,9 +65,5 @@
             <Link>%(RecursiveDir)%(Filename)%(Extension)</Link>
             <Visible>false</Visible>
         </Content>
-    </ItemGroup>
-
-    <ItemGroup>
-      <Folder Include="Utilits" />
     </ItemGroup>
 </Project>

@@ -1,5 +1,7 @@
 ﻿using MathNet.Numerics.LinearAlgebra;
 using Neo.Services;
+using Neo.Utilities;
+using NUnit.Framework.Interfaces;
 
 namespace TestNeoSoftware;
 
@@ -12,7 +14,7 @@ public class TestEquationParser
     [SetUp]
     public void Setup()
     {
-        _parser = new Parser(equationInput);
+        //_parser = new Parser(equationInput);
     }
 
     [Test]
@@ -58,4 +60,37 @@ public class TestEquationParser
 
         Assert.AreEqual(expected, actual.MatrixConversion());
     }
+
+    [Test]
+    public void TestIsTrash()
+    {
+        var input = new List<string>
+        {
+            "f21fe11wffd",
+            "fff111",
+            equationInput,
+        };
+
+        var expected = new List<bool>
+        {
+            true,
+            true,
+            false,
+        };
+
+        var actual = new List<bool>
+        {
+            input[0].IsTrash(),
+            input[1].IsTrash(),
+            input[2].IsTrash(),
+        };
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(expected[0], Is.EqualTo(actual[0]));
+            Assert.That(expected[1], Is.EqualTo(actual[1]));
+            Assert.That(expected[2], Is.EqualTo(actual[2]));
+        });
+    }
+    
 }

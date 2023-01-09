@@ -1,7 +1,7 @@
 ﻿using System.Text;
 using MathNet.Numerics.LinearAlgebra;
 using Neo.Services;
-using Neo.Utilits;
+using Neo.Utilities;
 using OpenTK.Platform.Windows;
 
 namespace TestNeoSoftware;
