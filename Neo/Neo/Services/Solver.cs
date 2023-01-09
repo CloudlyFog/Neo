@@ -47,7 +47,7 @@ public sealed class Solver : IDisposable
     public static explicit operator Solver(string input) => new(input);
 
     /// <summary>
-    /// returns instance of <see cref="Solver"/> with different implicit and explicit operators
+    /// initialize instance of <see cref="Solver"/> with different implicit and explicit operators
     /// </summary>
     /// <param name="input"><see cref="_input"/></param>
     public Solver(string input)
@@ -109,17 +109,17 @@ public sealed class Solver : IDisposable
     }
 
     /// <summary>
-    /// describe left side (matrix) of equation
+    /// presents matrix (digits before "=") of system linear equation
     /// </summary>
     public Matrix<double> LeftSide { get; private set; }
 
     /// <summary>
-    /// describe right side (results) of equation
+    /// presents result's sequence (digits after "=") of system linear equation
     /// </summary>
     public Vector<double> RightSide { get; private set; }
 
     /// <summary>
-    /// describe results of unknown variables of system linear equations
+    /// presents results of unknown variables of system linear equations
     /// </summary>
     private Vector<double> Result { get; set; }
 
