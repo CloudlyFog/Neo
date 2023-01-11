@@ -10,7 +10,6 @@ using Android.Util;
 using Android.Views;
 using Android.Widget;
 using AndroidX.Core.App;
-using Google.Android.Material.Tabs.AppCompat.App;
 using Java.Interop;
 using Java.Lang;
 using Neo.Services;
@@ -39,9 +38,9 @@ namespace Neo.Droid
             base.OnCreate(savedInstanceState);
             // Set our view from the "main" layout resource  
             SetContentView(Resource.Layout.activity_main);
-            _cameraView = FindViewById<SurfaceView>(Resource.Id.surface_view);
-            _txtView = FindViewById<TextView>(Resource.Id.txtview);
-            _output = FindViewById<TextView>(Resource.Id.output);
+            // _cameraView = FindViewById<SurfaceView>(Resource.Id.surface_view);
+            // _txtView = FindViewById<TextView>(Resource.Id.txtview);
+            // _output = FindViewById<TextView>(Resource.Id.output);
             _textRecognizer = new TextRecognizer.Builder(ApplicationContext).Build();
 
 

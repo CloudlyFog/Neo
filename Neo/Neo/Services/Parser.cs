@@ -56,7 +56,7 @@ public class Parser
     {
         var targetArray = new double[
             // read count of ";" and therefore count will one less than actually
-            _input.Count(x => x == SplitSymbol),
+            _input.SymbolCount(SplitSymbol),
             // read count of spaces and divide it on count of symbol ";"
             _input.Count(x => x == ' ') / _input.Count(x => x == SplitSymbol)];
 
@@ -87,12 +87,12 @@ public class Parser
         // 5 6 7 = 8
         // 9 10 11 = 12
         // we get index of "3" and next add 1 for take index of "4"
-        _every = _input.Count(x => x == ' ') / _input.Count(x => x == SplitSymbol) + 1;
+        _every = _input.SymbolCount(' ') / _input.SymbolCount(SplitSymbol) + 1;
 
         // remove empty space
         filterResult = filterResult.Where(s => !string.IsNullOrWhiteSpace(s)).AsEnumerable().ToList()
             // get vector
-            .AddEvery(_every, _input.Count(x => x == SplitSymbol));
+            .AddEvery(_every, _input.SymbolCount(SplitSymbol));
 
         return GetVectorValue(new double[filterResult.Count], filterResult);
     }

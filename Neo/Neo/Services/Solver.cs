@@ -21,11 +21,6 @@ public sealed class Solver : IDisposable
     private Parser _parser;
 
     /// <summary>
-    /// public instance of passed <see cref="_input"/>
-    /// </summary>
-    public static string Input { get; private set; }
-
-    /// <summary>
     /// implicitly converts instance of <see cref="Solver"/> to string by method <see cref="ToString"/>
     /// </summary>
     /// <param name="solver">instance of <see cref="Solver"/></param>
@@ -53,7 +48,6 @@ public sealed class Solver : IDisposable
     public Solver(string input)
     {
         _input = input.Replace("\n", Parser.SplitSymbol.ToString()).ToLower();
-        Input = _input;
 
         if (_input is "no text" or "" || _input.IsTrash())
         {

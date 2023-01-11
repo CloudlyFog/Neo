@@ -19,15 +19,6 @@ public static class ParserExtension
     /// <returns></returns>
     public static string GetUnknownVariables(this string input)
     {
-        try
-        {
-            var s = new string(input.Where(char.IsLetter).Distinct().ToArray());
-        }
-        catch (Exception e)
-        {
-            Console.WriteLine(e);
-            throw;
-        }
         return new string(input.Where(char.IsLetter).Distinct().ToArray());
     }
 
@@ -78,6 +69,7 @@ public static class ParserExtension
         var sb = new StringBuilder();
         for (var i = 0; i < input.Length; i++)
         {
+            var index = input[i];
             if (OnNegativeSymbol(input, sb, i) || OnFloatSymbol(input, sb, i))
                 continue;
 
@@ -98,7 +90,8 @@ public static class ParserExtension
             // adds whitespace
             if (!char.IsDigit(input[i + 1]) && input[i + 1] != Parser.SplitSymbol
                                             && input[i + 1] != Parser.FloatSymbolDot
-                                            && input[i + 1] != Parser.FloatSymbolComma)
+                                            && input[i + 1] != Parser.FloatSymbolComma
+                                            && input[i + 1] != ' ')
             {
                 sb.Append(' ');
             }
@@ -120,6 +113,69 @@ public static class ParserExtension
         if (len is <= 0 or > 5)
             return true;
         return input.GetUnknownVariables().Length != input.ConvertToDigits().Count() / len - 1;
+    }
+
+    public static int SymbolCount(this string input, char symbol)
+    {
+        return input.Count(x => x == symbol);
+    }
+
+
+    public static string OnZeroVariable(this string input)
+    {
+        var sb = new StringBuilder();
+        var equations = new List<string>();
+        var dictionary = new UnknownVariablesDictionary<int, string>();
+        var index = 0;
+        for (var i = 0; i < input.SymbolCount(Parser.SplitSymbol); i++)
+        {
+            for (; index < input.Length; index++)
+            {
+                if (input[index] == Parser.SplitSymbol)
+                {
+                    index++;
+                    break;
+                }
+
+                sb.Append(input[index]);
+            }
+
+            equations.Add(sb.ToString());
+
+            var unknownVariables = sb.ToString().GetUnknownVariables();
+            dictionary.Add(new UnknownVariable<int, string>
+                { Key = unknownVariables.Length, Value = unknownVariables });
+            sb.Clear();
+        }
+
+        var digits = equations.Combine(Parser.SplitSymbol).GetDigits();
+
+
+        return equations.AppendZeroCoefficients(dictionary).Combine(Parser.SplitSymbol);
+    }
+
+    private static List<string> AppendZeroCoefficients(this List<string> list,
+        UnknownVariablesDictionary<int, string> unknownVariablesDict)
+    {
+        for (var i = 0; i < list.Count; i++)
+        {
+        }
+
+        return new();
+    }
+
+    /// <summary>
+    /// combines <see cref="List{T}"/> in one string with split symbol 
+    /// </summary>
+    /// <param name="list">list of <see cref="T"/></param>
+    /// <param name="splitSymbol">symbol for splitting</param>
+    /// <returns>list of strings in one string with split symbol</returns>
+    private static string Combine<T>(this List<T> list, char splitSymbol = ' ')
+    {
+        var sb = new StringBuilder();
+        foreach (var equation in list)
+            sb.Append($"{equation}{splitSymbol}");
+        return sb.ToString();
     }
 
     /// <summary>
@@ -209,8 +265,7 @@ public static class ParserExtension
                 return true;
             }
 
-            //if (input[i] != Solver.Input.GetUnknownVariables()[j] || char.IsDigit(input[i - 1]))
-            if (input[i] != Solver.Input.GetUnknownVariables()[j] || char.IsDigit(input[i - 1]))
+            if (input[i] != input.GetUnknownVariables()[j] || char.IsDigit(input[i - 1]))
                 continue;
             sb.Append("1 ");
             return true;
