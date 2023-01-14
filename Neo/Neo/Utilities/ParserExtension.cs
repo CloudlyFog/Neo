@@ -123,8 +123,50 @@ public static class ParserExtension
 
     public static string OnZeroVariable(this string input)
     {
-        var sb = new StringBuilder();
         var equations = new List<string>();
+        using var dictionary = input.GetUnknownVariablesDictionary(equations);
+
+        var max = dictionary.Indexers.GetMaxIndexer();
+        
+        
+
+        var matrixString = dictionary.Lines.Combine().GetDigits();
+
+
+        return dictionary.Lines.AppendZeroCoefficients(dictionary).Combine();
+    }
+
+    /// <summary>
+    /// gets max value of passed array of <see cref="Indexer"/>
+    /// </summary>
+    /// <param name="indexers"></param>
+    /// <returns></returns>
+    private static Indexer GetMaxIndexer(this List<Indexer> indexers)
+    {
+        var values = new List<int>();
+        for (var i = 0; i < indexers.Count; i++)
+        {
+            for (var j = i; j < indexers[i].Indices.Count; j++)
+                values.Add(indexers[i].Indices[j]);
+        }
+
+        for (var i = 0; i < indexers.Count; i++)
+        {
+            for (var j = i; j < indexers[i].Indices.Count; j++)
+            {
+                if (indexers[i].Indices[j] == values.Max())
+                    return indexers[i];
+            }
+        }
+
+        return null;
+    }
+
+    private static UnknownVariablesDictionary<int, string> GetUnknownVariablesDictionary(this string input,
+        List<string> equations)
+    {
+        var sb = new StringBuilder();
+        equations = new List<string>();
         var dictionary = new UnknownVariablesDictionary<int, string>();
         var index = 0;
         for (var i = 0; i < input.SymbolCount(Parser.SplitSymbol); i++)
@@ -144,21 +186,58 @@ public static class ParserExtension
 
             var unknownVariables = sb.ToString().GetUnknownVariables();
             dictionary.Add(new UnknownVariable<int, string>
-                { Key = unknownVariables.Length, Value = unknownVariables });
+            {
+                Key = unknownVariables.Length,
+                Value = unknownVariables,
+                Line = sb.ToString(),
+                Indexer = equations[i].GetIndexValues(unknownVariables),
+            });
+
+
             sb.Clear();
         }
 
-        var digits = equations.Combine(Parser.SplitSymbol).GetDigits();
-
-
-        return equations.AppendZeroCoefficients(dictionary).Combine(Parser.SplitSymbol);
+        return dictionary;
     }
 
-    private static List<string> AppendZeroCoefficients(this List<string> list,
+    /// <summary>
+    /// gets <see cref="Indexer"/>
+    /// </summary>
+    /// <param name="equationPart"></param>
+    /// <param name="unknownVariables"></param>
+    /// <returns></returns>
+    private static Indexer GetIndexValues(this string equationPart, string unknownVariables)
+    {
+        var indexer = new Indexer();
+        for (var i = 0; i < equationPart.Length; i++)
+        {
+            foreach (var unknownVariable in unknownVariables.Where(
+                         unknownVariable => equationPart[i] == unknownVariable))
+            {
+                indexer.Indices.Add(i);
+                indexer.Values.Add(unknownVariable.ToString());
+            }
+        }
+
+        return indexer;
+    }
+
+    /// <summary>
+    /// appends in internal <see cref="List{T}"/> zero coefficients of equations
+    /// </summary>
+    /// <param name="equations"></param>
+    /// <param name="unknownVariablesDict"></param>
+    /// <returns></returns>
+    private static List<string> AppendZeroCoefficients(this List<string> equations,
         UnknownVariablesDictionary<int, string> unknownVariablesDict)
     {
-        for (var i = 0; i < list.Count; i++)
+        for (var i = 0; i < equations.Count; i++)
         {
+            for (var j = i; j < equations.Count; j++)
+            {
+                var len = equations.Count;
+                var a = 0;
+            }
         }
 
         return new();
@@ -170,7 +249,7 @@ public static class ParserExtension
     /// <param name="list">list of <see cref="T"/></param>
     /// <param name="splitSymbol">symbol for splitting</param>
     /// <returns>list of strings in one string with split symbol</returns>
-    private static string Combine<T>(this List<T> list, char splitSymbol = ' ')
+    private static string Combine<T>(this List<T> list, char splitSymbol = Parser.SplitSymbol)
     {
         var sb = new StringBuilder();
         foreach (var equation in list)
@@ -190,7 +269,7 @@ public static class ParserExtension
             .Replace(Parser.NegativeSymbol.ToString(), "");
 
         var sb = new StringBuilder();
-        var array = new List<double>();
+        var digits = new List<double>();
 
         for (var i = 0; i < input.Length; i++)
         {
@@ -201,11 +280,11 @@ public static class ParserExtension
             if (input[i + 1] != ' ')
                 continue;
 
-            array.Add(double.Parse(sb.ToString()));
+            digits.Add(double.Parse(sb.ToString()));
             sb.Clear();
         }
 
-        return array;
+        return digits;
     }
 
     /// <summary>
