@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using MathNet.Numerics.LinearAlgebra;
 using Neo.Services;
+using Xamarin.Forms;
 
 namespace Neo.Utilities;
 
@@ -20,6 +21,19 @@ public static class ParserExtension
     public static string GetUnknownVariables(this string input)
     {
         return new string(input.Where(char.IsLetter).Distinct().ToArray());
+    }
+
+    /// <summary>
+    /// returns string with unknown variables from system linear equations
+    /// </summary>
+    /// <param name="list">parsed <see cref="List{T}"/> (expected from <see cref="Matrix{T}"/>)</param>
+    /// <returns></returns>
+    public static string GetUnknownVariables(this List<string> equations)
+    {
+        var list = equations.Select(equation =>
+            new string(equation.Where(char.IsLetter).Distinct().ToArray())).OrderBy(x => x.Length).ToList();
+
+        return new string(list.Combine(whiteSpace: false).Distinct().ToArray());
     }
 
     /// <summary>
@@ -127,10 +141,10 @@ public static class ParserExtension
         using var dictionary = input.GetUnknownVariablesDictionary(equations);
 
         var max = dictionary.Indexers.GetMaxIndexer();
-        
-        
 
-        var matrixString = dictionary.Lines.Combine().GetDigits();
+        var indices = dictionary.Lines.GetIndices(dictionary.Lines.GetUnknownVariables());
+
+        dictionary.Digits = dictionary.Lines.Combine().GetDigits();
 
 
         return dictionary.Lines.AppendZeroCoefficients(dictionary).Combine();
@@ -160,6 +174,31 @@ public static class ParserExtension
         }
 
         return null;
+    }
+
+    /// <summary>
+    /// gets indices of passed <see cref="List{T}"/> of equations
+    /// </summary>
+    /// <param name="equations">system linear equations</param>
+    /// <param name="unknownVariables">all unknown variables of <see cref="equations"/></param>
+    /// <returns></returns>
+    private static List<Dictionary<char, int>> GetIndices(this List<string> equations, string unknownVariables)
+    {
+        var arr = new List<Dictionary<char, int>>();
+        foreach (var line in equations)
+        {
+            var dict = new Dictionary<char, int>();
+            for (var j = 0; j < line.Length; j++)
+            {
+                foreach (var unknownVariable
+                         in unknownVariables.Where(unknownVariable => line[j] == unknownVariable))
+                    dict.Add(line[j], j);
+            }
+
+            arr.Add(dict);
+        }
+
+        return arr;
     }
 
     private static UnknownVariablesDictionary<int, string> GetUnknownVariablesDictionary(this string input,
@@ -249,9 +288,16 @@ public static class ParserExtension
     /// <param name="list">list of <see cref="T"/></param>
     /// <param name="splitSymbol">symbol for splitting</param>
     /// <returns>list of strings in one string with split symbol</returns>
-    private static string Combine<T>(this List<T> list, char splitSymbol = Parser.SplitSymbol)
+    private static string Combine<T>(this List<T> list, char splitSymbol = Parser.SplitSymbol, bool whiteSpace = true)
     {
         var sb = new StringBuilder();
+        if (!whiteSpace)
+        {
+            foreach (var equation in list)
+                sb.Append($"{equation}");
+            return sb.ToString();
+        }
+
         foreach (var equation in list)
             sb.Append($"{equation}{splitSymbol}");
         return sb.ToString();
