@@ -10,7 +10,6 @@ public class UnknownVariablesDictionary<TKey, TValue> : IDisposable
     public List<TValue> Values { get; private set; } = new();
     public List<string> Lines { get; private set; } = new();
     public List<Indexer> Indexers { get; private set; } = new();
-    public string Digits { get; set; }
 
 
     public void Add(UnknownVariable<TKey, TValue> unknownVariable)

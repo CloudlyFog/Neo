@@ -24,19 +24,6 @@ public static class ParserExtension
     }
 
     /// <summary>
-    /// returns string with unknown variables from system linear equations
-    /// </summary>
-    /// <param name="list">parsed <see cref="List{T}"/> (expected from <see cref="Matrix{T}"/>)</param>
-    /// <returns></returns>
-    public static string GetUnknownVariables(this List<string> equations)
-    {
-        var list = equations.Select(equation =>
-            new string(equation.Where(char.IsLetter).Distinct().ToArray())).OrderBy(x => x.Length).ToList();
-
-        return new string(list.Combine(whiteSpace: false).Distinct().ToArray());
-    }
-
-    /// <summary>
     /// removes elements every time when i in cycle will divide without a trace by every' value
     /// after removes white spaces and empty strings from list
     /// </summary>
@@ -129,51 +116,25 @@ public static class ParserExtension
         return input.GetUnknownVariables().Length != input.ConvertToDigits().Count() / len - 1;
     }
 
+    /// <summary>
+    /// counts symbols in <see cref="input"/>
+    /// </summary>
+    /// <param name="input">read text</param>
+    /// <param name="symbol">symbol for counting</param>
+    /// <returns></returns>
     public static int SymbolCount(this string input, char symbol)
     {
         return input.Count(x => x == symbol);
     }
-
 
     public static string OnZeroVariable(this string input)
     {
         var equations = new List<string>();
         using var dictionary = input.GetUnknownVariablesDictionary(equations);
 
-        var max = dictionary.Indexers.GetMaxIndexer();
+        var indices = dictionary.Lines.GetIndices(input.GetUnknownVariables());
 
-        var indices = dictionary.Lines.GetIndices(dictionary.Lines.GetUnknownVariables());
-
-        dictionary.Digits = dictionary.Lines.Combine().GetDigits();
-
-
-        return dictionary.Lines.AppendZeroCoefficients(dictionary).Combine();
-    }
-
-    /// <summary>
-    /// gets max value of passed array of <see cref="Indexer"/>
-    /// </summary>
-    /// <param name="indexers"></param>
-    /// <returns></returns>
-    private static Indexer GetMaxIndexer(this List<Indexer> indexers)
-    {
-        var values = new List<int>();
-        for (var i = 0; i < indexers.Count; i++)
-        {
-            for (var j = i; j < indexers[i].Indices.Count; j++)
-                values.Add(indexers[i].Indices[j]);
-        }
-
-        for (var i = 0; i < indexers.Count; i++)
-        {
-            for (var j = i; j < indexers[i].Indices.Count; j++)
-            {
-                if (indexers[i].Indices[j] == values.Max())
-                    return indexers[i];
-            }
-        }
-
-        return null;
+        return dictionary.Lines.AppendZeroCoefficients(indices).Combine();
     }
 
     /// <summary>
@@ -268,15 +229,14 @@ public static class ParserExtension
     /// <param name="unknownVariablesDict"></param>
     /// <returns></returns>
     private static List<string> AppendZeroCoefficients(this List<string> equations,
-        UnknownVariablesDictionary<int, string> unknownVariablesDict)
+        List<Dictionary<char, int>> indices)
     {
+        for (int i = 0; i < indices.Count; i++)
+        {
+        }
+
         for (var i = 0; i < equations.Count; i++)
         {
-            for (var j = i; j < equations.Count; j++)
-            {
-                var len = equations.Count;
-                var a = 0;
-            }
         }
 
         return new();
@@ -288,16 +248,9 @@ public static class ParserExtension
     /// <param name="list">list of <see cref="T"/></param>
     /// <param name="splitSymbol">symbol for splitting</param>
     /// <returns>list of strings in one string with split symbol</returns>
-    private static string Combine<T>(this List<T> list, char splitSymbol = Parser.SplitSymbol, bool whiteSpace = true)
+    private static string Combine<T>(this List<T> list, char splitSymbol = Parser.SplitSymbol)
     {
         var sb = new StringBuilder();
-        if (!whiteSpace)
-        {
-            foreach (var equation in list)
-                sb.Append($"{equation}");
-            return sb.ToString();
-        }
-
         foreach (var equation in list)
             sb.Append($"{equation}{splitSymbol}");
         return sb.ToString();
