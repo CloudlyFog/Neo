@@ -207,6 +207,13 @@ public class Parser
         return false;
     }
 
+    /// <summary>
+    /// valid passed array for the some specifications
+    /// </summary>
+    /// <param name="array">passed array</param>
+    /// <param name="arrayName">name of passed array (name of variable)</param>
+    /// <typeparam name="T">the type of elements in the array</typeparam>
+    /// <returns></returns>
     internal static Error ValidArray<T>(T[] array, string arrayName)
     {
         if (array is null)
