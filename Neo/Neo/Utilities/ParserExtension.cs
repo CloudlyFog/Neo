@@ -2,9 +2,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using __livexaml;
 using MathNet.Numerics.LinearAlgebra;
 using Neo.Services;
-using Xamarin.Forms;
+using Xamarin.Forms.Internals;
 
 namespace Neo.Utilities;
 
@@ -18,9 +19,13 @@ public static class ParserExtension
     /// </summary>
     /// <param name="input">parsed string (expected from <see cref="Matrix{T}"/>)</param>
     /// <returns></returns>
-    public static string GetUnknownVariables(this string input)
+    public static string GetUnknownVariables(this string input, bool fullInput = false)
     {
-        return new string(input.Where(char.IsLetter).Distinct().ToArray());
+        if (!fullInput)
+            return new string(input.Where(char.IsLetter).Distinct().ToArray());
+
+        var digits = new string(input.Separate().OrderByDescending(x => x.Length).ToList()[0].ToArray());
+        return new string(digits.Where(char.IsLetter).Distinct().ToArray());
     }
 
     /// <summary>
@@ -132,34 +137,7 @@ public static class ParserExtension
         var equations = new List<string>();
         using var dictionary = input.GetUnknownVariablesDictionary(equations);
 
-        var indices = dictionary.Lines.GetIndices(input.GetUnknownVariables());
-
-        return dictionary.Lines.AppendZeroCoefficients(indices).Combine();
-    }
-
-    /// <summary>
-    /// gets indices of passed <see cref="List{T}"/> of equations
-    /// </summary>
-    /// <param name="equations">system linear equations</param>
-    /// <param name="unknownVariables">all unknown variables of <see cref="equations"/></param>
-    /// <returns></returns>
-    private static List<Dictionary<char, int>> GetIndices(this List<string> equations, string unknownVariables)
-    {
-        var arr = new List<Dictionary<char, int>>();
-        foreach (var line in equations)
-        {
-            var dict = new Dictionary<char, int>();
-            for (var j = 0; j < line.Length; j++)
-            {
-                foreach (var unknownVariable
-                         in unknownVariables.Where(unknownVariable => line[j] == unknownVariable))
-                    dict.Add(line[j], j);
-            }
-
-            arr.Add(dict);
-        }
-
-        return arr;
+        return dictionary.Lines.AppendZeroCoefficients(input.GetUnknownVariables(true)).Combine();
     }
 
     private static UnknownVariablesDictionary<int, string> GetUnknownVariablesDictionary(this string input,
@@ -228,32 +206,153 @@ public static class ParserExtension
     /// <param name="equations"></param>
     /// <param name="unknownVariablesDict"></param>
     /// <returns></returns>
-    private static List<string> AppendZeroCoefficients(this List<string> equations,
-        List<Dictionary<char, int>> indices)
+    private static List<string> AppendZeroCoefficients(this List<string> equations, string unknownVariables)
     {
-        for (int i = 0; i < indices.Count; i++)
+        equations[0] = " 2y = 4";
+        var appendableVariables = equations.GetAppendableEquations(unknownVariables);
+        var digitEquations = appendableVariables.Combine().GetDigits().Separate();
+        var missedVariables = equations.GetVariableNames(unknownVariables);
+        var output = new List<string>();
+
+
+        var sb = new StringBuilder();
+        for (var i = 0; i < digitEquations.Count; i++)
         {
+            // here we append to digitEquations zeros to definite equations
+            // with index corresponding value of Dictionary<char, int>
+            var missed = appendableVariables[i].GetMissedUnknownVariables(unknownVariables);
+            var withoutWhiteSpace = digitEquations[i].RemoveWhiteSpace();
+
+            for (var j = 0; j < missed.Length; j++)
+            {
+                var index = unknownVariables.IndexOf(missed[j]);
+                
+                
+                for (var k = 0; k < unknownVariables.Length; k++)
+                {
+                    var indexMissed = missed[j];
+                    var indexVariable = unknownVariables[k];
+                    if (missed[j] == unknownVariables[k])
+                    {
+                        sb.Append(" 0 ");
+                        break;
+                    }
+                    
+                    for (var l = 0; l < withoutWhiteSpace.Length; l++)
+                    {
+                        if (l == index)
+                            break;
+                        sb.Append($"{withoutWhiteSpace[l]} ");
+                    }
+                
+                    
+                    // sb.Append($"{digitEquations[missedVariables[i].Values.FirstOrDefault(x => x == i)]};");
+                    
+                }
+            }
+            output.Add(sb.ToString());
+            sb.Clear();
         }
 
-        for (var i = 0; i < equations.Count; i++)
+        var result = sb.ToString().Trim().Separate().Trim().Separate();
+
+
+        return digitEquations;
+    }
+
+    private static string RemoveWhiteSpace(this string str)
+    {
+        return new string(str.Where(x => !char.IsWhiteSpace(x)).ToArray());
+    }
+    private static string Trim(this IEnumerable<string> list)
+    {
+        return list.Select(item => item.Trim()).ToList().Combine();
+    }
+
+    private static string GetMissedUnknownVariables(this string equation, string unknownVariables)
+    {
+        var sb = new StringBuilder();
+        foreach (var unknownVariable in unknownVariables
+                     .Where(unknownVariable => !equation.Contains(unknownVariable.ToString())))
+            sb.Append(unknownVariable);
+
+        return sb.ToString();
+    }
+
+
+    private static List<Dictionary<char, int>> GetVariableNames(this List<string> equations, string unknownVariables)
+    {
+        var needToAppend = new List<Dictionary<char, int>>();
+
+        foreach (var equation in equations)
         {
+            foreach (var unknownVariable in unknownVariables)
+            {
+                if (!equation.Contains(unknownVariable))
+                    needToAppend.Add(new Dictionary<char, int>
+                    {
+                        { unknownVariable, equations.IndexOf(equation) }
+                    });
+            }
         }
 
-        return new();
+        return needToAppend;
+    }
+
+    private static List<string> GetAppendableEquations(this List<string> equations, string unknownVariables)
+    {
+        var needToAppend = new List<string>();
+
+        foreach (var equation in equations)
+        {
+            foreach (var unknownVariable in unknownVariables)
+            {
+                if (!equation.Contains(unknownVariable))
+                    needToAppend.Add(equation);
+            }
+        }
+
+        return needToAppend.Distinct().ToList();
     }
 
     /// <summary>
-    /// combines <see cref="List{T}"/> in one string with split symbol 
+    /// combines <see cref="List{T}"/> in one string with <see cref="splitSymbol"/>
     /// </summary>
     /// <param name="list">list of <see cref="T"/></param>
     /// <param name="splitSymbol">symbol for splitting</param>
-    /// <returns>list of strings in one string with split symbol</returns>
+    /// <returns><see cref="string"/> with <see cref="splitSymbol"/> in indices where list was ended</returns>
     private static string Combine<T>(this List<T> list, char splitSymbol = Parser.SplitSymbol)
     {
         var sb = new StringBuilder();
         foreach (var equation in list)
             sb.Append($"{equation}{splitSymbol}");
         return sb.ToString();
+    }
+
+    /// <summary>
+    /// separates <see cref="input"/> in <see cref="List{T}"/> using <see cref="splitSymbol"/>
+    /// </summary>
+    /// <param name="input">string for separating</param>
+    /// <param name="splitSymbol">symbol for splitting</param>
+    /// <returns><see cref="List{T}"/> from separated <see cref="input"/></returns>
+    private static List<string> Separate(this string input, char splitSymbol = Parser.SplitSymbol)
+    {
+        var list = new List<string>();
+        var sb = new StringBuilder();
+        foreach (var item in input)
+        {
+            if (item != splitSymbol)
+            {
+                sb.Append(item);
+            }
+            else
+            {
+                list.Add(sb.ToString());
+                sb.Clear();
+            }
+        }
+
+        return list;
     }
 
     /// <summary>

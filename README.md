@@ -13,5 +13,8 @@ small window with title "**output**".
 - solve system linear equation
 - solve matrix
 
-## In the next updates
-- recognition of variables with zero coefficient
+## Security policy
+You can read security policy here [Security Policy](https://github.com/CloudlyFog/Neo/blob/master/SECURITY.md)
+
+## About Updates
+You can read all planned updaets here [Updates](https://github.com/CloudlyFog/Neo/blob/master/UPDATES.md)
