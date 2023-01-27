@@ -24,7 +24,7 @@ using View = Android.Views.View;
 namespace NeoSoftware
 {
     [Activity(Label = "Recognize", Theme = "@style/AppTheme", MainLauncher = true)]
-    public class MainActivity : AppCompatActivity, ISurfaceHolderCallback, IProcessor
+    public partial class MainActivity : AppCompatActivity, ISurfaceHolderCallback, IProcessor
     {
         private SurfaceView _cameraView;
         private TextView _tessOutput;
@@ -161,22 +161,6 @@ namespace NeoSoftware
 
         public void Release()
         {
-        }
-
-        [Export("Solve")]
-        public void OpenConfirmationDialog(View view)
-        {
-            _detect = false;
-            _detectSwitch.Checked = _detect;
-            _confirmationAlertDialog.Show();
-        }
-
-        [Export("Confirm")]
-        public void ConfirmDataInput(View view)
-        {
-            _detectSwitch.Checked = _detect;
-            _confirmationAlertDialog.Cancel();
-            _output.Text = new Solver(_tessOutput.Text);
         }
     }
 }
