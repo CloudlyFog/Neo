@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Threading.Tasks;
 using Android.App;
 using Android.Widget;
 using Android.OS;
@@ -13,8 +12,6 @@ using Android;
 using AndroidX.AppCompat.App;
 using AndroidX.Core.App;
 using Java.Lang;
-using Java.Interop;
-using Neo.Services;
 using StringBuilder = System.Text.StringBuilder;
 using static Android.Gms.Vision.Detector;
 using AlertDialog = AndroidX.AppCompat.App.AlertDialog;
@@ -44,7 +41,7 @@ namespace NeoSoftware
         {
             base.OnCreate(savedInstanceState);
             // Set our view from the "main" layout resource  
-            SetContentView(Resource.Layout.activity_main);
+            SetContentView(Resource.Layout.activity_manual);
 
             BuildUI();
         }
@@ -56,6 +53,7 @@ namespace NeoSoftware
             _output = FindViewById<TextView>(Resource.Id.output);
             _detectSwitch = FindViewById<Switch>(Resource.Id.detect_switch);
             _textRecognizer = new TextRecognizer.Builder(ApplicationContext).Build();
+            GetButtons();
 
             ConfigureRecognizer();
             ConfigureConfirmationAlertDialog();
