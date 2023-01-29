@@ -32,8 +32,6 @@ public partial class MainPage
 
         // StackLayout
         ConfigureStackLayout();
-
-        // _tesseractApi = Resolver.Resolve<ITesseractApi>();
     }
 
     private void Exp_OnClick(object sender, EventArgs e)
@@ -60,16 +58,16 @@ public partial class MainPage
         RowCount.TextChanged += (o, args) => { _rows = int.Parse(args.NewTextValue); };
     }
 
-    private static Matrix<decimal> ConvertToMatrix(decimal[,] matrix)
-        => Matrix<decimal>.Build.DenseOfArray(matrix);
+    private static Matrix<double> ConvertToMatrix(double[,] matrix)
+        => Matrix<double>.Build.DenseOfArray(matrix);
 
     /// <summary>
     /// converting data from IGridListView to double[,]
     /// </summary>
     /// <returns></returns>
-    private decimal[,] GetMatrix()
+    private double[,] GetMatrix()
     {
-        var matrix = new decimal[_columns, _rows];
+        var matrix = new double[_columns, _rows];
         var startPoint = 0; // like an i in default cycle
         var j = 0;
         for (var i = 0; startPoint < MatrixGrid.Children.Count; i++)
@@ -100,7 +98,7 @@ public partial class MainPage
         return j == 0;
     }
 
-    private decimal[,] SetMatrix(decimal[,] matrix, int startPoint, int i, int j)
+    private double[,] SetMatrix(double[,] matrix, int startPoint, int i, int j)
     {
         // get frame with index startPoint from array of MatrixGrid
         var frame = (Frame)MatrixGrid.Children[startPoint];
@@ -108,11 +106,11 @@ public partial class MainPage
         var entry = (Entry)frame.Content;
 
         // assign value of entered Entry
-        matrix[i, j] = decimal.Parse(entry.Text);
+        matrix[i, j] = double.Parse(entry.Text);
         return matrix;
     }
 
-    private void ShowResult(Matrix<decimal> output, ResultKind resultKind)
+    private void ShowResult(Matrix<double> output, ResultKind resultKind)
     {
         var message = new StringBuilder();
         for (var i = 0; i < output.RowCount; i++)

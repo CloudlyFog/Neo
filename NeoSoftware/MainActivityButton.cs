@@ -1,7 +1,11 @@
-﻿using Android.Views;
+﻿using System.Text;
+using System.Threading.Tasks;
+using Android.Views;
 using Android.Widget;
 using Java.Interop;
+using MathNet.Numerics.LinearAlgebra;
 using Neo.Services;
+using NeoSoftware.Services;
 
 
 namespace NeoSoftware
@@ -13,6 +17,10 @@ namespace NeoSoftware
         private Button _det;
         private Button _rank;
         private Button _exponentiation;
+        private GridLayout _gridLayoutMatrix;
+        private Matrix<double> _matrix;
+        private int _rows;
+        private int _columns;
 
         private void GetButtons()
         {
@@ -21,6 +29,33 @@ namespace NeoSoftware
             _det = FindViewById<Button>(Resource.Id.det_btn);
             _rank = FindViewById<Button>(Resource.Id.rank_btn);
             _exponentiation = FindViewById<Button>(Resource.Id.exp_btn);
+
+            ConfigureButtons();
+        }
+
+        private void ConfigureButtons()
+        {
+            _transpose.Click += (s, a) =>
+            {
+                SetMatrix(_gridLayoutMatrix, _gridLayoutMatrix.RowCount, _gridLayoutMatrix.ColumnCount);
+            };
+        }
+
+        private void ConfigureGrid()
+        {
+            _gridLayoutMatrix = FindViewById<GridLayout>(Resource.Id.matrix_grid);
+            _gridLayoutMatrix.ColumnCount = 3;
+            _gridLayoutMatrix.RowCount = 3;
+
+            for (var i = 0; i < _gridLayoutMatrix.RowCount; i++)
+            {
+                for (var j = 0; j < _gridLayoutMatrix.ColumnCount; j++)
+                {
+                    _gridLayoutMatrix.AddView(new TextView(this)
+                    {
+                    });
+                }
+            }
         }
 
         [Export("Solve")]
@@ -69,6 +104,41 @@ namespace NeoSoftware
 
         [Export("Exp")]
         public void Exponentiation(View view)
+        {
+        }
+
+        private void SetMatrix(GridLayout gridLayout, int rows, int columns)
+        {
+            if (_matrix != null)
+                return;
+            _matrix = HandleMatrixAndroid.GetMatrix(gridLayout, rows, columns);
+        }
+
+        private void ShowResult(Matrix<double> output, ResultKind resultKind)
+        {
+            var message = new StringBuilder();
+            for (var i = 0; i < output.RowCount; i++)
+            {
+                for (var j = 0; j <= output.ColumnCount; j++)
+                {
+                    if (j == _rows)
+                    {
+                        message = message.Append("\n");
+                        continue;
+                    }
+
+                    message = message.Append($"{output[i, j]}|\t\t");
+                }
+            }
+
+            DisplayAlert(resultKind.ToString(), message.ToString(), "Close");
+        }
+
+        private void ShowResult(string output, ResultKind resultKind)
+            => DisplayAlert(resultKind.ToString(), output, "Close");
+
+
+        public async Task DisplayAlert(string title, string message, string cancel)
         {
         }
     }

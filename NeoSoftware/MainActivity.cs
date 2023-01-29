@@ -55,6 +55,8 @@ namespace NeoSoftware
             _textRecognizer = new TextRecognizer.Builder(ApplicationContext).Build();
             GetButtons();
 
+
+            ConfigureGrid();
             ConfigureRecognizer();
             ConfigureConfirmationAlertDialog();
             ConfigureDetectSwitch();
