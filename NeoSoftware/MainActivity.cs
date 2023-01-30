@@ -53,10 +53,12 @@ namespace NeoSoftware
             _output = FindViewById<TextView>(Resource.Id.output);
             _detectSwitch = FindViewById<Switch>(Resource.Id.detect_switch);
             _textRecognizer = new TextRecognizer.Builder(ApplicationContext).Build();
+
+
             GetButtons();
-
-
             ConfigureGrid();
+
+
             ConfigureRecognizer();
             ConfigureConfirmationAlertDialog();
             ConfigureDetectSwitch();

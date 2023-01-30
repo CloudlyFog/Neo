@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System;
+using System.Text;
 using System.Threading.Tasks;
 using Android.Views;
 using Android.Widget;
@@ -35,10 +36,36 @@ namespace NeoSoftware
 
         private void ConfigureButtons()
         {
-            _transpose.Click += (s, a) =>
+            _transpose.Click += (sender, args) =>
             {
-                SetMatrix(_gridLayoutMatrix, _gridLayoutMatrix.RowCount, _gridLayoutMatrix.ColumnCount);
+                SetClickButtons();
+                MatrixHighLevel.Transpose(_matrix);
             };
+            _reverse.Click += (sender, args) =>
+            {
+                SetClickButtons();
+                MatrixHighLevel.GetReverseMatrix(_matrix);
+            };
+            _det.Click += (sender, args) =>
+            {
+                SetClickButtons();
+                MatrixHighLevel.GetDeterminant(_matrix);
+            };
+            _rank.Click += (sender, args) =>
+            {
+                SetClickButtons();
+                MatrixHighLevel.GetRank(_matrix);
+            };
+            _exponentiation.Click += (sender, args) =>
+            {
+                SetClickButtons();
+                MatrixHighLevel.Exponentiation(_matrix, int.Parse(FindViewById<EditText>(Resource.Id.exp_value).Text));
+            };
+        }
+
+        private void SetClickButtons()
+        {
+            SetMatrix(_gridLayoutMatrix, _gridLayoutMatrix.RowCount, _gridLayoutMatrix.ColumnCount);
         }
 
         private void ConfigureGrid()
@@ -82,30 +109,30 @@ namespace NeoSoftware
         public void BackToManualBtn(View view) =>
             SetContentView(Resource.Layout.activity_manual);
 
-        [Export("Transpose")]
-        public void Transpose(View view)
-        {
-        }
-
-        [Export("Reverse")]
-        public void Reverse(View view)
-        {
-        }
-
-        [Export("Determinant")]
-        public void Determinant(View view)
-        {
-        }
-
-        [Export("Rank")]
-        public void Rank(View view)
-        {
-        }
-
-        [Export("Exp")]
-        public void Exponentiation(View view)
-        {
-        }
+        // [Export("Transpose")]
+        // public void Transpose(View view)
+        // {
+        // }
+        //
+        // [Export("Reverse")]
+        // public void Reverse(View view)
+        // {
+        // }
+        //
+        // [Export("Determinant")]
+        // public void Determinant(View view)
+        // {
+        // }
+        //
+        // [Export("Rank")]
+        // public void Rank(View view)
+        // {
+        // }
+        //
+        // [Export("Exp")]
+        // public void Exponentiation(View view)
+        // {
+        // }
 
         private void SetMatrix(GridLayout gridLayout, int rows, int columns)
         {

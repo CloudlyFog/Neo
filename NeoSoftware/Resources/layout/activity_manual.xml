@@ -174,4 +174,11 @@
             android:layout_alignParentEnd="true" android:layout_marginEnd="30dp"
             android:layout_alignParentBottom="true"
             android:layout_marginBottom="25dp" android:id="@+id/back_to_recognition"/>
+    <EditText
+            android:layout_width="140dp"
+            android:layout_height="wrap_content"
+            android:inputType="number"
+            android:ems="10"
+            android:layout_centerHorizontal="true" android:layout_alignParentBottom="true"
+            android:layout_marginBottom="255dp" android:id="@+id/exp_value"/>
 </RelativeLayout>  
