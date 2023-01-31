@@ -60,6 +60,7 @@ namespace NeoSoftware
             {
                 GetButtons();
                 ConfigureGrid();
+                ConfigureResultWindow();
             }
         }
 

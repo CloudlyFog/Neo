@@ -9,14 +9,14 @@ namespace NeoSoftware.Services
         /// converting data from IGridListView to double[,]
         /// </summary>
         /// <returns></returns>
-        public static Matrix<double> GetMatrix(GridLayout gridLayout, int rows, int columns)
+        public static Matrix<double> GetMatrix(GridLayout gridLayout)
         {
-            var matrix = new double[columns, rows];
+            var matrix = new double[gridLayout.ColumnCount, gridLayout.RowCount];
             var startPoint = 0; // like an i in default cycle
             var j = 0;
             for (var i = 0; startPoint < gridLayout.ChildCount; i++)
             {
-                if (ValidateIterators(ref i, ref j, rows, columns))
+                if (ValidateIterators(ref i, ref j, gridLayout.RowCount, gridLayout.ColumnCount))
                     break;
                 matrix = SetMatrix(matrix, gridLayout, startPoint, i, j);
                 startPoint++;
