@@ -1,5 +1,6 @@
 ﻿using System.Text;
 using System.Threading.Tasks;
+using Android.OS;
 using Android.Views;
 using Android.Widget;
 using Java.Interop;
@@ -20,8 +21,8 @@ namespace NeoSoftware
         private Button _exponentiation;
         private GridLayout _gridLayoutMatrix;
         private TextView _resultOutput;
-        private View _resultWindow;
-        private AlertDialog _resultAlertDialog;
+        private TextView _resultInput;
+        private TextView _resultTitle;
         private Matrix<double> _matrix;
         private int _rows;
         private int _columns;
@@ -42,27 +43,29 @@ namespace NeoSoftware
             _transpose.Click += (sender, args) =>
             {
                 SetMatrix(_gridLayoutMatrix);
-                ShowResult(MatrixHighLevel.Transpose(_matrix), ResultKind.Transpose);
+
+                ShowResult(_matrix, MatrixHighLevel.Transpose(_matrix), ResultKind.Transpose);
             };
             _reverse.Click += (sender, args) =>
             {
                 SetMatrix(_gridLayoutMatrix);
-                ShowResult(MatrixHighLevel.GetReverseMatrix(_matrix), ResultKind.Reverse);
+                ShowResult(_matrix, MatrixHighLevel.GetReverseMatrix(_matrix), ResultKind.Reverse);
             };
             _det.Click += (sender, args) =>
             {
                 SetMatrix(_gridLayoutMatrix);
-                ShowResult(MatrixHighLevel.GetDeterminant(_matrix).ToString(), ResultKind.Determinant);
+                ShowResult(GetMatrixValue(_matrix), MatrixHighLevel.GetDeterminant(_matrix).ToString(),
+                    ResultKind.Determinant);
             };
             _rank.Click += (sender, args) =>
             {
                 SetMatrix(_gridLayoutMatrix);
-                ShowResult(MatrixHighLevel.GetRank(_matrix).ToString(), ResultKind.Rank);
+                ShowResult(GetMatrixValue(_matrix), MatrixHighLevel.GetRank(_matrix).ToString(), ResultKind.Rank);
             };
             _exponentiation.Click += (sender, args) =>
             {
                 SetMatrix(_gridLayoutMatrix);
-                ShowResult(
+                ShowResult(_matrix,
                     MatrixHighLevel.Exponentiation(_matrix,
                         int.Parse(FindViewById<EditText>(Resource.Id.exp_value).Text)),
                     ResultKind.Exponentiation);
@@ -72,8 +75,8 @@ namespace NeoSoftware
         private void ConfigureGrid()
         {
             _gridLayoutMatrix = FindViewById<GridLayout>(Resource.Id.matrix_grid);
-            _gridLayoutMatrix.ColumnCount = 3;
-            _gridLayoutMatrix.RowCount = 3;
+            _gridLayoutMatrix.ColumnCount = _rows = 3;
+            _gridLayoutMatrix.RowCount = _columns = 3;
 
             for (var i = 0; i < _gridLayoutMatrix.RowCount; i++)
             {
@@ -84,13 +87,16 @@ namespace NeoSoftware
             }
         }
 
-        private void ConfigureResultWindow()
+        private void OpenResultWindow(string title, string input, string output)
         {
+            SetContentView(Resource.Layout.result);
+            _resultTitle = FindViewById<TextView>(Resource.Id.result_title);
+            _resultInput = FindViewById<TextView>(Resource.Id.result_input);
             _resultOutput = FindViewById<TextView>(Resource.Id.result_output);
-            _resultWindow = LayoutInflater.Inflate(Resource.Layout.result, null);
-            _resultAlertDialog = new AlertDialog.Builder(this).Create();
-            _resultAlertDialog.SetCancelable(true);
-            _resultAlertDialog.SetView(_resultOutput);
+
+            _resultTitle.Text = title;
+            _resultInput.Text += $"\n{input}";
+            _resultOutput.Text += $"\n{output}";
         }
 
         [Export("Solve")]
@@ -131,32 +137,30 @@ namespace NeoSoftware
             _matrix = HandleMatrixAndroid.GetMatrix(gridLayout);
         }
 
-        private void ShowResult(Matrix<double> output, ResultKind resultKind)
+        private void ShowResult(Matrix<double> input, Matrix<double> output, ResultKind resultKind)
+            => OpenResultWindow(resultKind.ToString(), GetMatrixValue(input), GetMatrixValue(output));
+
+        private void ShowResult(string input, string output, ResultKind resultKind)
+            => OpenResultWindow(resultKind.ToString(), input, output);
+
+        private string GetMatrixValue(Matrix<double> matrix)
         {
             var message = new StringBuilder();
-            for (var i = 0; i < output.RowCount; i++)
+            for (var i = 0; i < matrix.RowCount; i++)
             {
-                for (var j = 0; j <= output.ColumnCount; j++)
+                for (var j = 0; j <= matrix.ColumnCount; j++)
                 {
-                    if (j == _rows)
+                    if (j == _columns)
                     {
                         message = message.Append("\n");
                         continue;
                     }
 
-                    message = message.Append($"{output[i, j]}|\t\t");
+                    message = message.Append($"{matrix[i, j]}\t\t");
                 }
             }
 
-            DisplayAlert(resultKind.ToString(), message.ToString(), "Close");
-        }
-
-        private void ShowResult(string output, ResultKind resultKind)
-            => DisplayAlert(resultKind.ToString(), output, "Close");
-
-
-        public async Task DisplayAlert(string title, string message, string cancel)
-        {
+            return message.ToString();
         }
     }
 }
