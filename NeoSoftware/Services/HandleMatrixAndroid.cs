@@ -29,17 +29,17 @@ namespace NeoSoftware.Services
         {
             // if i equals count of columns
             // we go to the next row and resetting to zero i
-            if (i == columns)
-            {
-                i = 0;
-                j++;
-            }
+            if (i == 0)
+                return false;
+
+            if (i != columns)
+                return j == rows;
+            i = 0;
+            j++;
 
             // if j equals count of columns
             // we stopping all
-            if (j == rows)
-                j = 0;
-            return j == 0;
+            return j == rows;
         }
 
         private static double[,] SetMatrix(double[,] matrix, GridLayout gridLayout, int startPoint, int i, int j)

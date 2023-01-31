@@ -32,6 +32,7 @@ namespace NeoSoftware
         private AlertDialog _confirmationAlertDialog;
         private Switch _detectSwitch;
         private bool _detect = false;
+        private bool isLoadMain = false;
 
 
         private
@@ -41,31 +42,30 @@ namespace NeoSoftware
         {
             base.OnCreate(savedInstanceState);
             // Set our view from the "main" layout resource  
-            SetContentView(Resource.Layout.activity_manual);
+            SetContentView(Resource.Layout.activity_main);
+            isLoadMain = true;
 
             BuildUI();
         }
 
         private void BuildUI()
         {
-            _cameraView = FindViewById<SurfaceView>(Resource.Id.surface_view);
-            _tessOutput = FindViewById<TextView>(Resource.Id.tess_output);
-            _output = FindViewById<TextView>(Resource.Id.output);
-            _detectSwitch = FindViewById<Switch>(Resource.Id.detect_switch);
-            _textRecognizer = new TextRecognizer.Builder(ApplicationContext).Build();
-
-
-            GetButtons();
-            ConfigureGrid();
-
-
-            ConfigureRecognizer();
-            ConfigureConfirmationAlertDialog();
-            ConfigureDetectSwitch();
+            if (isLoadMain)
+            {
+                ConfigureRecognizer();
+                ConfigureConfirmationAlertDialog();
+                ConfigureDetectSwitch();
+            }
+            else
+            {
+                GetButtons();
+                ConfigureGrid();
+            }
         }
 
         private void ConfigureDetectSwitch()
         {
+            _detectSwitch = FindViewById<Switch>(Resource.Id.detect_switch);
             _detectSwitch.CheckedChange += delegate { _detect = !_detect; };
             _detectSwitch.Checked = _detect;
         }

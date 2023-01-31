@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Text;
 using System.Threading.Tasks;
+using Android.OS;
 using Android.Views;
 using Android.Widget;
 using Java.Interop;
@@ -39,27 +40,30 @@ namespace NeoSoftware
             _transpose.Click += (sender, args) =>
             {
                 SetClickButtons();
-                MatrixHighLevel.Transpose(_matrix);
+                ShowResult(MatrixHighLevel.Transpose(_matrix), ResultKind.Transpose);
             };
             _reverse.Click += (sender, args) =>
             {
                 SetClickButtons();
-                MatrixHighLevel.GetReverseMatrix(_matrix);
+                ShowResult(MatrixHighLevel.GetReverseMatrix(_matrix), ResultKind.Reverse);
             };
             _det.Click += (sender, args) =>
             {
                 SetClickButtons();
-                MatrixHighLevel.GetDeterminant(_matrix);
+                ShowResult(MatrixHighLevel.GetDeterminant(_matrix).ToString(), ResultKind.Determinant);
             };
             _rank.Click += (sender, args) =>
             {
                 SetClickButtons();
-                MatrixHighLevel.GetRank(_matrix);
+                ShowResult(MatrixHighLevel.GetRank(_matrix).ToString(), ResultKind.Rank);
             };
             _exponentiation.Click += (sender, args) =>
             {
                 SetClickButtons();
-                MatrixHighLevel.Exponentiation(_matrix, int.Parse(FindViewById<EditText>(Resource.Id.exp_value).Text));
+                ShowResult(
+                    MatrixHighLevel.Exponentiation(_matrix,
+                        int.Parse(FindViewById<EditText>(Resource.Id.exp_value).Text)),
+                    ResultKind.Exponentiation);
             };
         }
 
@@ -78,9 +82,7 @@ namespace NeoSoftware
             {
                 for (var j = 0; j < _gridLayoutMatrix.ColumnCount; j++)
                 {
-                    _gridLayoutMatrix.AddView(new TextView(this)
-                    {
-                    });
+                    _gridLayoutMatrix.AddView(new EditText(this), i + j);
                 }
             }
         }
@@ -103,36 +105,19 @@ namespace NeoSoftware
 
         [Export("BackToRecognition")]
         public void BackToRecognitionBtn(View view)
-            => SetContentView(Resource.Layout.activity_manual);
+        {
+            isLoadMain = true;
+            SetContentView(Resource.Layout.activity_main);
+            BuildUI();
+        }
 
         [Export("BackToManual")]
-        public void BackToManualBtn(View view) =>
+        public void BackToManualBtn(View view)
+        {
+            isLoadMain = false;
             SetContentView(Resource.Layout.activity_manual);
-
-        // [Export("Transpose")]
-        // public void Transpose(View view)
-        // {
-        // }
-        //
-        // [Export("Reverse")]
-        // public void Reverse(View view)
-        // {
-        // }
-        //
-        // [Export("Determinant")]
-        // public void Determinant(View view)
-        // {
-        // }
-        //
-        // [Export("Rank")]
-        // public void Rank(View view)
-        // {
-        // }
-        //
-        // [Export("Exp")]
-        // public void Exponentiation(View view)
-        // {
-        // }
+            BuildUI();
+        }
 
         private void SetMatrix(GridLayout gridLayout, int rows, int columns)
         {
