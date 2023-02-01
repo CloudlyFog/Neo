@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Text;
 using System.Threading.Tasks;
+using Android.Graphics;
+using Android.Graphics.Drawables;
 using Android.OS;
 using Android.Views;
 using Android.Widget;
@@ -45,8 +47,7 @@ namespace NeoSoftware
             _transpose.Click += (sender, args) =>
             {
                 SetMatrix(_gridLayoutMatrix);
-
-                ShowResult(_matrix, MatrixHighLevel.Transpose(_matrix), ResultKind.Transpose);
+                ShowResult(_matrix, _matrix.Transpose(), ResultKind.Transpose);
             };
             _reverse.Click += (sender, args) =>
             {
@@ -88,8 +89,15 @@ namespace NeoSoftware
             _submitSize.Click += (sender, args) => { ConfigureGrid(); };
         }
 
+        private bool ValidRowsColumnsCount(int rows, int columns)
+        {
+            return rows <= 6 && rows > 1 && columns <= 6 && columns > 1;
+        }
+
         private void ConfigureGrid()
         {
+            if (!ValidRowsColumnsCount(int.Parse(_rowsCount.Text), int.Parse(_columnsCount.Text)))
+                return;
             _gridLayoutMatrix = FindViewById<GridLayout>(Resource.Id.matrix_grid);
             _gridLayoutMatrix.RemoveAllViewsInLayout();
             _gridLayoutMatrix.RowCount = int.Parse(_rowsCount.Text);
@@ -98,7 +106,17 @@ namespace NeoSoftware
             for (var i = 0; i < _gridLayoutMatrix.RowCount; i++)
             {
                 for (var j = 0; j < _gridLayoutMatrix.ColumnCount; j++)
-                    _gridLayoutMatrix.AddView(new EditText(this), i + j);
+                {
+                    var child = new EditText(this)
+                    {
+                        Text = "3",
+                        TextSize = 18,
+                        TextAlignment = TextAlignment.Center,
+                    };
+                    child.SetWidth(150);
+                    child.SetHeight(100);
+                    _gridLayoutMatrix.AddView(child, i + j);
+                }
             }
         }
 
@@ -164,8 +182,15 @@ namespace NeoSoftware
             for (var i = 0; i < matrix.RowCount; i++)
             {
                 for (var j = 0; j <= matrix.ColumnCount; j++)
-                    message.Append($"{matrix[i, j]}\t\t");
-                message.AppendLine();
+                {
+                    if (j == matrix.ColumnCount)
+                    {
+                        message = message.Append("\n");
+                        continue;
+                    }
+
+                    message = message.Append($"{matrix[i, j]}\t\t");
+                }
             }
 
             return message.ToString();
