@@ -109,7 +109,6 @@ namespace NeoSoftware
                 {
                     var child = new EditText(this)
                     {
-                        Text = "3",
                         TextSize = 18,
                         TextAlignment = TextAlignment.Center,
                     };
