@@ -59,6 +59,7 @@ namespace NeoSoftware
             else
             {
                 GetButtons();
+                ConfigureRowsColumnsCount();
                 ConfigureGrid();
             }
         }

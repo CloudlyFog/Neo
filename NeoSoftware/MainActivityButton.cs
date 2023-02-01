@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System;
+using System.Text;
 using System.Threading.Tasks;
 using Android.OS;
 using Android.Views;
@@ -20,12 +21,13 @@ namespace NeoSoftware
         private Button _rank;
         private Button _exponentiation;
         private GridLayout _gridLayoutMatrix;
+        private EditText _rowsCount;
+        private EditText _columnsCount;
         private TextView _resultOutput;
         private TextView _resultInput;
         private TextView _resultTitle;
+        private Button _submitSize;
         private Matrix<double> _matrix;
-        private int _rows;
-        private int _columns;
 
         private void GetButtons()
         {
@@ -72,18 +74,31 @@ namespace NeoSoftware
             };
         }
 
+        private void ConfigureRowsColumnsCount()
+        {
+            _rowsCount = FindViewById<EditText>(Resource.Id.rows_count);
+            _columnsCount = FindViewById<EditText>(Resource.Id.columns_count);
+            _submitSize = FindViewById<Button>(Resource.Id.submit_size);
+
+            if (_rowsCount.Text == string.Empty)
+                _rowsCount.Text = "3";
+            if (_columnsCount.Text == string.Empty)
+                _columnsCount.Text = "3";
+
+            _submitSize.Click += (sender, args) => { ConfigureGrid(); };
+        }
+
         private void ConfigureGrid()
         {
             _gridLayoutMatrix = FindViewById<GridLayout>(Resource.Id.matrix_grid);
-            _gridLayoutMatrix.ColumnCount = _rows = 3;
-            _gridLayoutMatrix.RowCount = _columns = 3;
+            _gridLayoutMatrix.RemoveAllViewsInLayout();
+            _gridLayoutMatrix.RowCount = int.Parse(_rowsCount.Text);
+            _gridLayoutMatrix.ColumnCount = int.Parse(_columnsCount.Text);
 
             for (var i = 0; i < _gridLayoutMatrix.RowCount; i++)
             {
                 for (var j = 0; j < _gridLayoutMatrix.ColumnCount; j++)
-                {
                     _gridLayoutMatrix.AddView(new EditText(this), i + j);
-                }
             }
         }
 
@@ -149,15 +164,8 @@ namespace NeoSoftware
             for (var i = 0; i < matrix.RowCount; i++)
             {
                 for (var j = 0; j <= matrix.ColumnCount; j++)
-                {
-                    if (j == _columns)
-                    {
-                        message = message.Append("\n");
-                        continue;
-                    }
-
-                    message = message.Append($"{matrix[i, j]}\t\t");
-                }
+                    message.Append($"{matrix[i, j]}\t\t");
+                message.AppendLine();
             }
 
             return message.ToString();
