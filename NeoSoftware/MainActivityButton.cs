@@ -30,6 +30,7 @@ namespace NeoSoftware
         private TextView _resultTitle;
         private Button _submitSize;
         private Matrix<double> _matrix;
+        private readonly GridSize _gridSize = new GridSize();
 
         private void GetButtons()
         {
@@ -81,6 +82,10 @@ namespace NeoSoftware
             _columnsCount = FindViewById<EditText>(Resource.Id.columns_count);
             _submitSize = FindViewById<Button>(Resource.Id.submit_size);
 
+            _rowsCount.Text = _gridSize.RowCount.ToString();
+            _columnsCount.Text = _gridSize.ColumnCount.ToString();
+
+
             if (_rowsCount.Text == string.Empty)
                 _rowsCount.Text = "3";
             if (_columnsCount.Text == string.Empty)
@@ -100,8 +105,8 @@ namespace NeoSoftware
                 return;
             _gridLayoutMatrix = FindViewById<GridLayout>(Resource.Id.matrix_grid);
             _gridLayoutMatrix.RemoveAllViewsInLayout();
-            _gridLayoutMatrix.RowCount = int.Parse(_rowsCount.Text);
-            _gridLayoutMatrix.ColumnCount = int.Parse(_columnsCount.Text);
+            _gridLayoutMatrix.RowCount = _gridSize.RowCount = int.Parse(_rowsCount.Text);
+            _gridLayoutMatrix.ColumnCount = _gridSize.ColumnCount = int.Parse(_columnsCount.Text);
 
             for (var i = 0; i < _gridLayoutMatrix.RowCount; i++)
             {
@@ -164,8 +169,6 @@ namespace NeoSoftware
 
         private void SetMatrix(GridLayout gridLayout)
         {
-            if (_matrix != null)
-                return;
             _matrix = HandleMatrixAndroid.GetMatrix(gridLayout);
         }
 
