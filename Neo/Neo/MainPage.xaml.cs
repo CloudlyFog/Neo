@@ -32,6 +32,8 @@ public partial class MainPage
 
         // StackLayout
         ConfigureStackLayout();
+
+        // _tesseractApi = Resolver.Resolve<ITesseractApi>();
     }
 
     private void Exp_OnClick(object sender, EventArgs e)
