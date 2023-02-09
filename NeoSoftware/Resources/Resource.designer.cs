@@ -28247,13 +28247,16 @@ namespace NeoSoftware
 			public const int preference_list_divider_material = 2131165411;
 			
 			// aapt resource value: 0x7F0700E4
-			public const int test_level_drawable = 2131165412;
+			public const int rounded_edittext = 2131165412;
 			
 			// aapt resource value: 0x7F0700E5
-			public const int tooltip_frame_dark = 2131165413;
+			public const int test_level_drawable = 2131165413;
 			
 			// aapt resource value: 0x7F0700E6
-			public const int tooltip_frame_light = 2131165414;
+			public const int tooltip_frame_dark = 2131165414;
+			
+			// aapt resource value: 0x7F0700E7
+			public const int tooltip_frame_light = 2131165415;
 			
 			static Drawable()
 			{

@@ -1,4 +1,9 @@
-﻿using Android.Widget;
+﻿using System.Collections.Generic;
+using System.Drawing;
+using Android.Content;
+using Android.Graphics.Drawables;
+using Android.Views;
+using Android.Widget;
 using MathNet.Numerics.LinearAlgebra;
 
 namespace NeoSoftware.Services
@@ -23,6 +28,32 @@ namespace NeoSoftware.Services
             }
 
             return Matrix<double>.Build.DenseOfArray(matrix);
+        }
+
+        public static GridLayout GetGridLayout(Matrix<double> matrix, GridLayout oldGridLayout, Context context)
+        {
+            if (oldGridLayout is null || matrix is null || context is null)
+                return null;
+            oldGridLayout.RemoveAllViews();
+            var test = new List<string>();
+            var index = 0;
+            for (var i = 0; i < oldGridLayout.RowCount; i++)
+            {
+                for (var j = 0; j < oldGridLayout.ColumnCount; j++, index++)
+                {
+                    var child = new EditText(context)
+                    {
+                        Text = matrix[j, i].ToString(),
+                        TextSize = 18,
+                        TextAlignment = TextAlignment.Center,
+                    };
+                    child.SetWidth(150);
+                    child.SetHeight(100);
+                    oldGridLayout.AddView(child, index);
+                }
+            }
+
+            return oldGridLayout;
         }
 
         private static bool ValidateIterators(ref int i, ref int j, int rows, int columns)

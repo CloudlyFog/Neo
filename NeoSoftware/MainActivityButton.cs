@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Drawing;
 using System.Text;
 using System.Threading.Tasks;
 using Android.Graphics;
@@ -30,6 +31,7 @@ namespace NeoSoftware
         private TextView _resultTitle;
         private Button _submitSize;
         private Matrix<double> _matrix;
+        private Matrix<double> _inputMatrix;
         private readonly GridSize _gridSize = new GridSize();
 
         private void GetButtons()
@@ -48,29 +50,29 @@ namespace NeoSoftware
             _transpose.Click += (sender, args) =>
             {
                 SetMatrix(_gridLayoutMatrix);
-                ShowResult(_matrix, _matrix.Transpose(), ResultKind.Transpose);
+                ShowResult(_inputMatrix, _matrix.Transpose(), ResultKind.Transpose);
             };
             _reverse.Click += (sender, args) =>
             {
                 SetMatrix(_gridLayoutMatrix);
-                ShowResult(_matrix, MatrixHighLevel.GetReverseMatrix(_matrix), ResultKind.Reverse);
+                ShowResult(_inputMatrix, MatrixHighLevel.GetReverseMatrix(_matrix), ResultKind.Reverse);
             };
             _det.Click += (sender, args) =>
             {
                 SetMatrix(_gridLayoutMatrix);
-                ShowResult(GetMatrixValue(_matrix), MatrixHighLevel.GetDeterminant(_matrix).ToString(),
+                ShowResult(GetMatrixValue(_inputMatrix), MatrixHighLevel.GetDeterminant(_matrix).ToString(),
                     ResultKind.Determinant);
             };
             _rank.Click += (sender, args) =>
             {
                 SetMatrix(_gridLayoutMatrix);
-                ShowResult(GetMatrixValue(_matrix), MatrixHighLevel.GetRank(_matrix).ToString(), ResultKind.Rank);
+                ShowResult(GetMatrixValue(_inputMatrix), MatrixHighLevel.GetRank(_matrix).ToString(), ResultKind.Rank);
             };
             _exponentiation.Click += (sender, args) =>
             {
                 SetMatrix(_gridLayoutMatrix);
                 ShowResult(_matrix,
-                    MatrixHighLevel.Exponentiation(_matrix,
+                    MatrixHighLevel.Exponentiation(_inputMatrix,
                         int.Parse(FindViewById<EditText>(Resource.Id.exp_value).Text)),
                     ResultKind.Exponentiation);
             };
@@ -103,11 +105,18 @@ namespace NeoSoftware
         {
             if (!ValidRowsColumnsCount(int.Parse(_rowsCount.Text), int.Parse(_columnsCount.Text)))
                 return;
+
             _gridLayoutMatrix = FindViewById<GridLayout>(Resource.Id.matrix_grid);
             _gridLayoutMatrix.RemoveAllViewsInLayout();
             _gridLayoutMatrix.RowCount = _gridSize.RowCount = int.Parse(_rowsCount.Text);
             _gridLayoutMatrix.ColumnCount = _gridSize.ColumnCount = int.Parse(_columnsCount.Text);
 
+            if (HandleMatrixAndroid.GetGridLayout(_inputMatrix, _gridLayoutMatrix, this) is null)
+                SetGridLayout();
+        }
+
+        private void SetGridLayout()
+        {
             for (var i = 0; i < _gridLayoutMatrix.RowCount; i++)
             {
                 for (var j = 0; j < _gridLayoutMatrix.ColumnCount; j++)
@@ -170,6 +179,7 @@ namespace NeoSoftware
         private void SetMatrix(GridLayout gridLayout)
         {
             _matrix = HandleMatrixAndroid.GetMatrix(gridLayout);
+            _inputMatrix = HandleMatrixAndroid.GetMatrix(gridLayout);
         }
 
         private void ShowResult(Matrix<double> input, Matrix<double> output, ResultKind resultKind)
@@ -191,7 +201,7 @@ namespace NeoSoftware
                         continue;
                     }
 
-                    message = message.Append($"{matrix[i, j]}\t\t");
+                    message = message.Append($"{matrix[j, i]}\t\t");
                 }
             }
 
