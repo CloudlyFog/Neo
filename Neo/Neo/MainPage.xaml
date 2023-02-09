@@ -2,78 +2,14 @@
 
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:local="clr-namespace:Neo"
              x:Class="Neo.MainPage">
+
     <StackLayout>
-
-        <Frame x:Name="MatrixFrame">
-            <Grid x:Name="MatrixGrid"></Grid>
-        </Frame>
-
-        <Grid x:Name="MatrixConfigureGrid"
-              Margin="15, 10, 0, 0"
-              HorizontalOptions="CenterAndExpand"
-              VerticalOptions="EndAndExpand">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="230" />
-                <ColumnDefinition Width="50" />
-                <ColumnDefinition Width="50" />
-            </Grid.ColumnDefinitions>
-
-            <Frame Grid.Column="0" Grid.Row="0" CornerRadius="20" BackgroundColor="White">
-                <Entry Keyboard="Numeric" x:Name="ExpValue" Placeholder="Exponentiation value"></Entry>
-            </Frame>
-            <Frame Grid.Column="1" Grid.Row="0" CornerRadius="20" BackgroundColor="White">
-                <Entry Keyboard="Numeric" x:Name="ColumnCount" FontSize="10"></Entry>
-            </Frame>
-            <Frame Grid.Column="2" Grid.Row="0" CornerRadius="20" BackgroundColor="White">
-                <Entry Keyboard="Numeric" x:Name="RowCount" FontSize="10"></Entry>
-            </Frame>
-
-        </Grid>
-
-        <Grid x:Name="ButtonGrid" VerticalOptions="EndAndExpand" HorizontalOptions="CenterAndExpand">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="185" />
-                <ColumnDefinition Width="185" />
-            </Grid.ColumnDefinitions>
-            <Grid.RowDefinitions>
-                <RowDefinition />
-                <RowDefinition />
-                <RowDefinition />
-            </Grid.RowDefinitions>
-            <Frame x:Name="ExpButtonFrame" CornerRadius="16">
-                <Button x:Name="Exp"
-                        Clicked="Exp_OnClick"
-                        Text="Exponentiation" FontSize="14">
-                </Button>
-            </Frame>
-            <Frame Grid.Column="1" Grid.Row="0" x:Name="TransposeButtonFrame" CornerRadius="16">
-                <Button x:Name="Transpose"
-                        Clicked="Transpose_OnClick"
-                        Text="Transpose" FontSize="14">
-                </Button>
-            </Frame>
-
-            <Frame Grid.Column="0" Grid.Row="1" x:Name="ReverseButtonFrame" CornerRadius="16">
-                <Button x:Name="Reverse"
-                        Clicked="Reverse_OnClick"
-                        Text="Reverse" FontSize="14">
-                </Button>
-            </Frame>
-            <Frame Grid.Column="1" Grid.Row="1" x:Name="RankButtonFrame" CornerRadius="16">
-                <Button x:Name="Rank"
-                        Clicked="Rank_OnClick"
-                        Text="Rank" FontSize="14">
-                </Button>
-            </Frame>
-
-            <Frame Grid.Column="1" Grid.Row="2" x:Name="DeterminantButtonFrame" CornerRadius="16">
-
-                <Button x:Name="Determinant"
-                        Clicked="Determinant_OnClick"
-                        Text="Determinant" FontSize="14">
-                </Button>
-            </Frame>
-        </Grid>
+        <!-- Place new controls here -->
+        <Label Text="Welcome to Xamarin.Forms!"
+               HorizontalOptions="Center"
+               VerticalOptions="CenterAndExpand" />
     </StackLayout>
+
 </ContentPage>
