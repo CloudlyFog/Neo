@@ -39,8 +39,8 @@
             android:layout_alignParentBottom="true" android:layout_marginBottom="73dp" android:id="@+id/detect_switch"/>
     <ImageButton
             android:layout_width="wrap_content"
-            android:onClick="Back"
+            android:onClick="BackToManual"
             android:layout_height="wrap_content" app:srcCompat="?attr/actionModeCloseDrawable"
             android:layout_alignParentEnd="true" android:layout_marginEnd="51dp" android:layout_alignParentBottom="true"
-            android:layout_marginBottom="16dp" android:id="@+id/back_btn"/>
+            android:layout_marginBottom="16dp" android:id="@+id/back_to_manual_btn"/>
 </RelativeLayout>  

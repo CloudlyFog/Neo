@@ -9,7 +9,7 @@ namespace Neo.Services
         /// </summary>
         /// <param name="matrix"></param>
         /// <returns></returns>
-        public static decimal GetDeterminant(Matrix<decimal> matrix)
+        public static double GetDeterminant(Matrix<double> matrix)
             => matrix.Determinant();
 
         /// <summary>
@@ -17,7 +17,7 @@ namespace Neo.Services
         /// </summary>
         /// <param name="matrix"></param>
         /// <returns></returns>
-        public static decimal GetRank(Matrix<decimal> matrix)
+        public static double GetRank(Matrix<double> matrix)
             => matrix.Rank();
 
         /// <summary>
@@ -25,7 +25,7 @@ namespace Neo.Services
         /// </summary>
         /// <param name="matrix"></param>
         /// <returns></returns>
-        public static Matrix<decimal> GetReverseMatrix(Matrix<decimal> matrix)
+        public static Matrix<double> GetReverseMatrix(Matrix<double> matrix)
             => matrix.Inverse();
 
         /// <summary>
@@ -34,7 +34,7 @@ namespace Neo.Services
         /// <param name="matrix"></param>
         /// <param name="n">Exponentiation value</param>
         /// <returns></returns>
-        public static Matrix<decimal> Exponentiation(Matrix<decimal> matrix, int n)
+        public static Matrix<double> Exponentiation(Matrix<double> matrix, int n)
         {
             var tempMatrix = matrix;
             for (var i = 1; i < n; i++)
@@ -48,7 +48,7 @@ namespace Neo.Services
         /// </summary>
         /// <param name="matrix"></param>
         /// <returns></returns>
-        public static Matrix<decimal> Transpose(Matrix<decimal> matrix)
+        public static Matrix<double> Transpose(Matrix<double> matrix)
             => matrix.Transpose();
     }
 }

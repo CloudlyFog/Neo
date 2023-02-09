@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Threading.Tasks;
 using Android.App;
 using Android.Widget;
 using Android.OS;
@@ -13,8 +12,6 @@ using Android;
 using AndroidX.AppCompat.App;
 using AndroidX.Core.App;
 using Java.Lang;
-using Java.Interop;
-using Neo.Services;
 using StringBuilder = System.Text.StringBuilder;
 using static Android.Gms.Vision.Detector;
 using AlertDialog = AndroidX.AppCompat.App.AlertDialog;
@@ -35,6 +32,7 @@ namespace NeoSoftware
         private AlertDialog _confirmationAlertDialog;
         private Switch _detectSwitch;
         private bool _detect = false;
+        private bool isLoadMain = false;
 
 
         private
@@ -45,25 +43,30 @@ namespace NeoSoftware
             base.OnCreate(savedInstanceState);
             // Set our view from the "main" layout resource  
             SetContentView(Resource.Layout.activity_main);
+            isLoadMain = true;
 
             BuildUI();
         }
 
         private void BuildUI()
         {
-            _cameraView = FindViewById<SurfaceView>(Resource.Id.surface_view);
-            _tessOutput = FindViewById<TextView>(Resource.Id.tess_output);
-            _output = FindViewById<TextView>(Resource.Id.output);
-            _detectSwitch = FindViewById<Switch>(Resource.Id.detect_switch);
-            _textRecognizer = new TextRecognizer.Builder(ApplicationContext).Build();
-
-            ConfigureRecognizer();
-            ConfigureConfirmationAlertDialog();
-            ConfigureDetectSwitch();
+            if (isLoadMain)
+            {
+                ConfigureRecognizer();
+                ConfigureConfirmationAlertDialog();
+                ConfigureDetectSwitch();
+            }
+            else
+            {
+                GetButtons();
+                ConfigureRowsColumnsCount();
+                ConfigureGrid();
+            }
         }
 
         private void ConfigureDetectSwitch()
         {
+            _detectSwitch = FindViewById<Switch>(Resource.Id.detect_switch);
             _detectSwitch.CheckedChange += delegate { _detect = !_detect; };
             _detectSwitch.Checked = _detect;
         }
