@@ -20,7 +20,7 @@ using View = Android.Views.View;
 
 namespace NeoSoftware
 {
-    [Activity(Label = "Recognize", Theme = "@style/AppTheme", MainLauncher = true)]
+    [Activity(Label = "Neo", Theme = "@style/AppTheme", MainLauncher = true)]
     public partial class MainActivity : AppCompatActivity, ISurfaceHolderCallback, IProcessor
     {
         private SurfaceView _cameraView;
