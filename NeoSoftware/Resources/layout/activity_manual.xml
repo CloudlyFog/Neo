@@ -134,6 +134,12 @@
             android:layout_marginStart="10dp" android:layout_alignParentBottom="true"
             android:layout_marginBottom="251dp" android:id="@+id/textView2"
     />
+    <Switch
+            android:text="equations"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" android:layout_alignParentEnd="true" android:layout_marginEnd="47dp"
+            android:layout_alignParentBottom="true" android:layout_marginBottom="79dp"
+            android:id="@+id/is_equations_switch"/>
 
 
 </RelativeLayout>  

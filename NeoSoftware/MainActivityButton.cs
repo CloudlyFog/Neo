@@ -32,6 +32,7 @@ namespace NeoSoftware
         private Button _submitSize;
         private Matrix<double> _matrix;
         private Matrix<double> _inputMatrix;
+        private Switch _isEquationsSwitch;
         private readonly GridSize _gridSize = new GridSize();
 
         private void GetButtons()
@@ -43,6 +44,13 @@ namespace NeoSoftware
             _exponentiation = FindViewById<Button>(Resource.Id.exp_btn);
 
             ConfigureButtons();
+        }
+
+        private void ConfigureIsEquationsSwitch()
+        {
+            _isEquationsSwitch = FindViewById<Switch>(Resource.Id.is_equations_switch);
+            _isEquationsSwitch.CheckedChange += delegate { _isEquations = !_isEquations; };
+            _isEquationsSwitch.Checked = _isEquations;
         }
 
         private void ConfigureButtons()
@@ -163,7 +171,7 @@ namespace NeoSoftware
         [Export("BackToRecognition")]
         public void BackToRecognitionBtn(View view)
         {
-            isLoadMain = true;
+            _isLoadMain = true;
             SetContentView(Resource.Layout.activity_main);
             BuildUI();
         }
@@ -171,7 +179,7 @@ namespace NeoSoftware
         [Export("BackToManual")]
         public void BackToManualBtn(View view)
         {
-            isLoadMain = false;
+            _isLoadMain = false;
             SetContentView(Resource.Layout.activity_manual);
             BuildUI();
         }
