@@ -134,70 +134,8 @@ public static class ParserExtension
 
     public static string OnZeroVariable(this string input)
     {
-        var equations = new List<string>();
-        using var dictionary = input.GetUnknownVariablesDictionary(equations);
-
-        return dictionary.Lines.AppendZeroCoefficients(input.GetUnknownVariables(true)).Combine();
-    }
-
-    private static UnknownVariablesDictionary<int, string> GetUnknownVariablesDictionary(this string input,
-        List<string> equations)
-    {
-        var sb = new StringBuilder();
-        equations = new List<string>();
-        var dictionary = new UnknownVariablesDictionary<int, string>();
-        var index = 0;
-        for (var i = 0; i < input.SymbolCount(Parser.SplitSymbol); i++)
-        {
-            for (; index < input.Length; index++)
-            {
-                if (input[index] == Parser.SplitSymbol)
-                {
-                    index++;
-                    break;
-                }
-
-                sb.Append(input[index]);
-            }
-
-            equations.Add(sb.ToString());
-
-            var unknownVariables = sb.ToString().GetUnknownVariables();
-            dictionary.Add(new UnknownVariable<int, string>
-            {
-                Key = unknownVariables.Length,
-                Value = unknownVariables,
-                Line = sb.ToString(),
-                Indexer = equations[i].GetIndexValues(unknownVariables),
-            });
-
-
-            sb.Clear();
-        }
-
-        return dictionary;
-    }
-
-    /// <summary>
-    /// gets <see cref="Indexer"/>
-    /// </summary>
-    /// <param name="equationPart"></param>
-    /// <param name="unknownVariables"></param>
-    /// <returns></returns>
-    private static Indexer GetIndexValues(this string equationPart, string unknownVariables)
-    {
-        var indexer = new Indexer();
-        for (var i = 0; i < equationPart.Length; i++)
-        {
-            foreach (var unknownVariable in unknownVariables.Where(
-                         unknownVariable => equationPart[i] == unknownVariable))
-            {
-                indexer.Indices.Add(i);
-                indexer.Values.Add(unknownVariable.ToString());
-            }
-        }
-
-        return indexer;
+        var equations = input.Separate().AppendZeroCoefficients(input.GetUnknownVariables());
+        return "";
     }
 
     /// <summary>
@@ -211,59 +149,37 @@ public static class ParserExtension
         equations[0] = " 2y = 4";
         var appendableVariables = equations.GetAppendableEquations(unknownVariables);
         var digitEquations = appendableVariables.Combine().GetDigits().Separate();
-        var missedVariables = equations.GetVariableNames(unknownVariables);
+
         var output = new List<string>();
 
 
         var sb = new StringBuilder();
+
         for (var i = 0; i < digitEquations.Count; i++)
         {
-            // here we append to digitEquations zeros to definite equations
-            // with index corresponding value of Dictionary<char, int>
-            var missed = appendableVariables[i].GetMissedUnknownVariables(unknownVariables);
-            var withoutWhiteSpace = digitEquations[i].RemoveWhiteSpace();
-
-            for (var j = 0; j < missed.Length; j++)
+            var missedVariables = equations.GetVariableNames(unknownVariables, i);
+            for (var j = 0; j < missedVariables.Count; j++)
             {
-                var index = unknownVariables.IndexOf(missed[j]);
-                
-                
-                for (var k = 0; k < unknownVariables.Length; k++)
+                if (missedVariables[j].Values.All(x => x == i))
                 {
-                    var indexMissed = missed[j];
-                    var indexVariable = unknownVariables[k];
-                    if (missed[j] == unknownVariables[k])
-                    {
-                        sb.Append(" 0 ");
-                        break;
-                    }
-                    
-                    for (var l = 0; l < withoutWhiteSpace.Length; l++)
-                    {
-                        if (l == index)
-                            break;
-                        sb.Append($"{withoutWhiteSpace[l]} ");
-                    }
-                
-                    
-                    // sb.Append($"{digitEquations[missedVariables[i].Values.FirstOrDefault(x => x == i)]};");
-                    
+                    sb.Append($" {digitEquations[i]} ");
+                    break;
                 }
+
+                sb.Append(" 0 ");
+                break;
             }
-            output.Add(sb.ToString());
-            sb.Clear();
         }
 
-        var result = sb.ToString().Trim().Separate().Trim().Separate();
 
-
-        return digitEquations;
+        return output;
     }
 
     private static string RemoveWhiteSpace(this string str)
     {
         return new string(str.Where(x => !char.IsWhiteSpace(x)).ToArray());
     }
+
     private static string Trim(this IEnumerable<string> list)
     {
         return list.Select(item => item.Trim()).ToList().Combine();
@@ -279,6 +195,31 @@ public static class ParserExtension
         return sb.ToString();
     }
 
+    private static Dictionary<char, int> GetIndices(this string unknownVariables)
+    {
+        var indices = new Dictionary<char, int>();
+        for (var i = 0; i < unknownVariables.Length; i++)
+            indices.Add(unknownVariables[i], i);
+        return indices;
+    }
+
+    private static List<Dictionary<char, int>> GetVariableNames(this List<string> equations, string unknownVariables,
+        int index)
+    {
+        var needToAppend = new List<Dictionary<char, int>>();
+        var indices = unknownVariables.GetIndices();
+
+        for (var i = 0; i < unknownVariables.Length; i++)
+        {
+            if (!equations[index].Contains(unknownVariables[i]))
+                needToAppend.Add(new Dictionary<char, int>
+                {
+                    { unknownVariables[i], indices.Values.FirstOrDefault(x => x == i) }
+                });
+        }
+
+        return needToAppend;
+    }
 
     private static List<Dictionary<char, int>> GetVariableNames(this List<string> equations, string unknownVariables)
     {
