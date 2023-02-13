@@ -35,6 +35,21 @@ namespace NeoSoftware
         private Switch _isEquationsSwitch;
         private readonly GridSize _gridSize = new GridSize();
 
+
+        private void ConfigureRenderingInputFields()
+        {
+            if (_isEquations)
+            {
+                ConfigureIsEquationsSwitch();
+                ConfigureEquationsGrid();
+            }
+            else
+            {
+                ConfigureRowsColumnsCount();
+                ConfigureGrid();
+            }
+        }
+
         private void GetButtons()
         {
             _transpose = FindViewById<Button>(Resource.Id.transpose_btn);
@@ -44,6 +59,14 @@ namespace NeoSoftware
             _exponentiation = FindViewById<Button>(Resource.Id.exp_btn);
 
             ConfigureButtons();
+        }
+
+        private void ConfigureEquationsGrid()
+        {
+            _gridLayoutMatrix = FindViewById<GridLayout>(Resource.Id.matrix_grid);
+            _gridLayoutMatrix.RowCount = _gridSize.RowCount = int.Parse(_rowsCount.Text);
+            _gridLayoutMatrix.ColumnCount = 1;
+            RenderGridLayout(childWidth: 900);
         }
 
         private void ConfigureIsEquationsSwitch()
@@ -120,10 +143,10 @@ namespace NeoSoftware
             _gridLayoutMatrix.ColumnCount = _gridSize.ColumnCount = int.Parse(_columnsCount.Text);
 
             if (HandleMatrixAndroid.GetGridLayout(_inputMatrix, _gridLayoutMatrix, this) is null)
-                SetGridLayout();
+                RenderGridLayout();
         }
 
-        private void SetGridLayout()
+        private void RenderGridLayout(int childHeight = 100, int childWidth = 150)
         {
             for (var i = 0; i < _gridLayoutMatrix.RowCount; i++)
             {
@@ -134,8 +157,8 @@ namespace NeoSoftware
                         TextSize = 18,
                         TextAlignment = TextAlignment.Center,
                     };
-                    child.SetWidth(150);
-                    child.SetHeight(100);
+                    child.SetHeight(childHeight);
+                    child.SetWidth(childWidth);
                     _gridLayoutMatrix.AddView(child, i + j);
                 }
             }
