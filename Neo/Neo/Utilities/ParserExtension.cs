@@ -112,7 +112,14 @@ public static class ParserExtension
         return input.GetUnknownVariables().Length != input.ConvertToDigits().Count() / len - 1;
     }
 
-    public static string CleanInput(this string input, char splitSymbol = Parser.SplitSymbol)
+    /// <summary>
+    /// cleans <see cref="input"/> from whitespaces before <see cref="splitSymbol"/>
+    /// in order to verify validation of <see cref="input"/> in the next operations of solving
+    /// </summary>
+    /// <param name="input">text</param>
+    /// <param name="splitSymbol">symbol for splitting equations</param>
+    /// <returns></returns>
+    public static string RemoveWhiteSpacesBeforeSeparator(this string input, char splitSymbol = Parser.SplitSymbol)
     {
         var sb = new StringBuilder();
         for (var i = 0; i < input.Length; i++)

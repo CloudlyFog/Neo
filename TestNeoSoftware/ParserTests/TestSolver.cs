@@ -76,7 +76,7 @@ public class TestSolver
             "1 2 3 ; 4 5 6 ;",
             "1 6 3 ; 9 8 7 ;",
             "1 1 3 ; 4 4 12 ;",
-        }.Select(t => t.CleanInput()).ToList();
+        }.Select(t => t.RemoveWhiteSpacesBeforeSeparator()).ToList();
 
         Assert.AreEqual(expected, result);
     }
@@ -85,7 +85,7 @@ public class TestSolver
     [Test]
     public void TestSolverResult()
     {
-        var expected = Vector<double>.Build.DenseOfArray(new double[]
+        var expected = Vector<double>.Build.DenseOfArray(new[]
         {
             -1.5128844555278470,
             -1.2315045719035744,

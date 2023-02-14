@@ -50,7 +50,6 @@ public class Parser
 
     /// <summary>
     /// Take data from <see cref="_input"/> and put it to <see cref="Matrix{T}"/>
-    /// Uses <see cref="_input"/> like 
     /// </summary>
     /// <returns></returns>
     public Matrix<double> MatrixConversion(bool str = true, Matrix<double> matrix = null)
@@ -220,13 +219,24 @@ public class Parser
         return false;
     }
 
+    /// <summary>
+    /// does the same as the method <see cref="GetMatrixValue(double[,],System.Collections.Generic.List{string})"/>
+    /// but to everything else cleanup output of <see cref="GetMatrixValue(double[,],System.Collections.Generic.List{string})"/>
+    /// </summary>
+    /// <param name="matrix"></param>
+    /// <returns></returns>
     private static string GetStringMatrix(Matrix<double> matrix)
     {
         return ValidArray(matrix.ToArray(), nameof(matrix)) is null
             ? null
-            : GetMatrixValue(matrix).Replace('\n', SplitSymbol).CleanInput();
+            : GetMatrixValue(matrix).Replace('\n', SplitSymbol).RemoveWhiteSpacesBeforeSeparator();
     }
 
+    /// <summary>
+    /// returns string interpretation of matrix
+    /// </summary>
+    /// <param name="matrix">original data</param>
+    /// <returns></returns>
     private static string GetMatrixValue(Matrix<double> matrix)
     {
         var sb = new StringBuilder();

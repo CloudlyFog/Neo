@@ -46,7 +46,6 @@ namespace NeoSoftware
             SetContentView(Resource.Layout.activity_main);
             _isLoadMain = true;
 
-
             BuildUI();
         }
 
