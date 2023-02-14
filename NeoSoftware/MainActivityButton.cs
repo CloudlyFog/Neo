@@ -1,17 +1,9 @@
-﻿using System;
-using System.Drawing;
-using System.Text;
-using System.Threading.Tasks;
-using Android.Graphics;
-using Android.Graphics.Drawables;
-using Android.OS;
+﻿using System.Text;
 using Android.Widget;
 using Java.Interop;
 using MathNet.Numerics.LinearAlgebra;
 using Neo.Services;
 using NeoSoftware.Services;
-using Xamarin.Forms;
-using AlertDialog = AndroidX.AppCompat.App.AlertDialog;
 using Button = Android.Widget.Button;
 using Switch = Android.Widget.Switch;
 using TextAlignment = Android.Views.TextAlignment;

@@ -9,7 +9,7 @@ namespace Neo.Utilities;
 /// <summary>
 /// describe extension class for <see cref="Parser"/>
 /// </summary>
-public static class ParserExtension
+internal static class ParserExtension
 {
     /// <summary>
     /// returns string with unknown variables from system linear equations

@@ -1,14 +1,10 @@
-﻿using System.Windows;
-using MathNet.Numerics.LinearAlgebra;
+﻿using MathNet.Numerics.LinearAlgebra;
 using Neo.Services;
-using Neo.Utilities;
 
 namespace TestNeoSoftware;
 
 public class TestSolver
 {
-    private Parser _parser;
-
     // const string equationInput = "x - 2y + 3z = 4;5x - 6y + z = 8;9x + y + 11.5z =-  12.5;";
 
     const string equationInput = "1.3x - 2y + 3z = 4;5x - 6y + 7z = 8;9x + 10y + 11.5z =-  12.5;";
@@ -18,15 +14,6 @@ public class TestSolver
     public void Setup()
     {
         //_parser = new Parser(equationInput);
-    }
-
-    [Test]
-    public void TestGetUnknownVariables()
-    {
-        var expected = "xyz";
-        var actual = equationInput.GetUnknownVariables();
-
-        Assert.AreEqual(expected, actual);
     }
 
     [Test]
@@ -59,26 +46,6 @@ public class TestSolver
         string actual = new Solver(matrix);
 
         Assert.AreEqual(expected, actual);
-    }
-
-    [Test]
-    public void TestCleanup()
-    {
-        var expected = new List<string>()
-        {
-            "1 2 3; 4 5 6;",
-            "1 6 3; 9 8 7;",
-            "1 1 3; 4 4 12;",
-        };
-
-        var result = new List<string>()
-        {
-            "1 2 3 ; 4 5 6 ;",
-            "1 6 3 ; 9 8 7 ;",
-            "1 1 3 ; 4 4 12 ;",
-        }.Select(t => t.RemoveWhiteSpacesBeforeSeparator()).ToList();
-
-        Assert.AreEqual(expected, result);
     }
 
 

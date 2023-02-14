@@ -7,7 +7,7 @@ using Neo.Utilities;
 
 namespace Neo.Services;
 
-public class Parser
+internal class Parser
 {
     /// <summary>
     /// splits equations of system in string
