@@ -5,13 +5,17 @@ using System.Threading.Tasks;
 using Android.Graphics;
 using Android.Graphics.Drawables;
 using Android.OS;
-using Android.Views;
 using Android.Widget;
 using Java.Interop;
 using MathNet.Numerics.LinearAlgebra;
 using Neo.Services;
 using NeoSoftware.Services;
+using Xamarin.Forms;
 using AlertDialog = AndroidX.AppCompat.App.AlertDialog;
+using Button = Android.Widget.Button;
+using Switch = Android.Widget.Switch;
+using TextAlignment = Android.Views.TextAlignment;
+using View = Android.Views.View;
 
 
 namespace NeoSoftware
@@ -23,6 +27,7 @@ namespace NeoSoftware
         private Button _det;
         private Button _rank;
         private Button _exponentiation;
+        private Button _solveMatrix;
         private GridLayout _gridLayoutMatrix;
         private EditText _rowsCount;
         private EditText _columnsCount;
@@ -57,6 +62,7 @@ namespace NeoSoftware
             _det = FindViewById<Button>(Resource.Id.det_btn);
             _rank = FindViewById<Button>(Resource.Id.rank_btn);
             _exponentiation = FindViewById<Button>(Resource.Id.exp_btn);
+            _solveMatrix = FindViewById<Button>(Resource.Id.solve_manual_btn);
 
             ConfigureButtons();
         }
@@ -78,34 +84,39 @@ namespace NeoSoftware
 
         private void ConfigureButtons()
         {
-            _transpose.Click += (sender, args) =>
+            _transpose.Click += delegate
             {
                 SetMatrix(_gridLayoutMatrix);
                 ShowResult(_inputMatrix, _matrix.Transpose(), ResultKind.Transpose);
             };
-            _reverse.Click += (sender, args) =>
+            _reverse.Click += delegate
             {
                 SetMatrix(_gridLayoutMatrix);
                 ShowResult(_inputMatrix, MatrixHighLevel.GetReverseMatrix(_matrix), ResultKind.Reverse);
             };
-            _det.Click += (sender, args) =>
+            _det.Click += delegate
             {
                 SetMatrix(_gridLayoutMatrix);
                 ShowResult(GetMatrixValue(_inputMatrix), MatrixHighLevel.GetDeterminant(_matrix).ToString(),
                     ResultKind.Determinant);
             };
-            _rank.Click += (sender, args) =>
+            _rank.Click += delegate
             {
                 SetMatrix(_gridLayoutMatrix);
                 ShowResult(GetMatrixValue(_inputMatrix), MatrixHighLevel.GetRank(_matrix).ToString(), ResultKind.Rank);
             };
-            _exponentiation.Click += (sender, args) =>
+            _exponentiation.Click += delegate
             {
                 SetMatrix(_gridLayoutMatrix);
                 ShowResult(_matrix,
                     MatrixHighLevel.Exponentiation(_inputMatrix,
                         int.Parse(FindViewById<EditText>(Resource.Id.exp_value).Text)),
                     ResultKind.Exponentiation);
+            };
+            _solveMatrix.Click += delegate
+            {
+                SetMatrix(_gridLayoutMatrix);
+                ShowResult(GetMatrixValue(_inputMatrix), new Solver(_matrix).ToString(), ResultKind.Solve);
             };
         }
 

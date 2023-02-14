@@ -112,6 +112,21 @@ public static class ParserExtension
         return input.GetUnknownVariables().Length != input.ConvertToDigits().Count() / len - 1;
     }
 
+    public static string CleanInput(this string input, char splitSymbol = Parser.SplitSymbol)
+    {
+        var sb = new StringBuilder();
+        for (var i = 0; i < input.Length; i++)
+        {
+            if (i >= input.Length - 1)
+                return $"{sb}{splitSymbol}";
+            if (input[i + 1] == splitSymbol)
+                continue;
+            sb.Append(input[i]);
+        }
+
+        return sb.ToString();
+    }
+
     /// <summary>
     /// returns sequence of float digits which was parsed from <see cref="input"/>
     /// </summary>

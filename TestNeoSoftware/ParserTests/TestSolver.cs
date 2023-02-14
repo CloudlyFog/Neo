@@ -47,6 +47,40 @@ public class TestSolver
         Assert.AreEqual(expected, actual);
     }
 
+    [Test]
+    public void TestSolverMatrixCtor()
+    {
+        var expected = "x: -1.3333333333333333\r\ny: -2.416666666666667\r\nz: 0.1666666666666667\r\n";
+        var matrix = Matrix<double>.Build.DenseOfArray(new double[,]
+        {
+            { 1, 2, 3, },
+            { 4, 5, 6, },
+        });
+        string actual = new Solver(matrix);
+
+        Assert.AreEqual(expected, actual);
+    }
+
+    [Test]
+    public void TestCleanup()
+    {
+        var expected = new List<string>()
+        {
+            "1 2 3; 4 5 6;",
+            "1 6 3; 9 8 7;",
+            "1 1 3; 4 4 12;",
+        };
+
+        var result = new List<string>()
+        {
+            "1 2 3 ; 4 5 6 ;",
+            "1 6 3 ; 9 8 7 ;",
+            "1 1 3 ; 4 4 12 ;",
+        }.Select(t => t.CleanInput()).ToList();
+
+        Assert.AreEqual(expected, result);
+    }
+
 
     [Test]
     public void TestSolverResult()

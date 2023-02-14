@@ -75,12 +75,26 @@ public sealed class Solver : IDisposable
         }
     }
 
+    public Solver(Matrix<double> matrix)
+    {
+        _parser = new Parser(string.Empty);
+        try
+        {
+            Solve(false, matrix);
+        }
+        catch (Exception exception)
+        {
+            Error.Message = exception.Message;
+            Error.InnerMessage = exception.InnerException?.Message;
+        }
+    }
+
     /// <summary>
     /// solves system linear equations. set values to <see cref="Result"/>, <see cref="LeftSide"/>, <see cref="RightSide"/>
     /// </summary>
-    private void Solve()
+    private void Solve(bool str = true, Matrix<double> matrix = null)
     {
-        LeftSide = _parser.MatrixConversion();
+        LeftSide = _parser.MatrixConversion(str, matrix);
         if (LeftSide is null)
         {
             Error.Message = $"{nameof(LeftSide)} is null.";
@@ -88,7 +102,7 @@ public sealed class Solver : IDisposable
             return;
         }
 
-        RightSide = _parser.VectorConversion();
+        RightSide = _parser.VectorConversion(str, matrix);
         if (RightSide is null)
         {
             Error.Message = $"{nameof(RightSide)} is null.";

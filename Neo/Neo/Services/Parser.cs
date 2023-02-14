@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using MathNet.Numerics.LinearAlgebra;
 using Neo.Utilities;
 
@@ -31,7 +32,7 @@ public class Parser
     /// <summary>
     /// conversed string of system equations
     /// </summary>
-    private readonly string _input;
+    private string _input;
 
     /// <summary>
     /// every what iteration 'll doing something
@@ -52,8 +53,14 @@ public class Parser
     /// Uses <see cref="_input"/> like 
     /// </summary>
     /// <returns></returns>
-    public Matrix<double> MatrixConversion()
+    public Matrix<double> MatrixConversion(bool str = true, Matrix<double> matrix = null)
     {
+        if (!str)
+            _input = GetStringMatrix(matrix);
+
+        if (_input is null)
+            return null;
+
         var targetArray = new double[
             // read count of ";" and therefore count will one less than actually
             _input.Count(x => x == SplitSymbol),
@@ -74,8 +81,14 @@ public class Parser
     /// Take data from <see cref="_input"/> and put it to <see cref="Vector{T}"/>
     /// </summary>
     /// <returns></returns>
-    public Vector<double> VectorConversion()
+    public Vector<double> VectorConversion(bool str = true, Matrix<double> matrix = null)
     {
+        if (!str)
+            _input = GetStringMatrix(matrix);
+
+        if (_input is null)
+            return null;
+
         // remove white space and commas
         var filterResult = _input.Split(' ', SplitSymbol).Where(x => x is not (" " and "")).ToList();
 
@@ -207,6 +220,33 @@ public class Parser
         return false;
     }
 
+    private static string GetStringMatrix(Matrix<double> matrix)
+    {
+        return ValidArray(matrix.ToArray(), nameof(matrix)) is null
+            ? null
+            : GetMatrixValue(matrix).Replace('\n', SplitSymbol).CleanInput();
+    }
+
+    private static string GetMatrixValue(Matrix<double> matrix)
+    {
+        var sb = new StringBuilder();
+        for (var i = 0; i < matrix.RowCount; i++)
+        {
+            for (var j = 0; j <= matrix.ColumnCount; j++)
+            {
+                if (j == matrix.ColumnCount)
+                {
+                    sb.Append('\n');
+                    continue;
+                }
+
+                sb.Append($"{matrix[i, j]} ");
+            }
+        }
+
+        return sb.ToString();
+    }
+
     /// <summary>
     /// valid passed array for the some specifications
     /// </summary>
@@ -215,6 +255,30 @@ public class Parser
     /// <typeparam name="T">the type of elements in the array</typeparam>
     /// <returns></returns>
     internal static Error ValidArray<T>(T[] array, string arrayName)
+    {
+        if (array is null)
+        {
+            Error.Message = $"{arrayName} is null.";
+            return null;
+        }
+
+        if (array.Length <= 0)
+        {
+            Error.Message = $"length of {arrayName} less or equals 0";
+            return null;
+        }
+
+        return new Error(null);
+    }
+
+    /// <summary>
+    /// valid passed two dimension array for the some specifications
+    /// </summary>
+    /// <param name="array">passed array</param>
+    /// <param name="arrayName">name of passed array (name of variable)</param>
+    /// <typeparam name="T">the type of elements in the array</typeparam>
+    /// <returns></returns>
+    internal static Error ValidArray<T>(T[,] array, string arrayName)
     {
         if (array is null)
         {
