@@ -19,6 +19,7 @@
             android:text="Exponentiation"
             android:layout_width="160dp"
             android:layout_height="55dp"
+            android:textSize="13sp"
             android:onClick="Exp"
             android:id="@+id/exp_btn"
             tools:ignore="TextContrastCheck"
@@ -148,11 +149,12 @@
             android:layout_marginBottom="251dp" android:id="@+id/textView2"
     />
     <Switch
-            android:text="equations"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" android:layout_alignParentEnd="true" android:layout_marginEnd="47dp"
-            android:layout_alignParentBottom="true" android:layout_marginBottom="79dp"
-            android:id="@+id/is_equations_switch"/>
+            android:text="Equations"
+            android:layout_width="148dp"
+            android:layout_height="45dp" android:layout_alignParentEnd="true" android:layout_marginEnd="24dp"
+            android:layout_marginBottom="1dp"
+            android:id="@+id/is_equations_switch" android:layout_marginStart="42dp"
+            android:layout_toEndOf="@+id/exp_value" android:layout_alignBottom="@+id/exp_value"/>
 
 
 </RelativeLayout>  

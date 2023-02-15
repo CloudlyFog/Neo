@@ -6,12 +6,12 @@ using Neo.Utilities;
 namespace Neo.Services;
 
 /// <summary>
-/// class finds unknown variables of equation
+/// class finds unknown variables of equation/s
 /// </summary>
 public sealed class Solver : IDisposable
 {
     /// <summary>
-    /// passed recognized string (expected system linear equation)
+    /// passed recognized string (expected system linear equations)
     /// </summary>
     private readonly string _input;
 
@@ -47,7 +47,7 @@ public sealed class Solver : IDisposable
     public static explicit operator Solver(string input) => new(input);
 
     /// <summary>
-    /// initialize instance of <see cref="Solver"/> with different implicit and explicit operators
+    /// returns instance of <see cref="Solver"/> with different implicit and explicit operators
     /// </summary>
     /// <param name="input"><see cref="_input"/></param>
     public Solver(string input)
@@ -75,6 +75,10 @@ public sealed class Solver : IDisposable
         }
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="matrix"></param>
     public Solver(Matrix<double> matrix)
     {
         _parser = new Parser(string.Empty);

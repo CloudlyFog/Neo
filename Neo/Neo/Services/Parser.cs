@@ -7,6 +7,9 @@ using Neo.Utilities;
 
 namespace Neo.Services;
 
+/// <summary>
+/// converts string with definite structure to type <see cref="Matrix{T}"/>
+/// </summary>
 internal class Parser
 {
     /// <summary>
@@ -258,13 +261,13 @@ internal class Parser
     }
 
     /// <summary>
-    /// valid passed array for the some specifications
+    /// valid passed two dimension array for the some specifications
     /// </summary>
     /// <param name="array">passed array</param>
     /// <param name="arrayName">name of passed array (name of variable)</param>
     /// <typeparam name="T">the type of elements in the array</typeparam>
     /// <returns></returns>
-    internal static Error ValidArray<T>(T[] array, string arrayName)
+    private static Error ValidArray<T>(T[,] array, string arrayName)
     {
         if (array is null)
         {
@@ -282,13 +285,13 @@ internal class Parser
     }
 
     /// <summary>
-    /// valid passed two dimension array for the some specifications
+    /// valid passed array for the some specifications
     /// </summary>
     /// <param name="array">passed array</param>
     /// <param name="arrayName">name of passed array (name of variable)</param>
     /// <typeparam name="T">the type of elements in the array</typeparam>
     /// <returns></returns>
-    internal static Error ValidArray<T>(T[,] array, string arrayName)
+    internal static Error ValidArray<T>(T[] array, string arrayName)
     {
         if (array is null)
         {

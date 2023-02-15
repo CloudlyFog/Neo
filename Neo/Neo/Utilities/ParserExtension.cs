@@ -7,7 +7,7 @@ using Neo.Services;
 namespace Neo.Utilities;
 
 /// <summary>
-/// describe extension class for <see cref="Parser"/>
+/// describes extension class for <see cref="Parser"/>
 /// </summary>
 internal static class ParserExtension
 {
