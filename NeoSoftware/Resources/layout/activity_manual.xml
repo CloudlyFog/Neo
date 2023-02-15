@@ -27,7 +27,7 @@
             android:backgroundTint="#ff80cbc4"
             android:layout_marginRight="100dp"
             android:layout_marginLeft="100dp"
-            android:layout_marginTop="8dp" android:layout_below="@+id/det_btn" android:layout_marginStart="0dp"
+            android:layout_marginTop="10dp" android:layout_below="@+id/det_btn" android:layout_marginStart="0dp"
             android:layout_alignStart="@+id/det_btn" android:layout_centerHorizontal="true"/>
     <Button
             android:text="Solve"
@@ -39,7 +39,7 @@
             android:backgroundTint="#ff80cbc4"
             android:layout_marginRight="100dp"
             android:layout_marginLeft="100dp"
-            android:layout_marginTop="8dp" android:layout_below="@+id/rank_btn"
+            android:layout_marginTop="10dp" android:layout_below="@+id/rank_btn"
             android:layout_marginStart="0dp"
             android:layout_alignStart="@+id/rank_btn" android:layout_alignEnd="@+id/rank_btn"/>
     <Button
@@ -51,7 +51,7 @@
             android:backgroundTint="#ff80cbc4"
             tools:ignore="TextContrastCheck"
             android:layout_marginRight="15dp"
-            android:layout_marginLeft="188dp"
+            android:layout_marginLeft="190dp"
             android:layout_marginTop="390dp"/>
     <Button
             android:layout_width="160dp"
@@ -62,7 +62,7 @@
             android:backgroundTint="#ff80cbc4"
             tools:ignore="TextContrastCheck"
             android:layout_marginRight="15dp"
-            android:layout_marginLeft="188dp"
+            android:layout_marginLeft="190dp"
             android:layout_marginTop="330dp"/>
     <Button
             android:layout_width="160dp"
@@ -72,7 +72,7 @@
             android:id="@+id/transpose_btn"
             android:backgroundTint="#ff80cbc4"
             tools:ignore="TextContrastCheck"
-            android:layout_marginRight="188dp"
+            android:layout_marginRight="190dp"
             android:layout_marginLeft="15dp"
             android:layout_marginTop="330dp"/>
     <Button
@@ -83,32 +83,34 @@
             android:id="@+id/det_btn"
             android:backgroundTint="#ff80cbc4"
             tools:ignore="TextContrastCheck"
-            android:layout_marginRight="188dp"
+            android:layout_marginRight="190dp"
             android:layout_marginLeft="15dp"
             android:layout_marginTop="390dp"/>
     <ImageButton
-            android:layout_width="wrap_content"
+            android:layout_width="45dp"
             android:onClick="BackToRecognition"
             android:layout_height="wrap_content" app:srcCompat="?attr/actionModeCloseDrawable"
-            android:layout_alignParentEnd="true" android:layout_marginEnd="30dp"
-            android:layout_alignParentBottom="true"
-            android:layout_marginBottom="25dp" android:id="@+id/back_to_recognition"/>
+            android:layout_marginEnd="0dp"
+            android:id="@+id/back_to_recognition"
+            android:layout_toEndOf="@+id/submit_size" android:layout_marginStart="200dp"
+            android:layout_marginBottom="0dp" android:layout_alignBottom="@+id/submit_size"
+            android:layout_alignEnd="@+id/solve_manual_btn"/>
     <EditText
-            android:layout_width="83dp"
+            android:layout_width="80dp"
             android:layout_height="wrap_content"
             android:inputType="number"
             android:ems="10"
             android:gravity="center" android:layout_alignParentBottom="true"
-            android:layout_marginBottom="242dp" android:id="@+id/exp_value" android:layout_alignParentStart="true"
+            android:layout_marginBottom="240dp" android:id="@+id/exp_value" android:layout_alignParentStart="true"
             android:layout_marginStart="80dp"/>
     <TextView
             android:text="Rows: "
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" android:layout_alignParentStart="true"
-            android:layout_marginStart="17dp" android:layout_alignParentBottom="true"
-            android:layout_marginBottom="121dp" android:id="@+id/textView"/>
+            android:layout_marginStart="15dp" android:layout_alignParentBottom="true"
+            android:layout_marginBottom="120dp" android:id="@+id/textView"/>
     <EditText
-            android:layout_width="98dp"
+            android:layout_width="100dp"
             android:layout_height="45dp"
             android:inputType="number"
             android:ems="10"
@@ -122,10 +124,10 @@
             android:text="Columns: "
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" android:layout_alignParentStart="true"
-            android:layout_marginStart="17dp" android:layout_alignParentBottom="true"
+            android:layout_marginStart="15dp" android:layout_alignParentBottom="true"
             android:layout_marginBottom="70dp" android:id="@+id/textView1"/>
     <EditText
-            android:layout_width="98dp"
+            android:layout_width="100dp"
             android:layout_height="45dp"
             android:inputType="number"
             android:ems="10"
@@ -146,14 +148,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" android:layout_alignParentStart="true"
             android:layout_marginStart="10dp" android:layout_alignParentBottom="true"
-            android:layout_marginBottom="251dp" android:id="@+id/textView2"
+            android:layout_marginBottom="250dp" android:id="@+id/textView2"
     />
     <Switch
             android:text="Equations"
-            android:layout_width="148dp"
+            android:layout_width="150dp"
             android:layout_height="45dp" android:layout_alignParentEnd="true" android:layout_marginEnd="24dp"
-            android:layout_marginBottom="1dp"
-            android:id="@+id/is_equations_switch" android:layout_marginStart="42dp"
+            android:layout_marginBottom="0dp"
+            android:id="@+id/is_equations_switch" android:layout_marginStart="40dp"
             android:layout_toEndOf="@+id/exp_value" android:layout_alignBottom="@+id/exp_value"/>
 
 

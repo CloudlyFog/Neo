@@ -10,7 +10,7 @@ namespace Neo.Services;
 /// <summary>
 /// converts string with definite structure to type <see cref="Matrix{T}"/>
 /// </summary>
-internal class Parser
+public class Parser
 {
     /// <summary>
     /// splits equations of system in string

@@ -29,6 +29,8 @@ namespace NeoSoftware
         private Button _submitSize;
         private Matrix<double> _matrix;
         private Matrix<double> _inputMatrix;
+        private string _inputEquations;
+        private string _equations;
         private Switch _isEquationsSwitch;
         private readonly GridSize _gridSize = new GridSize();
 
@@ -107,8 +109,16 @@ namespace NeoSoftware
             };
             _solveMatrix.Click += delegate
             {
-                SetMatrix(_gridLayoutMatrix);
-                ShowResult(GetMatrixValue(_inputMatrix), new Solver(_matrix).ToString(), ResultKind.Solve);
+                if (_isEquations)
+                {
+                    SetEquations(_gridLayoutMatrix);
+                    ShowResult(GetEquationsValue(_inputEquations), new Solver(_equations), ResultKind.Solve);
+                }
+                else
+                {
+                    SetMatrix(_gridLayoutMatrix);
+                    ShowResult(GetMatrixValue(_inputMatrix), new Solver(_matrix), ResultKind.Solve);
+                }
             };
         }
 
@@ -214,6 +224,25 @@ namespace NeoSoftware
         {
             _matrix = HandleMatrixAndroid.GetMatrix(gridLayout);
             _inputMatrix = HandleMatrixAndroid.GetMatrix(gridLayout);
+        }
+
+        private void SetEquations(GridLayout gridLayout)
+        {
+            _equations = GetEquations(gridLayout);
+            _inputEquations = GetEquations(gridLayout);
+        }
+
+        private static string GetEquationsValue(string equations)
+        {
+            return equations.Replace(Parser.SplitSymbol, '\n');
+        }
+
+        private static string GetEquations(GridLayout gridLayout)
+        {
+            var sb = new StringBuilder();
+            for (var i = 0; i < gridLayout.ChildCount; i++)
+                sb.Append($"{gridLayout.GetChildAt(i)}{Parser.SplitSymbol}");
+            return sb.ToString();
         }
 
         private void ShowResult(Matrix<double> input, Matrix<double> output, ResultKind resultKind)
