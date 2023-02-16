@@ -75,7 +75,6 @@ namespace NeoSoftware
             };
         }
 
-
         /// <summary>
         /// renders matrix if <see cref="_isEquations"/> is false and fields for equations if true>
         /// </summary>
@@ -177,25 +176,31 @@ namespace NeoSoftware
                 RenderGridLayout();
         }
 
-        private void RenderGridLayout(int childHeight = 100, int childWidth = 150)
+        private void RenderGridLayout(string text = "", int childHeight = 100, int childWidth = 150)
         {
+            var equations = _inputEquations?.Split(Parser.SplitSymbol);
             for (var i = 0; i < _gridLayoutMatrix.RowCount; i++)
             {
                 for (var j = 0; j < _gridLayoutMatrix.ColumnCount; j++)
                 {
-                    var child = CreateEditTextInstance(childHeight, childWidth);
+                    using var child = CreateEditTextInstance(childHeight,
+                        childWidth,
+                        EquationValueStorage.IsEquation
+                            ? equations?[i]
+                            : text);
                     _gridLayoutMatrix.AddView(child, i + j);
                 }
             }
         }
 
-        private EditText CreateEditTextInstance(int childHeight, int childWidth)
+        private EditText CreateEditTextInstance(int childHeight, int childWidth, string text = "")
         {
             var child = new EditText(this);
             if (EquationValueStorage.IsEquation)
             {
                 child = new EditText(this)
                 {
+                    Text = text,
                     TextSize = 18,
                     Typeface = Typeface.DefaultBold,
                 };
