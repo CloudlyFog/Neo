@@ -19,6 +19,7 @@
             android:text="Exponentiation"
             android:layout_width="160dp"
             android:layout_height="55dp"
+            android:textStyle="bold"
             android:textSize="13sp"
             android:onClick="Exp"
             android:id="@+id/exp_btn"
@@ -33,6 +34,7 @@
             android:text="Solve"
             android:layout_width="160dp"
             android:layout_height="55dp"
+            android:textStyle="bold"
             android:id="@+id/solve_manual_btn"
             tools:ignore="TextContrastCheck"
             android:layout_marginEnd="0dp"
@@ -46,6 +48,7 @@
             android:layout_width="160dp"
             android:layout_height="55dp"
             android:text="Rank"
+            android:textStyle="bold"
             android:onClick="Rank"
             android:id="@+id/rank_btn"
             android:backgroundTint="#ff80cbc4"
@@ -57,6 +60,7 @@
             android:layout_width="160dp"
             android:layout_height="55dp"
             android:text="Reverse"
+            android:textStyle="bold"
             android:onClick="Reverse"
             android:id="@+id/reverse_btn"
             android:backgroundTint="#ff80cbc4"
@@ -69,6 +73,7 @@
             android:layout_height="55dp"
             android:text="Transpose"
             android:onClick="Transpose"
+            android:textStyle="bold"
             android:id="@+id/transpose_btn"
             android:backgroundTint="#ff80cbc4"
             tools:ignore="TextContrastCheck"
@@ -80,6 +85,7 @@
             android:layout_height="55dp"
             android:text="Determinant"
             android:onClick="Determinant"
+            android:textStyle="bold"
             android:id="@+id/det_btn"
             android:backgroundTint="#ff80cbc4"
             tools:ignore="TextContrastCheck"
@@ -99,12 +105,14 @@
             android:layout_width="80dp"
             android:layout_height="wrap_content"
             android:inputType="number"
+            android:textStyle="bold"
             android:ems="10"
             android:gravity="center" android:layout_alignParentBottom="true"
             android:layout_marginBottom="240dp" android:id="@+id/exp_value" android:layout_alignParentStart="true"
             android:layout_marginStart="80dp"/>
     <TextView
             android:text="Rows: "
+            android:textStyle="bold"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" android:layout_alignParentStart="true"
             android:layout_marginStart="15dp" android:layout_alignParentBottom="true"
@@ -113,6 +121,7 @@
             android:layout_width="100dp"
             android:layout_height="45dp"
             android:inputType="number"
+            android:textStyle="bold"
             android:ems="10"
             android:gravity="center"
             android:id="@+id/rows_count"
@@ -122,6 +131,7 @@
 
     <TextView
             android:text="Columns: "
+            android:textStyle="bold"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" android:layout_alignParentStart="true"
             android:layout_marginStart="15dp" android:layout_alignParentBottom="true"
@@ -130,6 +140,7 @@
             android:layout_width="100dp"
             android:layout_height="45dp"
             android:inputType="number"
+            android:textStyle="bold"
             android:ems="10"
             android:gravity="center"
             android:id="@+id/columns_count"
@@ -145,6 +156,7 @@
             android:id="@+id/submit_size"/>
     <TextView
             android:text="Exp value: "
+            android:textStyle="bold"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" android:layout_alignParentStart="true"
             android:layout_marginStart="10dp" android:layout_alignParentBottom="true"
@@ -152,6 +164,7 @@
     />
     <Switch
             android:text="Equations"
+            android:textStyle="bold"
             android:layout_width="150dp"
             android:layout_height="45dp" android:layout_alignParentEnd="true" android:layout_marginEnd="24dp"
             android:layout_marginBottom="0dp"

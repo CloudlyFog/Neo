@@ -1,4 +1,5 @@
 ﻿using System.Text;
+using Android.Graphics;
 using Android.Widget;
 using Java.Interop;
 using MathNet.Numerics.LinearAlgebra;
@@ -37,16 +38,9 @@ namespace NeoSoftware
 
         private void ConfigureRenderingInputFields()
         {
-            if (_isEquations)
-            {
-                ConfigureIsEquationsSwitch();
-                ConfigureEquationsGrid();
-            }
-            else
-            {
-                ConfigureRowsColumnsCount();
-                ConfigureGrid();
-            }
+            ConfigureIsEquationsSwitch();
+            ConfigureRowsColumnsCount();
+            ConfigureGrid();
         }
 
         private void GetButtons()
@@ -64,6 +58,7 @@ namespace NeoSoftware
         private void ConfigureEquationsGrid()
         {
             _gridLayoutMatrix = FindViewById<GridLayout>(Resource.Id.matrix_grid);
+            _gridLayoutMatrix.RemoveAllViews();
             _gridLayoutMatrix.RowCount = _gridSize.RowCount = int.Parse(_rowsCount.Text);
             _gridLayoutMatrix.ColumnCount = 1;
             RenderGridLayout(childWidth: 900);
@@ -72,8 +67,30 @@ namespace NeoSoftware
         private void ConfigureIsEquationsSwitch()
         {
             _isEquationsSwitch = FindViewById<Switch>(Resource.Id.is_equations_switch);
-            _isEquationsSwitch.CheckedChange += delegate { _isEquations = !_isEquations; };
-            _isEquationsSwitch.Checked = _isEquations;
+            _isEquationsSwitch.CheckedChange += delegate
+            {
+                _isEquations = _isEquationsSwitch.Checked;
+                RenderMainInputElement();
+            };
+        }
+
+
+        /// <summary>
+        /// renders matrix if <see cref="_isEquations"/> is false and fields for equations if true>
+        /// </summary>
+        /// <param name="calledRCCConf">if this method is calling from <see cref="ConfigureRowsColumnsCount"/></param>
+        private void RenderMainInputElement(bool calledRCCConf = false)
+        {
+            if (_isEquations)
+            {
+                ConfigureEquationsGrid();
+            }
+            else
+            {
+                if (!calledRCCConf)
+                    ConfigureRowsColumnsCount();
+                ConfigureGrid();
+            }
         }
 
         private void ConfigureButtons()
@@ -137,7 +154,7 @@ namespace NeoSoftware
             if (_columnsCount.Text == string.Empty)
                 _columnsCount.Text = "3";
 
-            _submitSize.Click += (sender, args) => { ConfigureGrid(); };
+            _submitSize.Click += (sender, args) => { RenderMainInputElement(true); };
         }
 
         private bool ValidRowsColumnsCount(int rows, int columns)
@@ -165,16 +182,37 @@ namespace NeoSoftware
             {
                 for (var j = 0; j < _gridLayoutMatrix.ColumnCount; j++)
                 {
-                    var child = new EditText(this)
-                    {
-                        TextSize = 18,
-                        TextAlignment = TextAlignment.Center,
-                    };
-                    child.SetHeight(childHeight);
-                    child.SetWidth(childWidth);
+                    var child = CreateEditTextInstance(childHeight, childWidth);
                     _gridLayoutMatrix.AddView(child, i + j);
                 }
             }
+        }
+
+        private EditText CreateEditTextInstance(int childHeight, int childWidth)
+        {
+            var child = new EditText(this);
+            if (_isEquations)
+            {
+                child = new EditText(this)
+                {
+                    TextSize = 18,
+                    Typeface = Typeface.DefaultBold,
+                };
+            }
+            else
+            {
+                child = new EditText(this)
+                {
+                    TextSize = 18,
+                    TextAlignment = TextAlignment.Center,
+                    Typeface = Typeface.DefaultBold,
+                };
+            }
+
+            child.SetHeight(childHeight);
+            child.SetWidth(childWidth);
+
+            return child;
         }
 
         private void OpenResultWindow(string title, string input, string output)
