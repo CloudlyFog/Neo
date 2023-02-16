@@ -278,8 +278,12 @@ namespace NeoSoftware
         private static string GetEquations(GridLayout gridLayout)
         {
             var sb = new StringBuilder();
-            for (var i = 0; i < gridLayout.ChildCount; i++)
-                sb.Append($"{gridLayout.GetChildAt(i)}{Parser.SplitSymbol}");
+            for (var i = 0; i < gridLayout.RowCount; i++)
+            {
+                var child = (EditText)gridLayout.GetChildAt(i);
+                sb.Append($"{child.Text}{Parser.SplitSymbol}");
+            }
+
             return sb.ToString();
         }
 
