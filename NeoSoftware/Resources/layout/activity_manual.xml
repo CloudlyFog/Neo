@@ -93,13 +93,15 @@
             android:layout_marginLeft="15dp"
             android:layout_marginTop="390dp"/>
     <ImageButton
-            android:layout_width="45dp"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
             android:onClick="BackToRecognition"
-            android:layout_height="wrap_content" app:srcCompat="?attr/actionModeCloseDrawable"
+            app:srcCompat="?attr/actionModeCloseDrawable"
             android:layout_marginEnd="0dp"
             android:id="@+id/back_to_recognition"
-            android:layout_toEndOf="@+id/submit_size" android:layout_marginStart="200dp"
-            android:layout_marginBottom="0dp" android:layout_alignBottom="@+id/submit_size"
+            android:layout_marginStart="0dp"
+            android:layout_marginBottom="0dp"
+            android:layout_alignBottom="@+id/submit_size"
             android:layout_alignEnd="@+id/solve_manual_btn"/>
     <EditText
             android:layout_width="80dp"
@@ -149,10 +151,12 @@
             android:layout_toEndOf="@+id/columns_count" android:layout_alignBottom="@+id/textView1"/>
     <Button
             android:text="Submit"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="140dp"
+            android:layout_height="55dp"
             android:layout_alignParentStart="true"
-            android:layout_marginStart="6dp" android:layout_alignParentBottom="true" android:layout_marginBottom="12dp"
+            android:layout_marginStart="15dp"
+            android:layout_marginBottom="0dp"
+            android:layout_alignParentBottom="true"
             android:id="@+id/submit_size"/>
     <TextView
             android:text="Exp value: "

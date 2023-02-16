@@ -5,6 +5,7 @@ using Java.Interop;
 using MathNet.Numerics.LinearAlgebra;
 using Neo.Services;
 using NeoSoftware.Services;
+using NeoSoftware.Utilities;
 using Button = Android.Widget.Button;
 using Switch = Android.Widget.Switch;
 using TextAlignment = Android.Views.TextAlignment;
@@ -59,7 +60,7 @@ namespace NeoSoftware
         {
             _gridLayoutMatrix = FindViewById<GridLayout>(Resource.Id.matrix_grid);
             _gridLayoutMatrix.RemoveAllViews();
-            _gridLayoutMatrix.RowCount = _gridSize.RowCount = int.Parse(_rowsCount.Text);
+            _gridLayoutMatrix.RowCount = int.Parse(_rowsCount.Text);
             _gridLayoutMatrix.ColumnCount = 1;
             RenderGridLayout(childWidth: 900);
         }
@@ -69,7 +70,7 @@ namespace NeoSoftware
             _isEquationsSwitch = FindViewById<Switch>(Resource.Id.is_equations_switch);
             _isEquationsSwitch.CheckedChange += delegate
             {
-                _isEquations = _isEquationsSwitch.Checked;
+                EquationValueStorage.IsEquation = _isEquationsSwitch.Checked;
                 RenderMainInputElement();
             };
         }
@@ -81,7 +82,7 @@ namespace NeoSoftware
         /// <param name="calledRCCConf">if this method is calling from <see cref="ConfigureRowsColumnsCount"/></param>
         private void RenderMainInputElement(bool calledRCCConf = false)
         {
-            if (_isEquations)
+            if (EquationValueStorage.IsEquation)
             {
                 ConfigureEquationsGrid();
             }
@@ -126,7 +127,7 @@ namespace NeoSoftware
             };
             _solveMatrix.Click += delegate
             {
-                if (_isEquations)
+                if (EquationValueStorage.IsEquation)
                 {
                     SetEquations(_gridLayoutMatrix);
                     ShowResult(GetEquationsValue(_inputEquations), new Solver(_equations), ResultKind.Solve);
@@ -191,7 +192,7 @@ namespace NeoSoftware
         private EditText CreateEditTextInstance(int childHeight, int childWidth)
         {
             var child = new EditText(this);
-            if (_isEquations)
+            if (EquationValueStorage.IsEquation)
             {
                 child = new EditText(this)
                 {
@@ -256,6 +257,7 @@ namespace NeoSoftware
             _isLoadMain = false;
             SetContentView(Resource.Layout.activity_manual);
             BuildUI();
+            RenderMainInputElement();
         }
 
         private void SetMatrix(GridLayout gridLayout)
