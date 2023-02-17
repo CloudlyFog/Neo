@@ -37,13 +37,13 @@
             android:textStyle="bold"
             android:id="@+id/solve_manual_btn"
             tools:ignore="TextContrastCheck"
-            android:layout_marginEnd="0dp"
+            android:layout_marginEnd="15dp"
             android:backgroundTint="#ff80cbc4"
             android:layout_marginRight="100dp"
             android:layout_marginLeft="100dp"
             android:layout_marginTop="10dp" android:layout_below="@+id/rank_btn"
             android:layout_marginStart="0dp"
-            android:layout_alignStart="@+id/rank_btn" android:layout_alignEnd="@+id/rank_btn"/>
+            android:layout_alignStart="@+id/rank_btn" android:layout_alignParentEnd="true"/>
     <Button
             android:layout_width="160dp"
             android:layout_height="55dp"
@@ -55,7 +55,7 @@
             tools:ignore="TextContrastCheck"
             android:layout_marginRight="15dp"
             android:layout_marginLeft="190dp"
-            android:layout_marginTop="390dp"/>
+            android:layout_marginTop="390dp" android:layout_alignParentEnd="true" android:layout_marginEnd="15dp"/>
     <Button
             android:layout_width="160dp"
             android:layout_height="55dp"
@@ -66,8 +66,8 @@
             android:backgroundTint="#ff80cbc4"
             tools:ignore="TextContrastCheck"
             android:layout_marginRight="15dp"
-            android:layout_marginLeft="190dp"
-            android:layout_marginTop="330dp"/>
+            android:layout_marginLeft="0dp"
+            android:layout_marginTop="330dp" android:layout_alignParentEnd="true" android:layout_marginEnd="15dp"/>
     <Button
             android:layout_width="160dp"
             android:layout_height="55dp"
@@ -77,7 +77,7 @@
             android:id="@+id/transpose_btn"
             android:backgroundTint="#ff80cbc4"
             tools:ignore="TextContrastCheck"
-            android:layout_marginRight="190dp"
+            android:layout_marginRight="0dp"
             android:layout_marginLeft="15dp"
             android:layout_marginTop="330dp"/>
     <Button
@@ -97,12 +97,11 @@
             android:layout_width="wrap_content"
             android:onClick="BackToRecognition"
             app:srcCompat="?attr/actionModeCloseDrawable"
-            android:layout_marginEnd="0dp"
+            android:layout_marginEnd="15dp"
             android:id="@+id/back_to_recognition"
             android:layout_marginStart="0dp"
-            android:layout_marginBottom="0dp"
-            android:layout_alignBottom="@+id/submit_size"
-            android:layout_alignEnd="@+id/solve_manual_btn"/>
+            android:layout_alignParentEnd="true" android:layout_alignParentBottom="true"
+            android:layout_marginBottom="0dp"/>
     <EditText
             android:layout_width="80dp"
             android:layout_height="wrap_content"
@@ -151,26 +150,25 @@
             android:layout_toEndOf="@+id/columns_count" android:layout_alignBottom="@+id/textView1"/>
     <Button
             android:text="Submit"
-            android:layout_width="140dp"
-            android:layout_height="55dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
             android:layout_marginStart="15dp"
-            android:layout_marginBottom="0dp"
-            android:layout_alignParentBottom="true"
-            android:id="@+id/submit_size"/>
+            android:id="@+id/submit_size" android:layout_alignParentBottom="true"
+            android:layout_marginBottom="0dp"/>
     <TextView
             android:text="Exp value: "
             android:textStyle="bold"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" android:layout_alignParentStart="true"
-            android:layout_marginStart="10dp" android:layout_alignParentBottom="true"
+            android:layout_marginStart="15dp" android:layout_alignParentBottom="true"
             android:layout_marginBottom="250dp" android:id="@+id/textView2"
     />
     <Switch
             android:text="Equations"
             android:textStyle="bold"
-            android:layout_width="150dp"
-            android:layout_height="45dp" android:layout_alignParentEnd="true" android:layout_marginEnd="24dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" android:layout_alignParentEnd="true" android:layout_marginEnd="15dp"
             android:layout_marginBottom="0dp"
             android:id="@+id/is_equations_switch" android:layout_marginStart="40dp"
             android:layout_toEndOf="@+id/exp_value" android:layout_alignBottom="@+id/exp_value"/>

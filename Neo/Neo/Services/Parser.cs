@@ -54,14 +54,19 @@ public class Parser
     /// <summary>
     /// Take data from <see cref="_input"/> and put it to <see cref="Matrix{T}"/>
     /// </summary>
+    /// <param name="isString">defines type of input. set <see cref="isString"/> false when parse <see cref="Matrix{T}"/></param>
+    /// <param name="matrix">matrix from what will parsed if <see cref="isString"/> is true</param>
     /// <returns></returns>
-    public Matrix<double> MatrixConversion(bool str = true, Matrix<double> matrix = null)
+    public Matrix<double> MatrixConversion(bool isString = true, Matrix<double> matrix = null)
     {
-        if (!str)
+        if (!isString)
             _input = GetStringMatrix(matrix);
 
         if (_input is null)
+        {
+            Error.Message = $"{nameof(_input)} is null.";
             return null;
+        }
 
         var targetArray = new double[
             // read count of ";" and therefore count will one less than actually
@@ -82,10 +87,12 @@ public class Parser
     /// <summary>
     /// Take data from <see cref="_input"/> and put it to <see cref="Vector{T}"/>
     /// </summary>
+    /// <param name="isString">defines type of input. set <see cref="isString"/> false when parse <see cref="Matrix{T}"/></param>
+    /// <param name="matrix">matrix from what will parsed if <see cref="isString"/> is true</param>
     /// <returns></returns>
-    public Vector<double> VectorConversion(bool str = true, Matrix<double> matrix = null)
+    public Vector<double> VectorConversion(bool isString = true, Matrix<double> matrix = null)
     {
-        if (!str)
+        if (!isString)
             _input = GetStringMatrix(matrix);
 
         if (_input is null)
@@ -117,6 +124,7 @@ public class Parser
     /// </summary>
     /// <param name="targetArray"> describe only size of array</param>
     /// <param name="filterResult">data from ocr output</param>
+    /// <returns></returns>
     private static Matrix<double> GetMatrixValue(double[,] targetArray, List<string> filterResult)
     {
         if (targetArray is null)
@@ -168,6 +176,7 @@ public class Parser
     /// </summary>
     /// <param name="targetArray">array which will contain parsed data from <see cref="filterResult"/></param>
     /// <param name="filterResult">parsed filtered data from ocr</param>
+    /// <returns></returns>
     private static Vector<double> GetVectorValue(double[] targetArray, List<string> filterResult)
     {
         if (ValidArray(targetArray, nameof(targetArray)) is null ||
