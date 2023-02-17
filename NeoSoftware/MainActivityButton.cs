@@ -59,8 +59,10 @@ namespace NeoSoftware
         private void ConfigureEquationsGrid()
         {
             _gridLayoutMatrix = FindViewById<GridLayout>(Resource.Id.matrix_grid);
+            _isEquationsSwitch = FindViewById<Switch>(Resource.Id.is_equations_switch);
+            _isEquationsSwitch.Checked = EquationValueStorage.IsEquation;
             _gridLayoutMatrix.RemoveAllViews();
-            _gridLayoutMatrix.RowCount = int.Parse(_rowsCount.Text);
+            _gridLayoutMatrix.RowCount = _gridSize.RowCount = int.Parse(_rowsCount.Text);
             _gridLayoutMatrix.ColumnCount = 1;
             RenderGridLayout(childWidth: 900);
         }
@@ -129,7 +131,8 @@ namespace NeoSoftware
                 if (EquationValueStorage.IsEquation)
                 {
                     SetEquations(_gridLayoutMatrix);
-                    ShowResult(GetEquationsValue(_inputEquations), new Solver(_equations), ResultKind.Solve);
+                    ShowResult(_inputEquations.Replace(Parser.SplitSymbol, '\n'), new Solver(_equations),
+                        ResultKind.Solve);
                 }
                 else
                 {
@@ -275,11 +278,6 @@ namespace NeoSoftware
         {
             _equations = GetEquations(gridLayout);
             _inputEquations = GetEquations(gridLayout);
-        }
-
-        private static string GetEquationsValue(string equations)
-        {
-            return equations.Replace(Parser.SplitSymbol, '\n');
         }
 
         private static string GetEquations(GridLayout gridLayout)
