@@ -1,5 +1,6 @@
 ﻿using System.Text;
 using Android.Graphics;
+using Android.Graphics.Drawables;
 using Android.Widget;
 using Java.Interop;
 using MathNet.Numerics.LinearAlgebra;
@@ -78,9 +79,9 @@ namespace NeoSoftware
         }
 
         /// <summary>
-        /// renders matrix if <see cref="_isEquations"/> is false and fields for equations if true>
+        /// renders matrix if <see cref="_isEquations"/> is false and fields for equations if true
         /// </summary>
-        /// <param name="calledRCCConf">if this method is calling from <see cref="ConfigureRowsColumnsCount"/></param>
+        /// <param name="calledRCCConf">defines calling this method from <see cref="ConfigureRowsColumnsCount"/></param>
         private void RenderMainInputElement(bool calledRCCConf = false)
         {
             if (EquationValueStorage.IsEquation)
