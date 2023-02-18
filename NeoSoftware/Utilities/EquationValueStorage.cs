@@ -2,6 +2,6 @@
 {
     public static class EquationValueStorage
     {
-        public static bool IsEquation { get; set; } = false;
+        public static bool IsEquation { get; set; }
     }
 }

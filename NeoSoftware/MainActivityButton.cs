@@ -1,6 +1,5 @@
 ﻿using System.Text;
 using Android.Graphics;
-using Android.Graphics.Drawables;
 using Android.Widget;
 using Java.Interop;
 using MathNet.Numerics.LinearAlgebra;
@@ -37,7 +36,9 @@ namespace NeoSoftware
         private Switch _isEquationsSwitch;
         private readonly GridSize _gridSize = new GridSize();
 
-
+        /// <summary>
+        /// brings together all configurations for change "view of input fields" to "equation view"
+        /// </summary>
         private void ConfigureRenderingInputFields()
         {
             ConfigureIsEquationsSwitch();
@@ -45,6 +46,37 @@ namespace NeoSoftware
             ConfigureGrid();
         }
 
+        /// <summary>
+        /// initializes instances of all elements
+        /// </summary>
+        private void InitAllElements()
+        {
+            GetButtons();
+            GetRowsColumnsCountFields();
+            GetEquationSwitchFields();
+        }
+
+        /// <summary>
+        /// initializes instances of fields for changing "rendering view"
+        /// </summary>
+        private void GetEquationSwitchFields()
+        {
+            _isEquationsSwitch = FindViewById<Switch>(Resource.Id.is_equations_switch);
+        }
+
+        /// <summary>
+        /// initializes instances for changing size of matrix
+        /// </summary>
+        private void GetRowsColumnsCountFields()
+        {
+            _rowsCount = FindViewById<EditText>(Resource.Id.rows_count);
+            _columnsCount = FindViewById<EditText>(Resource.Id.columns_count);
+            _submitSize = FindViewById<Button>(Resource.Id.submit_size);
+        }
+
+        /// <summary>
+        /// initializes instances of buttons
+        /// </summary>
         private void GetButtons()
         {
             _transpose = FindViewById<Button>(Resource.Id.transpose_btn);
@@ -57,6 +89,9 @@ namespace NeoSoftware
             ConfigureButtons();
         }
 
+        /// <summary>
+        /// configures and renders grid in "equation-view"
+        /// </summary>
         private void ConfigureEquationsGrid()
         {
             _isEquationsSwitch.Checked = EquationValueStorage.IsEquation;
@@ -66,9 +101,11 @@ namespace NeoSoftware
             RenderGridLayout(childWidth: 900);
         }
 
+        /// <summary>
+        /// sets behavior of grid's input fields by changing value CheckedChange of <see cref="_isEquationsSwitch"/>
+        /// </summary>
         private void ConfigureIsEquationsSwitch()
         {
-            _isEquationsSwitch = FindViewById<Switch>(Resource.Id.is_equations_switch);
             _isEquationsSwitch.CheckedChange += delegate
             {
                 EquationValueStorage.IsEquation = _isEquationsSwitch.Checked;
@@ -95,6 +132,9 @@ namespace NeoSoftware
             }
         }
 
+        /// <summary>
+        /// configures buttons event OnClick
+        /// </summary>
         private void ConfigureButtons()
         {
             _transpose.Click += delegate
@@ -143,15 +183,13 @@ namespace NeoSoftware
             _solveMatrix.Clickable = EquationValueStorage.IsEquation;
         }
 
+        /// <summary>
+        /// sets default values for size of grid and fields for changing size of grid
+        /// </summary>
         private void ConfigureRowsColumnsCount()
         {
-            _rowsCount = FindViewById<EditText>(Resource.Id.rows_count);
-            _columnsCount = FindViewById<EditText>(Resource.Id.columns_count);
-            _submitSize = FindViewById<Button>(Resource.Id.submit_size);
-
             _rowsCount.Text = _gridSize.RowCount.ToString();
             _columnsCount.Text = _gridSize.ColumnCount.ToString();
-
 
             if (_rowsCount.Text == string.Empty)
                 _rowsCount.Text = "3";
@@ -161,11 +199,20 @@ namespace NeoSoftware
             _submitSize.Click += (sender, args) => { RenderMainInputElement(true); };
         }
 
+        /// <summary>
+        /// validates rows and columns count of grid
+        /// </summary>
+        /// <param name="rows">count of grid's rows</param>
+        /// <param name="columns">count of grid's columns</param>
+        /// <returns></returns>
         private bool ValidRowsColumnsCount(int rows, int columns)
         {
             return rows <= 6 && rows > 1 && columns <= 6 && columns > 1;
         }
 
+        /// <summary>
+        /// sets default grid
+        /// </summary>
         private void ConfigureGrid()
         {
             if (!ValidRowsColumnsCount(int.Parse(_rowsCount.Text), int.Parse(_columnsCount.Text)))
@@ -180,6 +227,12 @@ namespace NeoSoftware
                 RenderGridLayout();
         }
 
+        /// <summary>
+        /// renders grid layout with specified parameters of its children and rows/columns count
+        /// </summary>
+        /// <param name="text">default text of grid's children</param>
+        /// <param name="childHeight">height of grid's children</param>
+        /// <param name="childWidth">width of grid's children</param>
         private void RenderGridLayout(string text = "", int childHeight = 100, int childWidth = 150)
         {
             var equations = _inputEquations?.Split(Parser.SplitSymbol);
@@ -321,3 +374,11 @@ namespace NeoSoftware
         }
     }
 }
+
+#region equation view
+
+// "equation view" is a type of input fields rendering
+// when view renders instead of like a matrix, 
+// renders like an long input fields
+
+#endregion

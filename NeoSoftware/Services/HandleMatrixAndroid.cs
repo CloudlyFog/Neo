@@ -1,8 +1,5 @@
-﻿using System.Collections.Generic;
-using System.Drawing;
-using System.Linq;
+﻿using System.Linq;
 using Android.Content;
-using Android.Graphics.Drawables;
 using Android.Views;
 using Android.Widget;
 using MathNet.Numerics.LinearAlgebra;
@@ -125,7 +122,7 @@ namespace NeoSoftware.Services
 
         /// <summary>
         /// validates values of grid's children
-        /// </summary
+        /// </summary>
         /// <param name="gridLayout">current grid of ui</param>
         /// <returns></returns>
         private static bool ValidMatrixValues(GridLayout? gridLayout)

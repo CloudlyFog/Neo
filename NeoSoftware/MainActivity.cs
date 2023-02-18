@@ -49,6 +49,9 @@ namespace NeoSoftware
             BuildUI();
         }
 
+        /// <summary>
+        /// renders all ui of app
+        /// </summary>
         private void BuildUI()
         {
             if (_isLoadMain)
@@ -59,7 +62,7 @@ namespace NeoSoftware
             }
             else
             {
-                GetButtons();
+                InitAllElements();
                 ConfigureRenderingInputFields();
             }
         }
