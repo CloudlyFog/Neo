@@ -59,8 +59,6 @@ namespace NeoSoftware
 
         private void ConfigureEquationsGrid()
         {
-            _gridLayoutMatrix = FindViewById<GridLayout>(Resource.Id.matrix_grid);
-            _isEquationsSwitch = FindViewById<Switch>(Resource.Id.is_equations_switch);
             _isEquationsSwitch.Checked = EquationValueStorage.IsEquation;
             _gridLayoutMatrix.RemoveAllViews();
             _gridLayoutMatrix.RowCount = _gridSize.RowCount = int.Parse(_rowsCount.Text);
@@ -84,6 +82,7 @@ namespace NeoSoftware
         /// <param name="calledRCCConf">defines calling this method from <see cref="ConfigureRowsColumnsCount"/></param>
         private void RenderMainInputElement(bool calledRCCConf = false)
         {
+            _solveMatrix.Clickable = EquationValueStorage.IsEquation;
             if (EquationValueStorage.IsEquation)
             {
                 ConfigureEquationsGrid();
@@ -141,6 +140,7 @@ namespace NeoSoftware
                     ShowResult(GetMatrixValue(_inputMatrix), new Solver(_matrix), ResultKind.Solve);
                 }
             };
+            _solveMatrix.Clickable = EquationValueStorage.IsEquation;
         }
 
         private void ConfigureRowsColumnsCount()
@@ -219,6 +219,7 @@ namespace NeoSoftware
                 };
             }
 
+            child.SetTextColor(new Color(168, 170, 177));
             child.SetHeight(childHeight);
             child.SetWidth(childWidth);
 

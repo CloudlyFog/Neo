@@ -65,6 +65,16 @@ internal static class ParserExtension
     /// <returns></returns>
     public static string GetDigits(this string input)
     {
+        switch (input)
+        {
+            case null:
+                Error.Message = $"{nameof(input)} is null";
+                return string.Empty;
+            case "":
+                Error.Message = $"{nameof(input)} doesn't contain anything.";
+                return string.Empty;
+        }
+
         var sb = new StringBuilder();
         for (var i = 0; i < input.Length; i++)
         {
