@@ -1,14 +1,10 @@
-﻿using System.Windows;
-using MathNet.Numerics.LinearAlgebra;
+﻿using MathNet.Numerics.LinearAlgebra;
 using Neo.Services;
-using Neo.Utilities;
 
 namespace TestNeoSoftware;
 
 public class TestSolver
 {
-    private Parser _parser;
-
     // const string equationInput = "x - 2y + 3z = 4;5x - 6y + z = 8;9x + y + 11.5z =-  12.5;";
 
     const string equationInput = "1.3x - 2y + 3z = 4;5x - 6y + 7z = 8;9x + 10y + 11.5z =-  12.5;";
@@ -18,15 +14,6 @@ public class TestSolver
     public void Setup()
     {
         //_parser = new Parser(equationInput);
-    }
-
-    [Test]
-    public void TestGetUnknownVariables()
-    {
-        var expected = "xyz";
-        var actual = equationInput.GetUnknownVariables();
-
-        Assert.AreEqual(expected, actual);
     }
 
     [Test]
@@ -47,11 +34,25 @@ public class TestSolver
         Assert.AreEqual(expected, actual);
     }
 
+    [Test]
+    public void TestSolverMatrixCtor()
+    {
+        var expected = "x: -1.3333333333333333\r\ny: -2.416666666666667\r\nz: 0.1666666666666667\r\n";
+        var matrix = Matrix<double>.Build.DenseOfArray(new double[,]
+        {
+            { 1, 2, 3, },
+            { 4, 5, 6, },
+        });
+        string actual = new Solver(matrix);
+
+        Assert.AreEqual(expected, actual);
+    }
+
 
     [Test]
     public void TestSolverResult()
     {
-        var expected = Vector<double>.Build.DenseOfArray(new double[]
+        var expected = Vector<double>.Build.DenseOfArray(new[]
         {
             -1.5128844555278470,
             -1.2315045719035744,

@@ -7,9 +7,9 @@ using Neo.Services;
 namespace Neo.Utilities;
 
 /// <summary>
-/// describe extension class for <see cref="Parser"/>
+/// describes extension class for <see cref="Parser"/>
 /// </summary>
-public static class ParserExtension
+internal static class ParserExtension
 {
     /// <summary>
     /// returns string with unknown variables from system linear equations
@@ -65,6 +65,16 @@ public static class ParserExtension
     /// <returns></returns>
     public static string GetDigits(this string input)
     {
+        switch (input)
+        {
+            case null:
+                Error.Message = $"{nameof(input)} is null";
+                return string.Empty;
+            case "":
+                Error.Message = $"{nameof(input)} doesn't contain anything.";
+                return string.Empty;
+        }
+
         var sb = new StringBuilder();
         for (var i = 0; i < input.Length; i++)
         {
@@ -110,6 +120,28 @@ public static class ParserExtension
         if (len is <= 0 or > 5)
             return true;
         return input.GetUnknownVariables().Length != input.ConvertToDigits().Count() / len - 1;
+    }
+
+    /// <summary>
+    /// cleans <see cref="input"/> from whitespaces before <see cref="splitSymbol"/>
+    /// in order to verify validation of <see cref="input"/> in the next operations of solving
+    /// </summary>
+    /// <param name="input">text</param>
+    /// <param name="splitSymbol">symbol for splitting equations</param>
+    /// <returns></returns>
+    public static string RemoveWhiteSpacesBeforeSeparator(this string input, char splitSymbol = Parser.SplitSymbol)
+    {
+        var sb = new StringBuilder();
+        for (var i = 0; i < input.Length; i++)
+        {
+            if (i >= input.Length - 1)
+                return $"{sb}{splitSymbol}";
+            if (input[i + 1] == splitSymbol)
+                continue;
+            sb.Append(input[i]);
+        }
+
+        return sb.ToString();
     }
 
     /// <summary>

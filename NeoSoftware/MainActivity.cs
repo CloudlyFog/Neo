@@ -32,7 +32,8 @@ namespace NeoSoftware
         private AlertDialog _confirmationAlertDialog;
         private Switch _detectSwitch;
         private bool _detect = false;
-        private bool isLoadMain = false;
+        private bool _isLoadMain = false;
+        private bool _isEquations = false;
 
 
         private
@@ -43,14 +44,17 @@ namespace NeoSoftware
             base.OnCreate(savedInstanceState);
             // Set our view from the "main" layout resource  
             SetContentView(Resource.Layout.activity_main);
-            isLoadMain = true;
+            _isLoadMain = true;
 
             BuildUI();
         }
 
+        /// <summary>
+        /// renders all ui of app
+        /// </summary>
         private void BuildUI()
         {
-            if (isLoadMain)
+            if (_isLoadMain)
             {
                 ConfigureRecognizer();
                 ConfigureConfirmationAlertDialog();
@@ -58,9 +62,8 @@ namespace NeoSoftware
             }
             else
             {
-                GetButtons();
-                ConfigureRowsColumnsCount();
-                ConfigureGrid();
+                InitAllElements();
+                ConfigureRenderingInputFields();
             }
         }
 
