@@ -7,14 +7,14 @@ using Neo.Utilities;
 
 namespace NeoSoftware.Services
 {
-    public abstract class HandleMatrixAndroid
+    public static class HandleMatrixAndroid
     {
         /// <summary>
         /// converting data from IGridListView to double[,]
         /// </summary>
         /// <param name="gridLayout">current grid of ui</param>
         /// <returns></returns>
-        public static Matrix<double> GetMatrix(GridLayout gridLayout)
+        public static Matrix<double> GetMatrix(this GridLayout gridLayout)
         {
             var matrix = new double[gridLayout.ColumnCount, gridLayout.RowCount];
             var startPoint = 0; // like an i in default cycle
@@ -37,7 +37,7 @@ namespace NeoSoftware.Services
         /// <param name="oldGridLayout">current <see cref="GridLayout"/> to which children will adds values</param>
         /// <param name="context">context of app for adding children to <see cref="oldGridLayout"/></param>
         /// <returns></returns>
-        public static GridLayout GetGridLayout(Matrix<double> matrix, GridLayout oldGridLayout, Context context)
+        public static GridLayout GetGridLayout(this Matrix<double> matrix, GridLayout oldGridLayout, Context context)
         {
             if (!ValidObtainingGridLayout(matrix, oldGridLayout, context))
                 return null;

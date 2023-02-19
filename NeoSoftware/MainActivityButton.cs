@@ -145,25 +145,24 @@ namespace NeoSoftware
             _reverse.Click += delegate
             {
                 SetMatrix(_gridLayoutMatrix);
-                ShowResult(_inputMatrix, MatrixHighLevel.GetReverseMatrix(_matrix), ResultKind.Reverse);
+                ShowResult(_inputMatrix, _matrix.GetReverseMatrix(), ResultKind.Reverse);
             };
             _det.Click += delegate
             {
                 SetMatrix(_gridLayoutMatrix);
-                ShowResult(GetMatrixValue(_inputMatrix), MatrixHighLevel.GetDeterminant(_matrix).ToString(),
+                ShowResult(_inputMatrix.GetMatrixValue(), _matrix.GetDeterminant().ToString(),
                     ResultKind.Determinant);
             };
             _rank.Click += delegate
             {
                 SetMatrix(_gridLayoutMatrix);
-                ShowResult(GetMatrixValue(_inputMatrix), MatrixHighLevel.GetRank(_matrix).ToString(), ResultKind.Rank);
+                ShowResult(_inputMatrix.GetMatrixValue(), _matrix.GetRank().ToString(), ResultKind.Rank);
             };
             _exponentiation.Click += delegate
             {
                 SetMatrix(_gridLayoutMatrix);
                 ShowResult(_matrix,
-                    MatrixHighLevel.Exponentiation(_inputMatrix,
-                        int.Parse(FindViewById<EditText>(Resource.Id.exp_value).Text)),
+                    _inputMatrix.Exponentiation(int.Parse(FindViewById<EditText>(Resource.Id.exp_value).Text)),
                     ResultKind.Exponentiation);
             };
             _solveMatrix.Click += delegate
@@ -177,7 +176,7 @@ namespace NeoSoftware
                 else
                 {
                     SetMatrix(_gridLayoutMatrix);
-                    ShowResult(GetMatrixValue(_inputMatrix), new Solver(_matrix), ResultKind.Solve);
+                    ShowResult(_inputMatrix.GetMatrixValue(), new Solver(_matrix), ResultKind.Solve);
                 }
             };
             _solveMatrix.Clickable = EquationValueStorage.IsEquation;
@@ -223,7 +222,7 @@ namespace NeoSoftware
             _gridLayoutMatrix.RowCount = _gridSize.RowCount = int.Parse(_rowsCount.Text);
             _gridLayoutMatrix.ColumnCount = _gridSize.ColumnCount = int.Parse(_columnsCount.Text);
 
-            if (HandleMatrixAndroid.GetGridLayout(_inputMatrix, _gridLayoutMatrix, this) is null)
+            if (_inputMatrix.GetGridLayout(_gridLayoutMatrix, this) is null)
                 RenderGridLayout();
         }
 
@@ -325,53 +324,21 @@ namespace NeoSoftware
 
         private void SetMatrix(GridLayout gridLayout)
         {
-            _matrix = HandleMatrixAndroid.GetMatrix(gridLayout);
-            _inputMatrix = HandleMatrixAndroid.GetMatrix(gridLayout);
+            _matrix = gridLayout.GetMatrix();
+            _inputMatrix = gridLayout.GetMatrix();
         }
 
         private void SetEquations(GridLayout gridLayout)
         {
-            _equations = GetEquations(gridLayout);
-            _inputEquations = GetEquations(gridLayout);
-        }
-
-        private static string GetEquations(GridLayout gridLayout)
-        {
-            var sb = new StringBuilder();
-            for (var i = 0; i < gridLayout.RowCount; i++)
-            {
-                var child = (EditText)gridLayout.GetChildAt(i);
-                sb.Append($"{child.Text}{Parser.SplitSymbol}");
-            }
-
-            return sb.ToString();
+            _equations = gridLayout.GetEquations();
+            _inputEquations = gridLayout.GetEquations();
         }
 
         private void ShowResult(Matrix<double> input, Matrix<double> output, ResultKind resultKind)
-            => OpenResultWindow(resultKind.ToString(), GetMatrixValue(input), GetMatrixValue(output));
+            => OpenResultWindow(resultKind.ToString(), input.GetMatrixValue(), output.GetMatrixValue());
 
         private void ShowResult(string input, string output, ResultKind resultKind)
             => OpenResultWindow(resultKind.ToString(), input, output);
-
-        private string GetMatrixValue(Matrix<double> matrix)
-        {
-            var message = new StringBuilder();
-            for (var i = 0; i < matrix.RowCount; i++)
-            {
-                for (var j = 0; j <= matrix.ColumnCount; j++)
-                {
-                    if (j == matrix.ColumnCount)
-                    {
-                        message = message.Append("\n");
-                        continue;
-                    }
-
-                    message = message.Append($"{matrix[j, i]}\t\t");
-                }
-            }
-
-            return message.ToString();
-        }
     }
 }
 

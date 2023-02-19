@@ -80,6 +80,7 @@
     <Compile Include="Services\GridSize.cs" />
     <Compile Include="Services\HandleMatrixAndroid.cs" />
     <Compile Include="Utilities\EquationValueStorage.cs" />
+    <Compile Include="Utilities\UtilsExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\AboutResources.txt" />
