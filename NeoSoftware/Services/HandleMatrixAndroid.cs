@@ -1,4 +1,6 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
+using System.Net.Mime;
 using Android.Content;
 using Android.Views;
 using Android.Widget;
@@ -16,6 +18,12 @@ namespace NeoSoftware.Services
         /// <returns></returns>
         public static Matrix<double> GetMatrix(this GridLayout gridLayout)
         {
+            if (gridLayout is null)
+            {
+                Error.Message = $"{nameof(gridLayout)} is null";
+                return null;
+            }
+
             var matrix = new double[gridLayout.ColumnCount, gridLayout.RowCount];
             var startPoint = 0; // like an i in default cycle
             var j = 0;
@@ -24,6 +32,8 @@ namespace NeoSoftware.Services
                 if (ValidateIterators(ref i, ref j, gridLayout.RowCount, gridLayout.ColumnCount))
                     break;
                 matrix = SetMatrix(matrix, gridLayout, startPoint, i, j);
+                if (matrix is null)
+                    return null;
                 startPoint++;
             }
 
@@ -155,7 +165,17 @@ namespace NeoSoftware.Services
             var child = (TextView)gridLayout.GetChildAt(startPoint);
 
             // assign value of entered Entry
-            matrix[i, j] = double.Parse(child.Text);
+            try
+            {
+                matrix[i, j] = double.Parse(child.Text);
+            }
+            catch (Exception e)
+            {
+                Error.Message = $"Couldn't parse value of {nameof(child)} {{\"{child.Text}\"}}.";
+                Error.InnerMessage = e.InnerException?.Message;
+                return null;
+            }
+
             return matrix;
         }
     }

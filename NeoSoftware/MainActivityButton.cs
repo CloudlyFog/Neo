@@ -4,6 +4,7 @@ using Android.Widget;
 using Java.Interop;
 using MathNet.Numerics.LinearAlgebra;
 using Neo.Services;
+using Neo.Utilities;
 using NeoSoftware.Services;
 using NeoSoftware.Utilities;
 using Button = Android.Widget.Button;
@@ -140,27 +141,37 @@ namespace NeoSoftware
             _transpose.Click += delegate
             {
                 SetMatrix(_gridLayoutMatrix);
+                if (Error.Message != null)
+                    return;
                 ShowResult(_inputMatrix, _matrix.Transpose(), ResultKind.Transpose);
             };
             _reverse.Click += delegate
             {
                 SetMatrix(_gridLayoutMatrix);
+                if (Error.Message != null)
+                    return;
                 ShowResult(_inputMatrix, _matrix.GetReverseMatrix(), ResultKind.Reverse);
             };
             _det.Click += delegate
             {
                 SetMatrix(_gridLayoutMatrix);
+                if (Error.Message != null)
+                    return;
                 ShowResult(_inputMatrix.GetMatrixValue(), _matrix.GetDeterminant().ToString(),
                     ResultKind.Determinant);
             };
             _rank.Click += delegate
             {
                 SetMatrix(_gridLayoutMatrix);
+                if (Error.Message != null)
+                    return;
                 ShowResult(_inputMatrix.GetMatrixValue(), _matrix.GetRank().ToString(), ResultKind.Rank);
             };
             _exponentiation.Click += delegate
             {
                 SetMatrix(_gridLayoutMatrix);
+                if (Error.Message != null)
+                    return;
                 ShowResult(_matrix,
                     _inputMatrix.Exponentiation(int.Parse(FindViewById<EditText>(Resource.Id.exp_value).Text)),
                     ResultKind.Exponentiation);
@@ -176,6 +187,8 @@ namespace NeoSoftware
                 else
                 {
                     SetMatrix(_gridLayoutMatrix);
+                    if (Error.Message != null)
+                        return;
                     ShowResult(_inputMatrix.GetMatrixValue(), new Solver(_matrix), ResultKind.Solve);
                 }
             };
@@ -290,6 +303,16 @@ namespace NeoSoftware
             _resultOutput.Text += $"\n{output}";
         }
 
+        private void OpenExceptionWindow()
+        {
+            SetContentView(Resource.Layout.exception);
+            var message = FindViewById<TextView>(Resource.Id.message);
+            var innerMessage = FindViewById<TextView>(Resource.Id.innerMessage);
+
+            message.Text += $"\n{Error.Message}";
+            innerMessage.Text += $"\n{Error.InnerMessage}";
+        }
+
         [Export("Solve")]
         public void OpenConfirmationDialog(View view)
         {
@@ -324,8 +347,23 @@ namespace NeoSoftware
 
         private void SetMatrix(GridLayout gridLayout)
         {
-            _matrix = gridLayout.GetMatrix();
-            _inputMatrix = gridLayout.GetMatrix();
+            var matrix = gridLayout.GetMatrix();
+            if (matrix is null)
+            {
+                OpenExceptionWindow();
+                return;
+            }
+
+            _matrix = matrix;
+
+            var inputMatrix = gridLayout.GetMatrix();
+            if (inputMatrix is null)
+            {
+                OpenExceptionWindow();
+                return;
+            }
+
+            _inputMatrix = inputMatrix;
         }
 
         private void SetEquations(GridLayout gridLayout)
