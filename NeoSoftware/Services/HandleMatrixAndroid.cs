@@ -1,11 +1,13 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using System.Net.Mime;
 using Android.Content;
 using Android.Views;
 using Android.Widget;
+using Java.Lang;
 using MathNet.Numerics.LinearAlgebra;
-using Neo.Utilities;
+using NeoSoftware.Utilities;
+using Error = Neo.Utilities.Error;
+using Exception = System.Exception;
 
 namespace NeoSoftware.Services
 {
@@ -172,7 +174,7 @@ namespace NeoSoftware.Services
             catch (Exception e)
             {
                 Error.Message = $"Couldn't parse value of {nameof(child)} {{\"{child.Text}\"}}.";
-                Error.InnerMessage = e.InnerException?.Message;
+                Error.InnerMessage = $"Wrong values: \n{gridLayout.GetMatrixValues(' ')}";
                 return null;
             }
 
