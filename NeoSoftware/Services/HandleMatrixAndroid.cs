@@ -171,7 +171,7 @@ namespace NeoSoftware.Services
             }
             catch (Exception e)
             {
-                Error.Message = $"Couldn't parse value of {nameof(child)} {{\"{child.Text}\"}}.";
+                Error.Message = $"Couldn't parse value of {nameof(child)} {{\"{child.Text}\"}} at [{j};{i}].";
                 Error.InnerMessage = $"Wrong values\n{gridLayout.GetMatrixValue()}";
                 return null;
             }

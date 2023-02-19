@@ -31,13 +31,14 @@ namespace NeoSoftware.Utilities
         {
             var sb = new StringBuilder();
             var index = 0;
+            var wrongValuesCounter = 1;
             for (var i = 0; i < gridLayout.RowCount; i++)
             {
                 for (var j = 0; j < gridLayout.ColumnCount; j++, index++)
                 {
                     var child = (EditText)gridLayout.GetChildAt(index);
                     if (child.Text != string.Empty && !int.TryParse(child.Text, out var result))
-                        sb.Append($"{{{child.Text}}} [{i};{j}]\n");
+                        sb.Append($"{wrongValuesCounter++}) {{\"{child.Text}\"}} at [{i};{j}]\n");
                 }
             }
 
