@@ -65,6 +65,7 @@ public class Parser
         if (_input is null)
         {
             Error.Message = $"{nameof(_input)} is null.";
+            Error.ArgValues = nameof(_input);
             return null;
         }
 
@@ -96,7 +97,11 @@ public class Parser
             _input = GetStringMatrix(matrix);
 
         if (_input is null)
+        {
+            Error.Message = $"{nameof(_input)} is null.";
+            Error.ArgValues = nameof(_input);
             return null;
+        }
 
         // remove white space and commas
         var filterResult = _input.Split(' ', SplitSymbol).Where(x => x is not (" " and "")).ToList();
