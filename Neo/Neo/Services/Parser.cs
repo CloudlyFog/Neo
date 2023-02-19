@@ -136,14 +136,14 @@ public class Parser
         if (targetArray is null)
         {
             Error.Message = $"{nameof(targetArray)} is null";
-            Error.ArgValues = $"{nameof(targetArray)}: {targetArray.GetArray()}";
+            Error.ArgValues = $"{nameof(targetArray)}: {targetArray.GetArrayValue()}";
             return null;
         }
 
         if (targetArray.Length <= 0)
         {
             Error.Message = $"length of {nameof(targetArray)} less or equals 0";
-            Error.ArgValues = $"{nameof(targetArray)}: {targetArray.GetArray()}";
+            Error.ArgValues = $"{nameof(targetArray)}: {targetArray.GetArrayValue()}";
             return null;
         }
 
@@ -171,7 +171,7 @@ public class Parser
                     Error.Message = exception.Message;
                     Error.InnerMessage = exception.InnerException?.Message;
                     Error.ArgValues =
-                        $"{nameof(i)}: {i}\n{nameof(j)}: {j}\n{nameof(targetArray)}: {targetArray.GetArray()}";
+                        $"{nameof(i)}: {i}\n{nameof(j)}: {j}\n{nameof(targetArray)}: {targetArray.GetArrayValue()}";
                     return null;
                 }
             }
@@ -217,6 +217,8 @@ public class Parser
             {
                 Error.Message = exception.Message;
                 Error.InnerMessage = exception.InnerException?.Message;
+                Error.ArgValues =
+                    $"{nameof(i)}: {i}\n{nameof(targetArray)}: {targetArray.GetArrayValue()}";
                 return null;
             }
         }
@@ -299,7 +301,7 @@ public class Parser
             return null;
         }
 
-        return new Error(null);
+        return new Error();
     }
 
     /// <summary>
@@ -323,6 +325,6 @@ public class Parser
             return null;
         }
 
-        return new Error(null);
+        return new Error();
     }
 }

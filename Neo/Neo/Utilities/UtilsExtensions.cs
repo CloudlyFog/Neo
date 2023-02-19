@@ -1,10 +1,11 @@
-﻿using System.Text;
+﻿using System.Collections.Generic;
+using System.Text;
 
 namespace Neo.Utilities;
 
 public static class UtilsExtensions
 {
-    public static string GetArray(this double[,] array)
+    public static string GetArrayValue<T>(this T[,] array)
     {
         var sb = new StringBuilder();
         for (var i = 0; i < array.GetLength(0); i++)
@@ -14,6 +15,15 @@ public static class UtilsExtensions
 
             sb.Append('\n');
         }
+
+        return sb.ToString();
+    }
+
+    public static string GetArrayValue<T>(this IEnumerable<T> array)
+    {
+        var sb = new StringBuilder();
+        foreach (var item in array)
+            sb.Append(item);
 
         return sb.ToString();
     }
