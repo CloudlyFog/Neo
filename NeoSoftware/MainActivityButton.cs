@@ -1,5 +1,4 @@
-﻿using System.Text;
-using Android.Graphics;
+﻿using Android.Graphics;
 using Android.Widget;
 using Java.Interop;
 using MathNet.Numerics.LinearAlgebra;
