@@ -1,11 +1,8 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using __livexaml;
 using MathNet.Numerics.LinearAlgebra;
 using Neo.Services;
-using Xamarin.Forms.Internals;
 
 namespace Neo.Utilities;
 
@@ -24,7 +21,7 @@ public static class ParserExtension
         if (!fullInput)
             return new string(input.Separate().GetLongestString().Where(char.IsLetter).Distinct().ToArray());
 
-        var digits = new string(input.Separate().OrderByDescending(x => x.Length).ToList()[0].ToArray());
+        var digits = new string(input.Separate().GetLongestString().ToArray());
         return new string(digits.Where(char.IsLetter).Distinct().ToArray());
     }
 
@@ -73,9 +70,21 @@ public static class ParserExtension
     public static string GetDigits(this string input)
     {
         var sb = new StringBuilder();
+
+        // validate input
+        switch (input)
+        {
+            case null:
+                Error.Message = $"{nameof(input)} is null.";
+                return input;
+            case "":
+                Error.Message = $"Lengths of {nameof(input)} equals or less than 0.";
+                return input;
+        }
+
+
         for (var i = 0; i < input.Length; i++)
         {
-            var index = input[i];
             if (OnNegativeSymbol(input, sb, i) || OnFloatSymbol(input, sb, i))
                 continue;
 
@@ -134,55 +143,75 @@ public static class ParserExtension
 
     public static string OnZeroVariable(this string input)
     {
-        var equations = input.Separate().AppendZeroCoefficients(input.GetUnknownVariables()).Combine();
+        var appendedZeroCoefficients = input.AppendZeroCoefficients(input.GetUnknownVariables());
         return "";
     }
 
     /// <summary>
     /// appends in internal <see cref="List{T}"/> zero coefficients of equations
     /// </summary>
-    /// <param name="equations"></param>
-    /// <param name="unknownVariablesDict"></param>
+    /// <param name="equations">parsed equations</param>
+    /// <param name="unknownVariables">string of unknown variables of equations</param>
     /// <returns></returns>
-    private static List<string> AppendZeroCoefficients(this List<string> equations, string unknownVariables)
+    public static List<string> AppendZeroCoefficients(this string input, string unknownVariables)
     {
+        var equations = input.Separate();
         var appendableVariables = equations.GetAppendableEquations(unknownVariables);
         var digitEquations = appendableVariables.Combine().GetDigits().Separate();
 
         var sb = new StringBuilder();
-
         for (var i = 0; i < digitEquations.Count; i++)
-        {
-            var missedVariables = equations.GetVariableNames(unknownVariables, i);
-            var index = 0;
-            var current = 0;
-            for (var j = 0; j < digitEquations[i].Length; j++)
-            {
-                // avoid IndexOutOfBoundsException
-                if (index < missedVariables.Count)
-                {
-                    if (missedVariables[index].Values.Any(x => x == current))
-                    {
-                        sb.Append(" 0 ");
-                        index++;
-                    }
-                }
-
-                if (char.IsDigit(digitEquations[i][j]))
-                    sb.Append($" {digitEquations[i][j]} ");
-                current++;
-
-                if (j != digitEquations[i].Length - 1)
-                    continue;
-                var line = sb.ToString().Trim();
-                sb.Clear();
-                sb.Append($"{line}{Parser.SplitSymbol}");
-            }
-        }
+            sb.AppendZeroCoefficientsEquation(digitEquations[i], equations.GetVariableNames(unknownVariables, i));
 
         return sb.ToString().Separate();
     }
 
+    private static StringBuilder AppendZeroCoefficientsEquation(this StringBuilder sb, string digitEquation,
+        List<Dictionary<char, int>> missedVariables)
+    {
+        var index = 0;
+        var current = 0;
+        for (var j = 0; j < digitEquation.Length; j++)
+        {
+            sb.AppendZero(missedVariables, ref index, current);
+            sb.AppendValue(digitEquation[j], ref current);
+
+            if (j != digitEquation.Length - 1)
+                continue;
+            var line = sb.ToString().Trim();
+            sb.Clear();
+            sb.Append($"{line}{Parser.SplitSymbol}");
+        }
+
+        return sb;
+    }
+
+    private static StringBuilder AppendValue(this StringBuilder sb, char digitEquationValue, ref int current)
+    {
+        if (char.IsDigit(digitEquationValue))
+            sb.Append($" {digitEquationValue} ");
+        current++;
+        return sb;
+    }
+
+    private static StringBuilder AppendZero(this StringBuilder sb, List<Dictionary<char, int>> missedVariables,
+        ref int index, int current)
+    {
+        // avoid IndexOutOfBoundsException
+        if (index >= missedVariables.Count)
+            return sb;
+        if (missedVariables[index].Values.All(x => x != current))
+            return sb;
+        sb.Append(" 0 ");
+        index++;
+        return sb;
+    }
+
+    /// <summary>
+    /// gets longest string of passed list
+    /// </summary>
+    /// <param name="list">list of strings</param>
+    /// <returns></returns>
     private static string GetLongestString(this List<string> list)
     {
         return list.OrderByDescending(s => s.Length).First();
@@ -236,7 +265,7 @@ public static class ParserExtension
     /// <param name="list">list of <see cref="T"/></param>
     /// <param name="splitSymbol">symbol for splitting</param>
     /// <returns><see cref="string"/> with <see cref="splitSymbol"/> in indices where list was ended</returns>
-    private static string Combine<T>(this List<T> list, char splitSymbol = Parser.SplitSymbol)
+    public static string Combine<T>(this List<T> list, char splitSymbol = Parser.SplitSymbol)
     {
         var sb = new StringBuilder();
         foreach (var equation in list)
@@ -250,7 +279,7 @@ public static class ParserExtension
     /// <param name="input">string for separating</param>
     /// <param name="splitSymbol">symbol for splitting</param>
     /// <returns><see cref="List{T}"/> from separated <see cref="input"/></returns>
-    private static List<string> Separate(this string input, char splitSymbol = Parser.SplitSymbol)
+    public static List<string> Separate(this string input, char splitSymbol = Parser.SplitSymbol)
     {
         var list = new List<string>();
         var sb = new StringBuilder();

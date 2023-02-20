@@ -44,7 +44,7 @@ public class Parser
     /// <param name="input"><see cref="_input"/></param>
     public Parser(string input)
     {
-        _input = input.GetDigits();
+        _input = input.AppendZeroCoefficients(input.GetUnknownVariables()).Combine().GetDigits();
     }
 
     /// <summary>
