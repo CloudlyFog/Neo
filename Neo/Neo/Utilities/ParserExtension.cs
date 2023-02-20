@@ -22,7 +22,7 @@ public static class ParserExtension
     public static string GetUnknownVariables(this string input, bool fullInput = false)
     {
         if (!fullInput)
-            return new string(input.Where(char.IsLetter).Distinct().ToArray());
+            return new string(input.Separate().GetLongestString().Where(char.IsLetter).Distinct().ToArray());
 
         var digits = new string(input.Separate().OrderByDescending(x => x.Length).ToList()[0].ToArray());
         return new string(digits.Where(char.IsLetter).Distinct().ToArray());
@@ -134,7 +134,7 @@ public static class ParserExtension
 
     public static string OnZeroVariable(this string input)
     {
-        var equations = input.Separate().AppendZeroCoefficients(input.GetUnknownVariables());
+        var equations = input.Separate().AppendZeroCoefficients(input.GetUnknownVariables()).Combine();
         return "";
     }
 
@@ -146,53 +146,46 @@ public static class ParserExtension
     /// <returns></returns>
     private static List<string> AppendZeroCoefficients(this List<string> equations, string unknownVariables)
     {
-        equations[0] = " 2y = 4";
         var appendableVariables = equations.GetAppendableEquations(unknownVariables);
         var digitEquations = appendableVariables.Combine().GetDigits().Separate();
-
-        var output = new List<string>();
-
 
         var sb = new StringBuilder();
 
         for (var i = 0; i < digitEquations.Count; i++)
         {
             var missedVariables = equations.GetVariableNames(unknownVariables, i);
-            for (var j = 0; j < missedVariables.Count; j++)
+            var index = 0;
+            var current = 0;
+            for (var j = 0; j < digitEquations[i].Length; j++)
             {
-                if (missedVariables[j].Values.All(x => x == i))
+                // avoid IndexOutOfBoundsException
+                if (index < missedVariables.Count)
                 {
-                    sb.Append($" {digitEquations[i]} ");
-                    break;
+                    if (missedVariables[index].Values.Any(x => x == current))
+                    {
+                        sb.Append(" 0 ");
+                        index++;
+                    }
                 }
 
-                sb.Append(" 0 ");
-                break;
+                if (char.IsDigit(digitEquations[i][j]))
+                    sb.Append($" {digitEquations[i][j]} ");
+                current++;
+
+                if (j != digitEquations[i].Length - 1)
+                    continue;
+                var line = sb.ToString().Trim();
+                sb.Clear();
+                sb.Append($"{line}{Parser.SplitSymbol}");
             }
         }
 
-
-        return output;
+        return sb.ToString().Separate();
     }
 
-    private static string RemoveWhiteSpace(this string str)
+    private static string GetLongestString(this List<string> list)
     {
-        return new string(str.Where(x => !char.IsWhiteSpace(x)).ToArray());
-    }
-
-    private static string Trim(this IEnumerable<string> list)
-    {
-        return list.Select(item => item.Trim()).ToList().Combine();
-    }
-
-    private static string GetMissedUnknownVariables(this string equation, string unknownVariables)
-    {
-        var sb = new StringBuilder();
-        foreach (var unknownVariable in unknownVariables
-                     .Where(unknownVariable => !equation.Contains(unknownVariable.ToString())))
-            sb.Append(unknownVariable);
-
-        return sb.ToString();
+        return list.OrderByDescending(s => s.Length).First();
     }
 
     private static Dictionary<char, int> GetIndices(this string unknownVariables)
@@ -216,25 +209,6 @@ public static class ParserExtension
                 {
                     { unknownVariables[i], indices.Values.FirstOrDefault(x => x == i) }
                 });
-        }
-
-        return needToAppend;
-    }
-
-    private static List<Dictionary<char, int>> GetVariableNames(this List<string> equations, string unknownVariables)
-    {
-        var needToAppend = new List<Dictionary<char, int>>();
-
-        foreach (var equation in equations)
-        {
-            foreach (var unknownVariable in unknownVariables)
-            {
-                if (!equation.Contains(unknownVariable))
-                    needToAppend.Add(new Dictionary<char, int>
-                    {
-                        { unknownVariable, equations.IndexOf(equation) }
-                    });
-            }
         }
 
         return needToAppend;
@@ -288,10 +262,13 @@ public static class ParserExtension
             }
             else
             {
-                list.Add(sb.ToString());
+                list.Add(sb.ToString().Trim());
                 sb.Clear();
             }
         }
+
+        if (list.Count == 0)
+            list.Add(sb.ToString().Trim());
 
         return list;
     }
