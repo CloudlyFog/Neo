@@ -180,7 +180,8 @@ namespace NeoSoftware
                 if (EquationValueStorage.IsEquation)
                 {
                     SetEquations(_gridLayoutMatrix);
-                    ShowResult(_inputEquations.Replace(Parser.SplitSymbol, '\n'), new Solver(_equations),
+                    using var solver = new Solver(_equations);
+                    ShowResult(_inputEquations.Replace(Parser.SplitSymbol, '\n'), solver.ToString(),
                         ResultKind.Solve);
                 }
                 else
