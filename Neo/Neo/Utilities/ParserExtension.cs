@@ -62,12 +62,91 @@ public static class ParserExtension
     }
 
     /// <summary>
+    /// check passed string of input it's trash input or not
+    /// </summary>
+    /// <param name="input">read text</param>
+    /// <returns><see cref="bool"/></returns>
+    public static bool IsTrash(this string input)
+    {
+        if (!input.Any(item => "1234567890".Any(numeric => item == numeric)))
+            return true;
+        var len = input.Count(x => x == Parser.SplitSymbol);
+        if (len is <= 0 or > 5)
+            return true;
+        return input.GetUnknownVariables().Length != input.ConvertToDigits().Count() / len - 1;
+    }
+
+    /// <summary>
+    /// counts symbols in <see cref="input"/>
+    /// </summary>
+    /// <param name="input">read text</param>
+    /// <param name="symbol">symbol for counting</param>
+    /// <returns></returns>
+    public static int SymbolCount(this string input, char symbol)
+    {
+        return input.Count(x => x == symbol);
+    }
+
+    /// <summary>
+    /// appends zero coefficients to <see cref="input"/>
+    /// </summary>
+    /// <param name="input">parsed equations</param>
+    /// <param name="unknownVariables">string of unknown variables of equations</param>
+    /// <returns></returns>
+    public static string AppendZeroCoefficients(this string input, string unknownVariables)
+    {
+        var equations = input.Separate();
+        var appendableVariables = equations.GetAppendableEquations(unknownVariables);
+        var digitAppendableEquations = appendableVariables.Combine().GetDigits().Separate();
+        var digitsEquations = equations.Combine().GetDigits().Separate();
+
+        var sb = new StringBuilder();
+        var index = 0;
+        foreach (var equation in digitsEquations)
+        {
+            if (index >= digitAppendableEquations.Count)
+            {
+                sb.Append($"{equation}{Parser.SplitSymbol}");
+                break;
+            }
+
+            if (equation != digitAppendableEquations[index])
+            {
+                sb.Append($"{equation}{Parser.SplitSymbol}");
+                continue;
+            }
+
+            sb.AppendZeroCoefficientsEquation(digitAppendableEquations[index],
+                appendableVariables.GetVariableNames(unknownVariables, index));
+            index++;
+        }
+
+
+        return sb.ToString();
+    }
+
+    /// <summary>
+    /// cleans <see cref="input"/> from whitespaces before <see cref="splitSymbol"/>
+    /// in order to verify validation of <see cref="input"/> in the next operations of solving
+    /// </summary>
+    /// <param name="input">text</param>
+    /// <param name="splitSymbol">symbol for splitting equations</param>
+    /// <returns></returns>
+    public static string RemoveWhiteSpacesNearSeparator(this string input, char splitSymbol = Parser.SplitSymbol)
+    {
+        var strings = input.Separate(splitSymbol);
+        for (var i = 0; i < strings.Count; i++)
+            strings[i] = strings[i].Trim();
+        return strings.Combine();
+    }
+
+    /// <summary>
     /// gets as arg string with/without other symbols like words, punctuations marks etc
     /// return new <see cref="string"/> only with digits
     /// </summary>
     /// <param name="input">parsed string (expected from <see cref="Matrix{T}"/>)</param>
     /// <returns></returns>
-    public static string GetDigits(this string input)
+    private static string GetDigits(this string input)
     {
         var sb = new StringBuilder();
 
@@ -116,69 +195,12 @@ public static class ParserExtension
     }
 
     /// <summary>
-    /// check passed string of input it's trash input or not
+    /// appends zero coefficients to equation
     /// </summary>
-    /// <param name="input">read text</param>
-    /// <returns><see cref="bool"/></returns>
-    public static bool IsTrash(this string input)
-    {
-        if (!input.Any(item => "1234567890".Any(numeric => item == numeric)))
-            return true;
-        var len = input.Count(x => x == Parser.SplitSymbol);
-        if (len is <= 0 or > 5)
-            return true;
-        return input.GetUnknownVariables().Length != input.ConvertToDigits().Count() / len - 1;
-    }
-
-    /// <summary>
-    /// counts symbols in <see cref="input"/>
-    /// </summary>
-    /// <param name="input">read text</param>
-    /// <param name="symbol">symbol for counting</param>
+    /// <param name="sb"><see cref="StringBuilder"/> in which will added value of return</param>
+    /// <param name="digitEquationValue">char of string with converted equations strings to digit strings</param>
+    /// <param name="missedVariables">variables of equation with zero coefficient</param>
     /// <returns></returns>
-    public static int SymbolCount(this string input, char symbol)
-    {
-        return input.Count(x => x == symbol);
-    }
-
-    /// <summary>
-    /// appends in internal <see cref="List{T}"/> zero coefficients of equations
-    /// </summary>
-    /// <param name="equations">parsed equations</param>
-    /// <param name="unknownVariables">string of unknown variables of equations</param>
-    /// <returns></returns>
-    public static string AppendZeroCoefficients(this string input, string unknownVariables)
-    {
-        var equations = input.Separate();
-        var appendableVariables = equations.GetAppendableEquations(unknownVariables);
-        var digitAppendableEquations = appendableVariables.Combine().GetDigits().Separate();
-        var digitsEquations = equations.Combine().GetDigits().Separate();
-
-        var sb = new StringBuilder();
-        var index = 0;
-        foreach (var equation in digitsEquations)
-        {
-            if (index >= digitAppendableEquations.Count)
-            {
-                sb.Append($"{equation}{Parser.SplitSymbol}");
-                break;
-            }
-
-            if (equation != digitAppendableEquations[index])
-            {
-                sb.Append($"{equation}{Parser.SplitSymbol}");
-                continue;
-            }
-
-            sb.AppendZeroCoefficientsEquation(digitAppendableEquations[index],
-                appendableVariables.GetVariableNames(unknownVariables, index));
-            index++;
-        }
-
-
-        return sb.ToString();
-    }
-
     private static StringBuilder AppendZeroCoefficientsEquation(this StringBuilder sb, string digitEquation,
         List<Dictionary<char, int>> missedVariables)
     {
@@ -199,6 +221,13 @@ public static class ParserExtension
         return sb;
     }
 
+    /// <summary>
+    /// appends to the <see cref="sb"/> value of <see cref="digitEquationValue"/>
+    /// </summary>
+    /// <param name="sb"><see cref="StringBuilder"/> in which will added value of return</param>
+    /// <param name="digitEquationValue">char of string with converted equations strings to digit strings</param>
+    /// <param name="current">index of variable from <see cref="missedVariables"/></param>
+    /// <returns></returns>
     private static StringBuilder AppendValue(this StringBuilder sb, char digitEquationValue, ref int current)
     {
         sb.Append(digitEquationValue);
@@ -206,6 +235,14 @@ public static class ParserExtension
         return sb;
     }
 
+    /// <summary>
+    /// appends zero to the <see cref="sb"/> if equation has zero coefficients
+    /// </summary>
+    /// <param name="sb"><see cref="StringBuilder"/> in which will added value of return</param>
+    /// <param name="missedVariables">variables of equation with zero coefficient</param>
+    /// <param name="index">index of <see cref="missedVariables"/> iteration</param>
+    /// <param name="current">index of variable from <see cref="missedVariables"/></param>
+    /// <returns></returns>
     private static StringBuilder AppendZero(this StringBuilder sb, List<Dictionary<char, int>> missedVariables,
         ref int index, int current)
     {
@@ -229,6 +266,11 @@ public static class ParserExtension
         return list.OrderByDescending(s => s.Length).First();
     }
 
+    /// <summary>
+    /// gets indices of <see cref="unknownVariables"/>
+    /// </summary>
+    /// <param name="unknownVariables">all unknown variables of equations</param>
+    /// <returns></returns>
     private static Dictionary<char, int> GetIndices(this string unknownVariables)
     {
         var indices = new Dictionary<char, int>();
@@ -237,6 +279,13 @@ public static class ParserExtension
         return indices;
     }
 
+    /// <summary>
+    /// gets list of dictionaries which contains name of unknown variable as key and its index as value
+    /// </summary>
+    /// <param name="equations">parsed string from input</param>
+    /// <param name="unknownVariables">all unknown variables of equations</param>
+    /// <param name="index">index of equations</param>
+    /// <returns></returns>
     private static List<Dictionary<char, int>> GetVariableNames(this List<string> equations, string unknownVariables,
         int index)
     {
@@ -255,6 +304,12 @@ public static class ParserExtension
         return needToAppend;
     }
 
+    /// <summary>
+    /// gets list of equations which needs in appending zero (zero coefficients)
+    /// </summary>
+    /// <param name="equations">parsed string from input</param>
+    /// <param name="unknownVariables">all unknown variables of equations</param>
+    /// <returns></returns>
     private static List<string> GetAppendableEquations(this List<string> equations, string unknownVariables)
     {
         var needToAppend = new List<string>();
@@ -271,18 +326,13 @@ public static class ParserExtension
         return needToAppend.Distinct().ToList();
     }
 
-    private static string Trim(this IEnumerable<string> list)
-    {
-        return list.Select(item => item.Trim()).ToList().Combine();
-    }
-
     /// <summary>
     /// combines <see cref="List{T}"/> in one string with <see cref="splitSymbol"/>
     /// </summary>
     /// <param name="list">list of <see cref="T"/></param>
     /// <param name="splitSymbol">symbol for splitting</param>
     /// <returns><see cref="string"/> with <see cref="splitSymbol"/> in indices where list was ended</returns>
-    public static string Combine<T>(this List<T> list, char splitSymbol = Parser.SplitSymbol)
+    private static string Combine<T>(this List<T> list, char splitSymbol = Parser.SplitSymbol)
     {
         var sb = new StringBuilder();
         foreach (var equation in list)
@@ -296,7 +346,7 @@ public static class ParserExtension
     /// <param name="input">string for separating</param>
     /// <param name="splitSymbol">symbol for splitting</param>
     /// <returns><see cref="List{T}"/> from separated <see cref="input"/></returns>
-    public static List<string> Separate(this string input, char splitSymbol = Parser.SplitSymbol)
+    private static List<string> Separate(this string input, char splitSymbol = Parser.SplitSymbol)
     {
         var list = new List<string>();
         var sb = new StringBuilder();
@@ -317,21 +367,6 @@ public static class ParserExtension
             list.Add(sb.ToString().Trim());
 
         return list;
-    }
-
-    /// <summary>
-    /// cleans <see cref="input"/> from whitespaces before <see cref="splitSymbol"/>
-    /// in order to verify validation of <see cref="input"/> in the next operations of solving
-    /// </summary>
-    /// <param name="input">text</param>
-    /// <param name="splitSymbol">symbol for splitting equations</param>
-    /// <returns></returns>
-    public static string RemoveWhiteSpacesNearSeparator(this string input, char splitSymbol = Parser.SplitSymbol)
-    {
-        var strings = input.Separate();
-        for (var i = 0; i < strings.Count; i++)
-            strings[i] = strings[i].Trim();
-        return strings.Combine();
     }
 
     /// <summary>
