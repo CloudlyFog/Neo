@@ -1,7 +1,7 @@
 ## Here will writes info about udpates in the next versions
 
 ### Planned updates
-- recognition of variables with zero coefficient
+- <s>recognition of variables with zero coefficient</s> (21.02.2023)
 <hr>
 
 ### Possible difficulties
