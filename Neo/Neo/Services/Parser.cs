@@ -49,9 +49,11 @@ public class Parser
     }
 
     /// <summary>
-    /// Take data from <see cref="_input"/> and put it to <see cref="Matrix{T}"/>
+    /// Converts <see cref="_input"/> to <see cref="Matrix{T}"/>
     /// Uses <see cref="_input"/> like 
     /// </summary>
+    /// <param name="isString">defines is entered/passed data for conversion is string</param>
+    /// <param name="matrix">matrix if need convert it to view for calculation</param>
     /// <returns></returns>
     public Matrix<double> MatrixConversion(bool isString = true, Matrix<double> matrix = null)
     {
@@ -81,8 +83,10 @@ public class Parser
     }
 
     /// <summary>
-    /// Take data from <see cref="_input"/> and put it to <see cref="Vector{T}"/>
+    /// Converts <see cref="_input"/> to <see cref="Vector{T}"/>
     /// </summary>
+    /// <param name="isString">defines is entered/passed data for conversion is string</param>
+    /// <param name="matrix">matrix if need convert it to view for calculation</param>
     /// <returns></returns>
     public Vector<double> VectorConversion(bool isString = true, Matrix<double> matrix = null)
     {
@@ -212,7 +216,7 @@ public class Parser
     }
 
     /// <summary>
-    /// returns string interpretation of matrix
+    /// gets string interpretation of matrix
     /// </summary>
     /// <param name="matrix">original data</param>
     /// <returns></returns>
@@ -236,6 +240,11 @@ public class Parser
         return sb.ToString();
     }
 
+    /// <summary>
+    /// gets converted matrix to string
+    /// </summary>
+    /// <param name="matrix">original data</param>
+    /// <returns></returns>
     private static string GetStringMatrix(Matrix<double> matrix)
     {
         return ValidArray(matrix.ToArray(), nameof(matrix)) is null
