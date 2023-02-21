@@ -7,6 +7,7 @@ small window with title "**output**".
 - negative and positive digits
 - float digits
 - variables without coefficient
+- equations with zero coefficients
 
 **Neo can:**
 - correctly convert system linear equation to matrix
