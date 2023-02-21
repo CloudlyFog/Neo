@@ -45,7 +45,7 @@ public class Parser
     /// <param name="input"><see cref="_input"/></param>
     public Parser(string input)
     {
-        _input = input.AppendZeroCoefficients(input.GetUnknownVariables());
+        _input = input;
     }
 
     /// <summary>
@@ -74,8 +74,7 @@ public class Parser
         _every = targetArray.GetLength(1);
 
         // removing white space and commas
-        var filterResult = _input.Split(' ', SplitSymbol).Where(x => x is not (" " and "")).ToList()
-            // get matrix
+        var filterResult = _input.Split(' ', SplitSymbol).Where(x => x is not (" " or "")).ToList()
             .RemoveEvery(_every, targetArray.GetLength(0));
 
         return GetMatrixValue(targetArray, filterResult);
@@ -241,7 +240,7 @@ public class Parser
     {
         return ValidArray(matrix.ToArray(), nameof(matrix)) is null
             ? null
-            : GetMatrixValue(matrix).Replace('\n', SplitSymbol).RemoveWhiteSpacesBeforeSeparator();
+            : GetMatrixValue(matrix).Replace('\n', SplitSymbol).RemoveWhiteSpacesNearSeparator();
     }
 
     /// <summary>

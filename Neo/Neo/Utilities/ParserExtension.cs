@@ -171,7 +171,7 @@ public static class ParserExtension
             }
 
             sb.AppendZeroCoefficientsEquation(digitAppendableEquations[index],
-                equations.GetVariableNames(unknownVariables, index));
+                appendableVariables.GetVariableNames(unknownVariables, index));
             index++;
         }
 
@@ -326,19 +326,12 @@ public static class ParserExtension
     /// <param name="input">text</param>
     /// <param name="splitSymbol">symbol for splitting equations</param>
     /// <returns></returns>
-    public static string RemoveWhiteSpacesBeforeSeparator(this string input, char splitSymbol = Parser.SplitSymbol)
+    public static string RemoveWhiteSpacesNearSeparator(this string input, char splitSymbol = Parser.SplitSymbol)
     {
-        var sb = new StringBuilder();
-        for (var i = 0; i < input.Length; i++)
-        {
-            if (i >= input.Length - 1)
-                return $"{sb}{splitSymbol}";
-            if (input[i + 1] == splitSymbol)
-                continue;
-            sb.Append(input[i]);
-        }
-
-        return sb.ToString();
+        var strings = input.Separate();
+        for (var i = 0; i < strings.Count; i++)
+            strings[i] = strings[i].Trim();
+        return strings.Combine();
     }
 
     /// <summary>
