@@ -188,7 +188,8 @@ namespace NeoSoftware
                     SetMatrix(_gridLayoutMatrix);
                     if (Error.Message != null)
                         return;
-                    ShowResult(_inputMatrix.GetMatrixValue(), new Solver(_matrix), ResultKind.Solve);
+                    using var solver = new Solver(_matrix);
+                    ShowResult(_inputMatrix.GetMatrixValue(), solver.ToString(), ResultKind.Solve);
                 }
             };
             _solveMatrix.Clickable = EquationValueStorage.IsEquation;

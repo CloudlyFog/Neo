@@ -74,9 +74,9 @@ public sealed class Solver : IDisposable
     }
 
     /// <summary>
-    /// 
+    /// returns instance of <see cref="Solver"/> with different implicit and explicit operators
     /// </summary>
-    /// <param name="matrix"></param>
+    /// <param name="matrix">matrix for conversion to <see cref="_input"/></param>
     public Solver(Matrix<double> matrix)
     {
         _parser = new Parser(string.Empty);
