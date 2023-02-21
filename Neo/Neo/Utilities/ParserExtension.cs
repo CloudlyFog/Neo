@@ -143,7 +143,11 @@ public static class ParserExtension
 
     public static string OnZeroVariable(this string input)
     {
-        var appendedZeroCoefficients = input.AppendZeroCoefficients(input.GetUnknownVariables());
+        var appended = input.AppendZeroCoefficients(input.GetUnknownVariables()).Separate().Trim();
+        var parser = new Parser(input);
+        var matrix = parser.MatrixConversion();
+        var appendedZeroCoefficients =
+            input.AppendZeroCoefficients(input.GetUnknownVariables()).Separate().Trim().GetDigits();
         return "";
     }
 
@@ -153,17 +157,36 @@ public static class ParserExtension
     /// <param name="equations">parsed equations</param>
     /// <param name="unknownVariables">string of unknown variables of equations</param>
     /// <returns></returns>
-    public static List<string> AppendZeroCoefficients(this string input, string unknownVariables)
+    public static string AppendZeroCoefficients(this string input, string unknownVariables)
     {
         var equations = input.Separate();
         var appendableVariables = equations.GetAppendableEquations(unknownVariables);
-        var digitEquations = appendableVariables.Combine().GetDigits().Separate();
+        var digitAppendableEquations = appendableVariables.Combine().GetDigits().Separate();
+        var digitsEquations = equations.Combine().GetDigits().Separate();
 
         var sb = new StringBuilder();
-        for (var i = 0; i < digitEquations.Count; i++)
-            sb.AppendZeroCoefficientsEquation(digitEquations[i], equations.GetVariableNames(unknownVariables, i));
+        var index = 0;
+        foreach (var equation in digitsEquations)
+        {
+            if (index >= digitAppendableEquations.Count)
+            {
+                sb.Append($"{equation}{Parser.SplitSymbol}");
+                break;
+            }
 
-        return sb.ToString().Separate();
+            if (equation != digitAppendableEquations[index])
+            {
+                sb.Append($"{equation}{Parser.SplitSymbol}");
+                continue;
+            }
+
+            sb.AppendZeroCoefficientsEquation(digitAppendableEquations[index],
+                equations.GetVariableNames(unknownVariables, index));
+            index++;
+        }
+
+
+        return sb.ToString();
     }
 
     private static StringBuilder AppendZeroCoefficientsEquation(this StringBuilder sb, string digitEquation,
@@ -188,8 +211,7 @@ public static class ParserExtension
 
     private static StringBuilder AppendValue(this StringBuilder sb, char digitEquationValue, ref int current)
     {
-        if (char.IsDigit(digitEquationValue))
-            sb.Append($" {digitEquationValue} ");
+        sb.Append(digitEquationValue);
         current++;
         return sb;
     }
@@ -257,6 +279,11 @@ public static class ParserExtension
         }
 
         return needToAppend.Distinct().ToList();
+    }
+
+    private static string Trim(this IEnumerable<string> list)
+    {
+        return list.Select(item => item.Trim()).ToList().Combine();
     }
 
     /// <summary>
