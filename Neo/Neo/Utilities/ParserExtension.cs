@@ -141,16 +141,6 @@ public static class ParserExtension
         return input.Count(x => x == symbol);
     }
 
-    public static string OnZeroVariable(this string input)
-    {
-        var appended = input.AppendZeroCoefficients(input.GetUnknownVariables()).Separate().Trim();
-        var parser = new Parser(input);
-        var matrix = parser.MatrixConversion();
-        var appendedZeroCoefficients =
-            input.AppendZeroCoefficients(input.GetUnknownVariables()).Separate().Trim().GetDigits();
-        return "";
-    }
-
     /// <summary>
     /// appends in internal <see cref="List{T}"/> zero coefficients of equations
     /// </summary>

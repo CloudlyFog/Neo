@@ -55,8 +55,8 @@ public class TestParserExtension
     public void TestOnZeroVariable()
     {
         var expected = $"0 {equationInput}";
-        var actual = equationInput.OnZeroVariable();
-        var s = equationInput.AppendZeroCoefficients(equationInput.GetUnknownVariables()).GetDigits();
+        // var actual = equationInput.OnZeroVariable();
+        var actual = string.Empty;
 
         Assert.AreEqual(expected, actual);
     }
