@@ -164,10 +164,10 @@ public static class ParserExtension
 
         for (var i = 0; i < input.Length; i++)
         {
-            if (OnNegativeSymbol(input, sb, i) || OnFloatSymbol(input, sb, i))
+            if (AppendNegativeSymbol(input, sb, i) || AppendFloatSymbol(input, sb, i))
                 continue;
 
-            if (OnUnitVariable(input, sb, i))
+            if (AppendUnitVariable(input, sb, i))
                 continue;
 
             // if input[i] neither is digit nor is split symbol ";" cycle 'll iterate
@@ -406,7 +406,7 @@ public static class ParserExtension
     /// <param name="sb">used <see cref="StringBuilder"/></param>
     /// <param name="i">current index</param>
     /// <returns></returns>
-    private static bool OnNegativeSymbol(string input, StringBuilder sb, int i)
+    private static bool AppendNegativeSymbol(string input, StringBuilder sb, int i)
     {
         if (input[i] != Parser.NegativeSymbol)
             return false;
@@ -429,7 +429,7 @@ public static class ParserExtension
     /// <param name="sb">used <see cref="StringBuilder"/></param>
     /// <param name="i">current index</param>
     /// <returns></returns>
-    private static bool OnFloatSymbol(string input, StringBuilder sb, int i)
+    private static bool AppendFloatSymbol(string input, StringBuilder sb, int i)
     {
         if (input[i] != Parser.FloatSymbolDot && input[i] != Parser.FloatSymbolComma)
             return false;
@@ -446,7 +446,7 @@ public static class ParserExtension
     /// <param name="sb">used <see cref="StringBuilder"/></param>
     /// <param name="i">current index</param>
     /// <returns></returns>
-    private static bool OnUnitVariable(string input, StringBuilder sb, int i)
+    private static bool AppendUnitVariable(string input, StringBuilder sb, int i)
     {
         for (var j = 0; j < input.GetUnknownVariables().Length; j++)
         {
