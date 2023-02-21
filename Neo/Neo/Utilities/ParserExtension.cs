@@ -320,6 +320,28 @@ public static class ParserExtension
     }
 
     /// <summary>
+    /// cleans <see cref="input"/> from whitespaces before <see cref="splitSymbol"/>
+    /// in order to verify validation of <see cref="input"/> in the next operations of solving
+    /// </summary>
+    /// <param name="input">text</param>
+    /// <param name="splitSymbol">symbol for splitting equations</param>
+    /// <returns></returns>
+    public static string RemoveWhiteSpacesBeforeSeparator(this string input, char splitSymbol = Parser.SplitSymbol)
+    {
+        var sb = new StringBuilder();
+        for (var i = 0; i < input.Length; i++)
+        {
+            if (i >= input.Length - 1)
+                return $"{sb}{splitSymbol}";
+            if (input[i + 1] == splitSymbol)
+                continue;
+            sb.Append(input[i]);
+        }
+
+        return sb.ToString();
+    }
+
+    /// <summary>
     /// returns sequence of float digits which was parsed from <see cref="input"/>
     /// </summary>
     /// <param name="input">parsed string (expected from <see cref="Matrix{T}"/>)</param>

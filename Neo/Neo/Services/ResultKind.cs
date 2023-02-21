@@ -6,6 +6,7 @@
         Rank,
         Reverse,
         Determinant,
-        Transpose
+        Transpose,
+        Solve,
     }
 }

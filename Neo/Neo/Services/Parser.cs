@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using MathNet.Numerics.LinearAlgebra;
 using Neo.Utilities;
 
@@ -31,7 +32,7 @@ public class Parser
     /// <summary>
     /// conversed string of system equations
     /// </summary>
-    private readonly string _input;
+    private string _input;
 
     /// <summary>
     /// every what iteration 'll doing something
@@ -52,8 +53,18 @@ public class Parser
     /// Uses <see cref="_input"/> like 
     /// </summary>
     /// <returns></returns>
-    public Matrix<double> MatrixConversion()
+    public Matrix<double> MatrixConversion(bool isString = true, Matrix<double> matrix = null)
     {
+        if (!isString)
+            _input = GetStringMatrix(matrix);
+
+        if (_input is null)
+        {
+            Error.Message = $"{nameof(_input)} is null.";
+            Error.ArgValues = nameof(_input);
+            return null;
+        }
+
         var targetArray = new double[
             // read count of ";" and therefore count will one less than actually
             _input.SymbolCount(SplitSymbol),
@@ -74,8 +85,18 @@ public class Parser
     /// Take data from <see cref="_input"/> and put it to <see cref="Vector{T}"/>
     /// </summary>
     /// <returns></returns>
-    public Vector<double> VectorConversion()
+    public Vector<double> VectorConversion(bool isString = true, Matrix<double> matrix = null)
     {
+        if (!isString)
+            _input = GetStringMatrix(matrix);
+
+        if (_input is null)
+        {
+            Error.Message = $"{nameof(_input)} is null.";
+            Error.ArgValues = nameof(_input);
+            return null;
+        }
+
         // remove white space and commas
         var filterResult = _input.Split(' ', SplitSymbol).Where(x => x is not (" " and "")).ToList();
 
@@ -192,28 +213,68 @@ public class Parser
     }
 
     /// <summary>
-    /// Validate index of filterResult is corresponding to requirements or not
+    /// returns string interpretation of matrix
     /// </summary>
-    /// <param name="point">index of <see cref="filterResult"/></param>
-    /// <param name="filterResult">parsed data from Tesseract OCR</param>
+    /// <param name="matrix">original data</param>
     /// <returns></returns>
-    private static bool ValidIteration(ref int point, List<string> filterResult)
+    private static string GetMatrixValue(Matrix<double> matrix)
     {
-        if (point == filterResult.Count)
-            return false;
-        if (filterResult[point] != string.Empty)
-            return true;
-        point++;
-        return false;
+        var sb = new StringBuilder();
+        for (var i = 0; i < matrix.RowCount; i++)
+        {
+            for (var j = 0; j <= matrix.ColumnCount; j++)
+            {
+                if (j == matrix.ColumnCount)
+                {
+                    sb.Append('\n');
+                    continue;
+                }
+
+                sb.Append($"{matrix[i, j]} ");
+            }
+        }
+
+        return sb.ToString();
+    }
+
+    private static string GetStringMatrix(Matrix<double> matrix)
+    {
+        return ValidArray(matrix.ToArray(), nameof(matrix)) is null
+            ? null
+            : GetMatrixValue(matrix).Replace('\n', SplitSymbol).RemoveWhiteSpacesBeforeSeparator();
     }
 
     /// <summary>
-    /// validates input array
+    /// valid passed two dimension array for the some specifications
     /// </summary>
-    /// <param name="array">array for validation</param>
-    /// <param name="arrayName">name of passed array</param>
-    /// <typeparam name="T">the type of elements of array/></typeparam>
-    /// <returns>null if there's error or new instance of <see cref="Error"/> if not</returns>
+    /// <param name="array">passed array</param>
+    /// <param name="arrayName">name of passed array (name of variable)</param>
+    /// <typeparam name="T">the type of elements in the array</typeparam>
+    /// <returns></returns>
+    private static Error ValidArray<T>(T[,] array, string arrayName)
+    {
+        if (array is null)
+        {
+            Error.Message = $"{arrayName} is null.";
+            return null;
+        }
+
+        if (array.Length <= 0)
+        {
+            Error.Message = $"length of {arrayName} less or equals 0";
+            return null;
+        }
+
+        return new Error();
+    }
+
+    /// <summary>
+    /// valid passed array for the some specifications
+    /// </summary>
+    /// <param name="array">passed array</param>
+    /// <param name="arrayName">name of passed array (name of variable)</param>
+    /// <typeparam name="T">the type of elements in the array</typeparam>
+    /// <returns></returns>
     internal static Error ValidArray<T>(T[] array, string arrayName)
     {
         if (array is null)
@@ -228,6 +289,22 @@ public class Parser
             return null;
         }
 
-        return new Error(null);
+        return new Error();
+    }
+
+    /// <summary>
+    /// Validate index of filterResult is corresponding to requirements or not
+    /// </summary>
+    /// <param name="point">index of <see cref="filterResult"/></param>
+    /// <param name="filterResult">parsed data from Tesseract OCR</param>
+    /// <returns></returns>
+    private static bool ValidIteration(ref int point, List<string> filterResult)
+    {
+        if (point == filterResult.Count)
+            return false;
+        if (filterResult[point] != string.Empty)
+            return true;
+        point++;
+        return false;
     }
 }

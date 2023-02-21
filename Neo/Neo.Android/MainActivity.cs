@@ -10,9 +10,11 @@ using Android.Util;
 using Android.Views;
 using Android.Widget;
 using AndroidX.Core.App;
+using Google.Android.Material.Tabs.AppCompat.App;
 using Java.Interop;
 using Java.Lang;
 using Neo.Services;
+using Xamarin.Forms;
 using Xamarin.Forms.Platform.Android;
 using StringBuilder = System.Text.StringBuilder;
 
@@ -37,23 +39,9 @@ namespace Neo.Droid
         {
             base.OnCreate(savedInstanceState);
             // Set our view from the "main" layout resource  
-            SetContentView(Resource.Layout.activity_main);
-            // _cameraView = FindViewById<SurfaceView>(Resource.Id.surface_view);
-            // _txtView = FindViewById<TextView>(Resource.Id.txtview);
-            // _output = FindViewById<TextView>(Resource.Id.output);
-            _textRecognizer = new TextRecognizer.Builder(ApplicationContext).Build();
-
-
-            if (!_textRecognizer.IsOperational)
-            {
-                Log.Error("Main Activity", "Detector dependencies are not yet available");
-                throw new Exception($"{nameof(_textRecognizer.IsOperational)} is {_textRecognizer.IsOperational}");
-            }
-
-            _cameraSource = new CameraSource.Builder(ApplicationContext, _textRecognizer).SetFacing(CameraFacing.Back)
-                .SetRequestedPreviewSize(2340, 1080).SetRequestedFps(60f).SetAutoFocusEnabled(true).Build();
-            _cameraView.Holder.AddCallback(this);
-            _textRecognizer.SetProcessor(this);
+            Xamarin.Essentials.Platform.Init(this, savedInstanceState);
+            Forms.Init(this, savedInstanceState);
+            LoadApplication(new App());
         }
 
         public override void OnRequestPermissionsResult(int requestCode, string[] permissions,

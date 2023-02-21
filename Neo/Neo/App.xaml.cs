@@ -7,22 +7,23 @@ namespace Neo
         public App()
         {
             InitializeComponent();
-            MainPage = new MainPage
-            {
-                BackgroundColor = new Color(0, 0, 0, 0.7),
-            };
+
+            MainPage = new MainPage();
         }
 
         protected override void OnStart()
         {
+            // Handle when your app starts
         }
 
         protected override void OnSleep()
         {
+            // Handle when your app sleeps
         }
 
         protected override void OnResume()
         {
+            // Handle when your app resumes
         }
     }
 }

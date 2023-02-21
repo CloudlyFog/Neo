@@ -6,12 +6,12 @@ using Neo.Utilities;
 namespace Neo.Services;
 
 /// <summary>
-/// class finds unknown variables of equation
+/// class finds unknown variables of equation/s
 /// </summary>
 public sealed class Solver : IDisposable
 {
     /// <summary>
-    /// passed recognized string (expected system linear equation)
+    /// passed recognized string (expected system linear equations)
     /// </summary>
     private readonly string _input;
 
@@ -69,9 +69,30 @@ public sealed class Solver : IDisposable
         }
     }
 
-    private void Solve()
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="matrix"></param>
+    public Solver(Matrix<double> matrix)
     {
-        LeftSide = _parser.MatrixConversion();
+        _parser = new Parser(string.Empty);
+        try
+        {
+            Solve(false, matrix);
+        }
+        catch (Exception exception)
+        {
+            Error.Message = exception.Message;
+            Error.InnerMessage = exception.InnerException?.Message;
+        }
+    }
+
+    /// <summary>
+    /// solves system linear equations. set values to <see cref="Result"/>, <see cref="LeftSide"/>, <see cref="RightSide"/>
+    /// </summary>
+    private void Solve(bool str = true, Matrix<double> matrix = null)
+    {
+        LeftSide = _parser.MatrixConversion(str, matrix);
         if (LeftSide is null)
         {
             Error.Message = $"{nameof(LeftSide)} is null.";
@@ -79,7 +100,7 @@ public sealed class Solver : IDisposable
             return;
         }
 
-        RightSide = _parser.VectorConversion();
+        RightSide = _parser.VectorConversion(str, matrix);
         if (RightSide is null)
         {
             Error.Message = $"{nameof(RightSide)} is null.";
@@ -100,17 +121,17 @@ public sealed class Solver : IDisposable
     }
 
     /// <summary>
-    /// describe left side (matrix) of equation
+    /// presents matrix (digits before "=") of system linear equation
     /// </summary>
     public Matrix<double> LeftSide { get; private set; }
 
     /// <summary>
-    /// describe right side (results) of equation
+    /// presents result's sequence (digits after "=") of system linear equation
     /// </summary>
     public Vector<double> RightSide { get; private set; }
 
     /// <summary>
-    /// describe results of unknown variables of system linear equations
+    /// presents results of unknown variables of system linear equations
     /// </summary>
     private Vector<double> Result { get; set; }
 

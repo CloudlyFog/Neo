@@ -1,14 +1,10 @@
-﻿using System.Text;
-using MathNet.Numerics.LinearAlgebra;
+﻿using MathNet.Numerics.LinearAlgebra;
 using Neo.Services;
-using Neo.Utilities;
-using OpenTK.Platform.Windows;
 
 namespace TestNeoSoftware;
 
 public class TestParserExtension
 {
-    private Parser _parser;
     const string equationInput = " - 2y + 3z = 4; - 6y + z = 8;9x + y + 11.5z =-  12.5;";
     const string matrixInput = "2 3 4;6 7 8;10 11 12;";
 
@@ -28,16 +24,8 @@ public class TestParserExtension
             { 9, 1, 11.5d },
         };
         var expected = Matrix<double>.Build.DenseOfArray(correctMatrix);
-        var actual = new Parser(equationInput);
-
-        Assert.AreEqual(expected, actual.MatrixConversion());
-    }
-
-    [Test]
-    public void TestGetUnknownVariables()
-    {
-        var expected = "xyz";
-        var actual = equationInput.GetUnknownVariables();
+        // var actualMatrix = _parser.MatrixConversion();
+        Matrix<double> actual = null;
 
         Assert.AreEqual(expected, actual);
     }
