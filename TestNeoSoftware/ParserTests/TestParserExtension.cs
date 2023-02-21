@@ -30,12 +30,21 @@ public class TestParserExtension
         Assert.AreEqual(expected, actual);
     }
 
-
     [Test]
     public void TestSolverOnUnit()
     {
         var expected = "x: -1.3333333333333333\r\ny: -2.416666666666667\r\nz: 0.1666666666666667\r\n";
         string actual = new Solver(equationInput);
+
+        Assert.AreEqual(expected, actual);
+    }
+
+    [Test]
+    public void TestOnZeroVariable()
+    {
+        var expected = $"0 {equationInput}";
+        // var actual = equationInput.OnZeroVariable();
+        var actual = string.Empty;
 
         Assert.AreEqual(expected, actual);
     }

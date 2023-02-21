@@ -54,6 +54,7 @@ namespace NeoSoftware.Services
             if (!ValidMatrixValues(oldGridLayout))
                 return null;
 
+            Error.Message = null;
             oldGridLayout.RemoveAllViews();
             var index = 0;
             for (var i = 0; i < oldGridLayout.RowCount; i++)
@@ -102,6 +103,7 @@ namespace NeoSoftware.Services
                 return false;
             }
 
+            Error.Message = null;
             return true;
         }
 

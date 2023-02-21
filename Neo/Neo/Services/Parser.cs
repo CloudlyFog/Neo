@@ -7,9 +7,6 @@ using Neo.Utilities;
 
 namespace Neo.Services;
 
-/// <summary>
-/// converts string with definite structure to type <see cref="Matrix{T}"/>
-/// </summary>
 public class Parser
 {
     /// <summary>
@@ -48,14 +45,13 @@ public class Parser
     /// <param name="input"><see cref="_input"/></param>
     public Parser(string input)
     {
-        _input = input.GetDigits();
+        _input = input;
     }
 
     /// <summary>
     /// Take data from <see cref="_input"/> and put it to <see cref="Matrix{T}"/>
+    /// Uses <see cref="_input"/> like 
     /// </summary>
-    /// <param name="isString">defines type of input. set <see cref="isString"/> false when parse <see cref="Matrix{T}"/></param>
-    /// <param name="matrix">matrix from what will parsed if <see cref="isString"/> is true</param>
     /// <returns></returns>
     public Matrix<double> MatrixConversion(bool isString = true, Matrix<double> matrix = null)
     {
@@ -71,15 +67,14 @@ public class Parser
 
         var targetArray = new double[
             // read count of ";" and therefore count will one less than actually
-            _input.Count(x => x == SplitSymbol),
+            _input.SymbolCount(SplitSymbol),
             // read count of spaces and divide it on count of symbol ";"
             _input.Count(x => x == ' ') / _input.Count(x => x == SplitSymbol)];
 
         _every = targetArray.GetLength(1);
 
         // removing white space and commas
-        var filterResult = _input.Split(' ', SplitSymbol).Where(x => x is not (" " and "")).ToList()
-            // get matrix
+        var filterResult = _input.Split(' ', SplitSymbol).Where(x => x is not (" " or "")).ToList()
             .RemoveEvery(_every, targetArray.GetLength(0));
 
         return GetMatrixValue(targetArray, filterResult);
@@ -88,8 +83,6 @@ public class Parser
     /// <summary>
     /// Take data from <see cref="_input"/> and put it to <see cref="Vector{T}"/>
     /// </summary>
-    /// <param name="isString">defines type of input. set <see cref="isString"/> false when parse <see cref="Matrix{T}"/></param>
-    /// <param name="matrix">matrix from what will parsed if <see cref="isString"/> is true</param>
     /// <returns></returns>
     public Vector<double> VectorConversion(bool isString = true, Matrix<double> matrix = null)
     {
@@ -114,12 +107,12 @@ public class Parser
         // 5 6 7 = 8
         // 9 10 11 = 12
         // we get index of "3" and next add 1 for take index of "4"
-        _every = _input.Count(x => x == ' ') / _input.Count(x => x == SplitSymbol) + 1;
+        _every = _input.SymbolCount(' ') / _input.SymbolCount(SplitSymbol) + 1;
 
         // remove empty space
         filterResult = filterResult.Where(s => !string.IsNullOrWhiteSpace(s)).AsEnumerable().ToList()
             // get vector
-            .AddEvery(_every, _input.Count(x => x == SplitSymbol));
+            .AddEvery(_every, _input.SymbolCount(SplitSymbol));
 
         return GetVectorValue(new double[filterResult.Count], filterResult);
     }
@@ -129,20 +122,18 @@ public class Parser
     /// </summary>
     /// <param name="targetArray"> describe only size of array</param>
     /// <param name="filterResult">data from ocr output</param>
-    /// <returns></returns>
     private static Matrix<double> GetMatrixValue(double[,] targetArray, List<string> filterResult)
     {
         if (targetArray is null)
         {
             Error.Message = $"{nameof(targetArray)} is null";
-            Error.ArgValues = $"{nameof(targetArray)}: {targetArray.GetArrayValue()}";
+            Error.ArgValues = $"{nameof(targetArray)}: {targetArray}";
             return null;
         }
 
         if (targetArray.Length <= 0)
         {
             Error.Message = $"length of {nameof(targetArray)} less or equals 0";
-            Error.ArgValues = $"{nameof(targetArray)}: {targetArray.GetArrayValue()}";
             return null;
         }
 
@@ -169,8 +160,6 @@ public class Parser
                 {
                     Error.Message = exception.Message;
                     Error.InnerMessage = exception.InnerException?.Message;
-                    Error.ArgValues =
-                        $"{nameof(i)}: {i}\n{nameof(j)}: {j}\n{nameof(targetArray)}: {targetArray.GetArrayValue()}";
                     return null;
                 }
             }
@@ -184,7 +173,6 @@ public class Parser
     /// </summary>
     /// <param name="targetArray">array which will contain parsed data from <see cref="filterResult"/></param>
     /// <param name="filterResult">parsed filtered data from ocr</param>
-    /// <returns></returns>
     private static Vector<double> GetVectorValue(double[] targetArray, List<string> filterResult)
     {
         if (ValidArray(targetArray, nameof(targetArray)) is null ||
@@ -216,42 +204,11 @@ public class Parser
             {
                 Error.Message = exception.Message;
                 Error.InnerMessage = exception.InnerException?.Message;
-                Error.ArgValues =
-                    $"{nameof(i)}: {i}\n{nameof(targetArray)}: {targetArray.GetArrayValue()}";
                 return null;
             }
         }
 
         return Vector<double>.Build.DenseOfArray(targetArray);
-    }
-
-    /// <summary>
-    /// Validate index of filterResult is corresponding to requirements or not
-    /// </summary>
-    /// <param name="point">index of <see cref="filterResult"/></param>
-    /// <param name="filterResult">parsed data from Tesseract OCR</param>
-    /// <returns></returns>
-    private static bool ValidIteration(ref int point, List<string> filterResult)
-    {
-        if (point == filterResult.Count)
-            return false;
-        if (filterResult[point] != string.Empty)
-            return true;
-        point++;
-        return false;
-    }
-
-    /// <summary>
-    /// does the same as the method <see cref="GetMatrixValue(double[,],System.Collections.Generic.List{string})"/>
-    /// but to everything else cleanup output of <see cref="GetMatrixValue(double[,],System.Collections.Generic.List{string})"/>
-    /// </summary>
-    /// <param name="matrix"></param>
-    /// <returns></returns>
-    private static string GetStringMatrix(Matrix<double> matrix)
-    {
-        return ValidArray(matrix.ToArray(), nameof(matrix)) is null
-            ? null
-            : GetMatrixValue(matrix).Replace('\n', SplitSymbol).RemoveWhiteSpacesBeforeSeparator();
     }
 
     /// <summary>
@@ -277,6 +234,13 @@ public class Parser
         }
 
         return sb.ToString();
+    }
+
+    private static string GetStringMatrix(Matrix<double> matrix)
+    {
+        return ValidArray(matrix.ToArray(), nameof(matrix)) is null
+            ? null
+            : GetMatrixValue(matrix).Replace('\n', SplitSymbol).RemoveWhiteSpacesNearSeparator();
     }
 
     /// <summary>
@@ -325,5 +289,21 @@ public class Parser
         }
 
         return new Error();
+    }
+
+    /// <summary>
+    /// Validate index of filterResult is corresponding to requirements or not
+    /// </summary>
+    /// <param name="point">index of <see cref="filterResult"/></param>
+    /// <param name="filterResult">parsed data from Tesseract OCR</param>
+    /// <returns></returns>
+    private static bool ValidIteration(ref int point, List<string> filterResult)
+    {
+        if (point == filterResult.Count)
+            return false;
+        if (filterResult[point] != string.Empty)
+            return true;
+        point++;
+        return false;
     }
 }

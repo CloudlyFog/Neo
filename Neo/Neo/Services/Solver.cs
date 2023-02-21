@@ -15,15 +15,12 @@ public sealed class Solver : IDisposable
     /// </summary>
     private readonly string _input;
 
+    private readonly string _constantInput;
+
     /// <summary>
     /// instance of <see cref="Parser"/>
     /// </summary>
     private Parser _parser;
-
-    /// <summary>
-    /// public instance of passed <see cref="_input"/>
-    /// </summary>
-    public static string Input { get; private set; }
 
     /// <summary>
     /// implicitly converts instance of <see cref="Solver"/> to string by method <see cref="ToString"/>
@@ -52,8 +49,9 @@ public sealed class Solver : IDisposable
     /// <param name="input"><see cref="_input"/></param>
     public Solver(string input)
     {
+        _constantInput = input;
         _input = input.Replace("\n", Parser.SplitSymbol.ToString()).ToLower();
-        Input = _input;
+        _input = _input.AppendZeroCoefficients(input.GetUnknownVariables()).RemoveWhiteSpacesNearSeparator();
 
         if (_input is "no text" or "" || _input.IsTrash())
         {
@@ -148,7 +146,7 @@ public sealed class Solver : IDisposable
 
         var sb = new StringBuilder();
         for (var i = 0; i < Result.Count; i++)
-            sb.AppendLine($"{_input.GetUnknownVariables()[i]}: {Result[i]}");
+            sb.AppendLine($"{_constantInput.GetUnknownVariables()[i]}: {Result[i]}");
 
         return sb.ToString();
     }

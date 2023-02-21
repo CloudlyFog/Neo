@@ -1,4 +1,5 @@
 ﻿using MathNet.Numerics.LinearAlgebra;
+using Neo.Services;
 
 namespace TestNeoSoftware;
 
@@ -58,5 +59,15 @@ public class TestEquationParser
         Matrix<double> actual = null;
 
         Assert.AreEqual(expected, actual);
+    }
+
+    [Test]
+    public void TestSolve()
+    {
+        var eq = "3 4 5;0 1 5;";
+        var expected = "string";
+        //string actual = new Solver(eq);
+        var parser = new Parser(eq);
+        Assert.AreEqual(expected, parser.MatrixConversion().ToString());
     }
 }

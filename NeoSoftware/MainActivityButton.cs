@@ -362,6 +362,7 @@ namespace NeoSoftware
                 return;
             }
 
+            Error.Message = null;
             _inputMatrix = inputMatrix;
         }
 

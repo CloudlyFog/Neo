@@ -7,18 +7,22 @@ using Neo.Services;
 namespace Neo.Utilities;
 
 /// <summary>
-/// describes extension class for <see cref="Parser"/>
+/// describe extension class for <see cref="Parser"/>
 /// </summary>
-internal static class ParserExtension
+public static class ParserExtension
 {
     /// <summary>
     /// returns string with unknown variables from system linear equations
     /// </summary>
     /// <param name="input">parsed string (expected from <see cref="Matrix{T}"/>)</param>
     /// <returns></returns>
-    public static string GetUnknownVariables(this string input)
+    public static string GetUnknownVariables(this string input, bool fullInput = false)
     {
-        return new string(input.Where(char.IsLetter).Distinct().ToArray());
+        if (!fullInput)
+            return new string(input.Separate().GetLongestString().Where(char.IsLetter).Distinct().ToArray());
+
+        var digits = new string(input.Separate().GetLongestString().ToArray());
+        return new string(digits.Where(char.IsLetter).Distinct().ToArray());
     }
 
     /// <summary>
@@ -65,17 +69,20 @@ internal static class ParserExtension
     /// <returns></returns>
     public static string GetDigits(this string input)
     {
+        var sb = new StringBuilder();
+
+        // validate input
         switch (input)
         {
             case null:
-                Error.Message = $"{nameof(input)} is null";
-                return string.Empty;
+                Error.Message = $"{nameof(input)} is null.";
+                return input;
             case "":
-                Error.Message = $"{nameof(input)} doesn't contain anything.";
-                return string.Empty;
+                Error.Message = $"Lengths of {nameof(input)} equals or less than 0.";
+                return input;
         }
 
-        var sb = new StringBuilder();
+
         for (var i = 0; i < input.Length; i++)
         {
             if (OnNegativeSymbol(input, sb, i) || OnFloatSymbol(input, sb, i))
@@ -98,7 +105,8 @@ internal static class ParserExtension
             // adds whitespace
             if (!char.IsDigit(input[i + 1]) && input[i + 1] != Parser.SplitSymbol
                                             && input[i + 1] != Parser.FloatSymbolDot
-                                            && input[i + 1] != Parser.FloatSymbolComma)
+                                            && input[i + 1] != Parser.FloatSymbolComma
+                                            && input[i + 1] != ' ')
             {
                 sb.Append(' ');
             }
@@ -123,25 +131,207 @@ internal static class ParserExtension
     }
 
     /// <summary>
+    /// counts symbols in <see cref="input"/>
+    /// </summary>
+    /// <param name="input">read text</param>
+    /// <param name="symbol">symbol for counting</param>
+    /// <returns></returns>
+    public static int SymbolCount(this string input, char symbol)
+    {
+        return input.Count(x => x == symbol);
+    }
+
+    /// <summary>
+    /// appends in internal <see cref="List{T}"/> zero coefficients of equations
+    /// </summary>
+    /// <param name="equations">parsed equations</param>
+    /// <param name="unknownVariables">string of unknown variables of equations</param>
+    /// <returns></returns>
+    public static string AppendZeroCoefficients(this string input, string unknownVariables)
+    {
+        var equations = input.Separate();
+        var appendableVariables = equations.GetAppendableEquations(unknownVariables);
+        var digitAppendableEquations = appendableVariables.Combine().GetDigits().Separate();
+        var digitsEquations = equations.Combine().GetDigits().Separate();
+
+        var sb = new StringBuilder();
+        var index = 0;
+        foreach (var equation in digitsEquations)
+        {
+            if (index >= digitAppendableEquations.Count)
+            {
+                sb.Append($"{equation}{Parser.SplitSymbol}");
+                break;
+            }
+
+            if (equation != digitAppendableEquations[index])
+            {
+                sb.Append($"{equation}{Parser.SplitSymbol}");
+                continue;
+            }
+
+            sb.AppendZeroCoefficientsEquation(digitAppendableEquations[index],
+                appendableVariables.GetVariableNames(unknownVariables, index));
+            index++;
+        }
+
+
+        return sb.ToString();
+    }
+
+    private static StringBuilder AppendZeroCoefficientsEquation(this StringBuilder sb, string digitEquation,
+        List<Dictionary<char, int>> missedVariables)
+    {
+        var index = 0;
+        var current = 0;
+        for (var j = 0; j < digitEquation.Length; j++)
+        {
+            sb.AppendZero(missedVariables, ref index, current);
+            sb.AppendValue(digitEquation[j], ref current);
+
+            if (j != digitEquation.Length - 1)
+                continue;
+            var line = sb.ToString().Trim();
+            sb.Clear();
+            sb.Append($"{line}{Parser.SplitSymbol}");
+        }
+
+        return sb;
+    }
+
+    private static StringBuilder AppendValue(this StringBuilder sb, char digitEquationValue, ref int current)
+    {
+        sb.Append(digitEquationValue);
+        current++;
+        return sb;
+    }
+
+    private static StringBuilder AppendZero(this StringBuilder sb, List<Dictionary<char, int>> missedVariables,
+        ref int index, int current)
+    {
+        // avoid IndexOutOfBoundsException
+        if (index >= missedVariables.Count)
+            return sb;
+        if (missedVariables[index].Values.All(x => x != current))
+            return sb;
+        sb.Append(" 0 ");
+        index++;
+        return sb;
+    }
+
+    /// <summary>
+    /// gets longest string of passed list
+    /// </summary>
+    /// <param name="list">list of strings</param>
+    /// <returns></returns>
+    private static string GetLongestString(this List<string> list)
+    {
+        return list.OrderByDescending(s => s.Length).First();
+    }
+
+    private static Dictionary<char, int> GetIndices(this string unknownVariables)
+    {
+        var indices = new Dictionary<char, int>();
+        for (var i = 0; i < unknownVariables.Length; i++)
+            indices.Add(unknownVariables[i], i);
+        return indices;
+    }
+
+    private static List<Dictionary<char, int>> GetVariableNames(this List<string> equations, string unknownVariables,
+        int index)
+    {
+        var needToAppend = new List<Dictionary<char, int>>();
+        var indices = unknownVariables.GetIndices();
+
+        for (var i = 0; i < unknownVariables.Length; i++)
+        {
+            if (!equations[index].Contains(unknownVariables[i]))
+                needToAppend.Add(new Dictionary<char, int>
+                {
+                    { unknownVariables[i], indices.Values.FirstOrDefault(x => x == i) }
+                });
+        }
+
+        return needToAppend;
+    }
+
+    private static List<string> GetAppendableEquations(this List<string> equations, string unknownVariables)
+    {
+        var needToAppend = new List<string>();
+
+        foreach (var equation in equations)
+        {
+            foreach (var unknownVariable in unknownVariables)
+            {
+                if (!equation.Contains(unknownVariable))
+                    needToAppend.Add(equation);
+            }
+        }
+
+        return needToAppend.Distinct().ToList();
+    }
+
+    private static string Trim(this IEnumerable<string> list)
+    {
+        return list.Select(item => item.Trim()).ToList().Combine();
+    }
+
+    /// <summary>
+    /// combines <see cref="List{T}"/> in one string with <see cref="splitSymbol"/>
+    /// </summary>
+    /// <param name="list">list of <see cref="T"/></param>
+    /// <param name="splitSymbol">symbol for splitting</param>
+    /// <returns><see cref="string"/> with <see cref="splitSymbol"/> in indices where list was ended</returns>
+    public static string Combine<T>(this List<T> list, char splitSymbol = Parser.SplitSymbol)
+    {
+        var sb = new StringBuilder();
+        foreach (var equation in list)
+            sb.Append($"{equation}{splitSymbol}");
+        return sb.ToString();
+    }
+
+    /// <summary>
+    /// separates <see cref="input"/> in <see cref="List{T}"/> using <see cref="splitSymbol"/>
+    /// </summary>
+    /// <param name="input">string for separating</param>
+    /// <param name="splitSymbol">symbol for splitting</param>
+    /// <returns><see cref="List{T}"/> from separated <see cref="input"/></returns>
+    public static List<string> Separate(this string input, char splitSymbol = Parser.SplitSymbol)
+    {
+        var list = new List<string>();
+        var sb = new StringBuilder();
+        foreach (var item in input)
+        {
+            if (item != splitSymbol)
+            {
+                sb.Append(item);
+            }
+            else
+            {
+                list.Add(sb.ToString().Trim());
+                sb.Clear();
+            }
+        }
+
+        if (list.Count == 0)
+            list.Add(sb.ToString().Trim());
+
+        return list;
+    }
+
+    /// <summary>
     /// cleans <see cref="input"/> from whitespaces before <see cref="splitSymbol"/>
     /// in order to verify validation of <see cref="input"/> in the next operations of solving
     /// </summary>
     /// <param name="input">text</param>
     /// <param name="splitSymbol">symbol for splitting equations</param>
     /// <returns></returns>
-    public static string RemoveWhiteSpacesBeforeSeparator(this string input, char splitSymbol = Parser.SplitSymbol)
+    public static string RemoveWhiteSpacesNearSeparator(this string input, char splitSymbol = Parser.SplitSymbol)
     {
-        var sb = new StringBuilder();
-        for (var i = 0; i < input.Length; i++)
-        {
-            if (i >= input.Length - 1)
-                return $"{sb}{splitSymbol}";
-            if (input[i + 1] == splitSymbol)
-                continue;
-            sb.Append(input[i]);
-        }
-
-        return sb.ToString();
+        var strings = input.Separate();
+        for (var i = 0; i < strings.Count; i++)
+            strings[i] = strings[i].Trim();
+        return strings.Combine();
     }
 
     /// <summary>
@@ -156,7 +346,7 @@ internal static class ParserExtension
             .Replace(Parser.NegativeSymbol.ToString(), "");
 
         var sb = new StringBuilder();
-        var array = new List<double>();
+        var digits = new List<double>();
 
         for (var i = 0; i < input.Length; i++)
         {
@@ -167,11 +357,11 @@ internal static class ParserExtension
             if (input[i + 1] != ' ')
                 continue;
 
-            array.Add(double.Parse(sb.ToString()));
+            digits.Add(double.Parse(sb.ToString()));
             sb.Clear();
         }
 
-        return array;
+        return digits;
     }
 
     /// <summary>
@@ -231,8 +421,7 @@ internal static class ParserExtension
                 return true;
             }
 
-            //if (input[i] != Solver.Input.GetUnknownVariables()[j] || char.IsDigit(input[i - 1]))
-            if (input[i] != Solver.Input.GetUnknownVariables()[j] || char.IsDigit(input[i - 1]))
+            if (input[i] != input.GetUnknownVariables()[j] || char.IsDigit(input[i - 1]))
                 continue;
             sb.Append("1 ");
             return true;
