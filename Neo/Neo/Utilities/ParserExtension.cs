@@ -129,13 +129,12 @@ public static class ParserExtension
         return sb.ToString();
     }
 
-    public static bool IsSymmetric(this string input)
-    {
-        var parser = new Parser(input);
-        var matrix = parser.MatrixConversion(input.GetUnknownVariables());
-        return matrix.RowCount == matrix.ColumnCount;
-    }
-
+    /// <summary>
+    /// checks if the <see cref="str"/> contains something from <see cref="contains"/>
+    /// </summary>
+    /// <param name="str">where will finding</param>
+    /// <param name="contains">wherefrom will finding</param>
+    /// <returns></returns>
     public static bool ContainsString(this string str, string contains)
     {
         return contains.Any(str.Contains);
@@ -208,6 +207,18 @@ public static class ParserExtension
         }
 
         return sb.ToString();
+    }
+
+    /// <summary>
+    /// checks if the converted <see cref="input"/> to matrix has symmetric sides
+    /// </summary>
+    /// <param name="input">string of system linear equations</param>
+    /// <returns></returns>
+    private static bool IsSymmetric(this string input)
+    {
+        var parser = new Parser(input);
+        var matrix = parser.MatrixConversion(input.GetUnknownVariables());
+        return matrix.RowCount == matrix.ColumnCount;
     }
 
     /// <summary>
