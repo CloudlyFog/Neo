@@ -64,7 +64,7 @@ public sealed class Solver : IDisposable
         _parser = new Parser(_input);
         try
         {
-            Solve();
+            Solve(_input.GetUnknownVariables());
         }
         catch (Exception exception)
         {
@@ -82,7 +82,7 @@ public sealed class Solver : IDisposable
         _parser = new Parser(string.Empty);
         try
         {
-            Solve(false, matrix);
+            Solve(null, matrix);
         }
         catch (Exception exception)
         {
@@ -94,9 +94,9 @@ public sealed class Solver : IDisposable
     /// <summary>
     /// solves system linear equations. set values to <see cref="Result"/>, <see cref="LeftSide"/>, <see cref="RightSide"/>
     /// </summary>
-    private void Solve(bool str = true, Matrix<double> matrix = null)
+    private void Solve(string unknownVariables, Matrix<double> matrix = null)
     {
-        LeftSide = _parser.MatrixConversion(str, matrix);
+        LeftSide = _parser.MatrixConversion(unknownVariables, matrix);
         if (LeftSide is null)
         {
             Error.Message = $"{nameof(LeftSide)} is null.";
@@ -104,7 +104,7 @@ public sealed class Solver : IDisposable
             return;
         }
 
-        RightSide = _parser.VectorConversion(str, matrix);
+        RightSide = _parser.VectorConversion(unknownVariables, matrix);
         if (RightSide is null)
         {
             Error.Message = $"{nameof(RightSide)} is null.";

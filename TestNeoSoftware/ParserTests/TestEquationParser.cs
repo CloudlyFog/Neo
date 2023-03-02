@@ -1,5 +1,6 @@
 ﻿using MathNet.Numerics.LinearAlgebra;
 using Neo.Services;
+using Neo.Utilities;
 
 namespace TestNeoSoftware;
 
@@ -64,10 +65,11 @@ public class TestEquationParser
     [Test]
     public void TestSolve()
     {
-        var eq = "3 4 5;0 1 5;";
+        var eq = "-X+2y +3z - 4t = 7;3x - 2y-z+t = 8;9x +12y - 3z + 4t = 5;6x -7y +2z -9t = 18;";
         var expected = "string";
+        var solver = new Solver(eq);
         //string actual = new Solver(eq);
         var parser = new Parser(eq);
-        Assert.AreEqual(expected, parser.MatrixConversion().ToString());
+        Assert.AreEqual(expected, parser.MatrixConversion(eq.GetUnknownVariables()).ToString());
     }
 }

@@ -95,9 +95,13 @@ public static class ParserExtension
     /// <returns></returns>
     public static string AppendZeroCoefficients(this string input, string unknownVariables)
     {
+        if (input.IsSymmetric())
+            return input;
         var equations = input.Separate();
         var appendableVariables = equations.GetAppendableEquations(unknownVariables);
         var digitAppendableEquations = appendableVariables.Combine().GetDigits().Separate();
+
+
         var digitsEquations = equations.Combine().GetDigits().Separate();
 
         var sb = new StringBuilder();
@@ -125,6 +129,18 @@ public static class ParserExtension
         return sb.ToString();
     }
 
+    public static bool IsSymmetric(this string input)
+    {
+        var parser = new Parser(input);
+        var matrix = parser.MatrixConversion(input.GetUnknownVariables());
+        return matrix.RowCount == matrix.ColumnCount;
+    }
+
+    public static bool ContainsString(this string str, string contains)
+    {
+        return contains.Any(str.Contains);
+    }
+
     /// <summary>
     /// cleans <see cref="input"/> from whitespaces before <see cref="splitSymbol"/>
     /// in order to verify validation of <see cref="input"/> in the next operations of solving
@@ -146,7 +162,7 @@ public static class ParserExtension
     /// </summary>
     /// <param name="input">parsed string (expected from <see cref="Matrix{T}"/>)</param>
     /// <returns></returns>
-    private static string GetDigits(this string input)
+    public static string GetDigits(this string input)
     {
         var sb = new StringBuilder();
 

@@ -1,4 +1,6 @@
-﻿using MathNet.Numerics.LinearAlgebra;
+﻿using System;
+using MathNet.Numerics.LinearAlgebra;
+using Neo.Utilities;
 
 namespace Neo.Services
 {
@@ -36,9 +38,9 @@ namespace Neo.Services
         /// <returns></returns>
         public static Matrix<double> Exponentiation(this Matrix<double> matrix, int n)
         {
-            var tempMatrix = matrix;
             for (var i = 1; i < n; i++)
-                matrix = matrix.Multiply(tempMatrix);
+                matrix = matrix.Multiply(matrix);
+
             return matrix;
         }
 
@@ -50,5 +52,13 @@ namespace Neo.Services
         /// <returns></returns>
         public static Matrix<double> Transpose(this Matrix<double> matrix)
             => matrix.Transpose();
+
+        public static bool IsSymmetrical(this Matrix<double> matrix)
+        {
+            if (matrix.RowCount == matrix.ColumnCount)
+                return true;
+            Error.Message = $"matrix isn't symmetric.";
+            return false;
+        }
     }
 }

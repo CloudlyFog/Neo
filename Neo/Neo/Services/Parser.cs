@@ -55,10 +55,13 @@ public class Parser
     /// <param name="isString">defines is entered/passed data for conversion is string</param>
     /// <param name="matrix">matrix if need convert it to view for calculation</param>
     /// <returns></returns>
-    public Matrix<double> MatrixConversion(bool isString = true, Matrix<double> matrix = null)
+    public Matrix<double> MatrixConversion(string unknownVariables, Matrix<double> matrix = null)
     {
-        if (!isString)
+        if (unknownVariables is null)
             _input = GetStringMatrix(matrix);
+
+        if (_input.ContainsString(unknownVariables))
+            _input = _input.GetDigits();
 
         if (_input is null)
         {
@@ -71,7 +74,7 @@ public class Parser
             // read count of ";" and therefore count will one less than actually
             _input.SymbolCount(SplitSymbol),
             // read count of spaces and divide it on count of symbol ";"
-            _input.Count(x => x == ' ') / _input.Count(x => x == SplitSymbol)];
+            _input.SymbolCount(' ') / _input.SymbolCount(SplitSymbol)];
 
         _every = targetArray.GetLength(1);
 
@@ -88,10 +91,13 @@ public class Parser
     /// <param name="isString">defines is entered/passed data for conversion is string</param>
     /// <param name="matrix">matrix if need convert it to view for calculation</param>
     /// <returns></returns>
-    public Vector<double> VectorConversion(bool isString = true, Matrix<double> matrix = null)
+    public Vector<double> VectorConversion(string unknownVariables, Matrix<double> matrix = null)
     {
-        if (!isString)
+        if (unknownVariables is null)
             _input = GetStringMatrix(matrix);
+
+        if (_input.ContainsString(unknownVariables))
+            _input = _input.GetDigits();
 
         if (_input is null)
         {

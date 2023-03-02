@@ -142,6 +142,12 @@ namespace NeoSoftware
                 SetMatrix(_gridLayoutMatrix);
                 if (Error.Message != null)
                     return;
+                if (!_matrix.IsSymmetrical())
+                {
+                    OpenExceptionWindow();
+                    return;
+                }
+
                 ShowResult(_inputMatrix, _matrix.Transpose(), ResultKind.Transpose);
             };
             _reverse.Click += delegate
@@ -149,6 +155,12 @@ namespace NeoSoftware
                 SetMatrix(_gridLayoutMatrix);
                 if (Error.Message != null)
                     return;
+                if (!_matrix.IsSymmetrical())
+                {
+                    OpenExceptionWindow();
+                    return;
+                }
+
                 ShowResult(_inputMatrix, _matrix.GetReverseMatrix(), ResultKind.Reverse);
             };
             _det.Click += delegate
@@ -156,6 +168,12 @@ namespace NeoSoftware
                 SetMatrix(_gridLayoutMatrix);
                 if (Error.Message != null)
                     return;
+                if (!_matrix.IsSymmetrical())
+                {
+                    OpenExceptionWindow();
+                    return;
+                }
+
                 ShowResult(_inputMatrix.GetMatrixValue(), _matrix.GetDeterminant().ToString(),
                     ResultKind.Determinant);
             };
@@ -164,6 +182,12 @@ namespace NeoSoftware
                 SetMatrix(_gridLayoutMatrix);
                 if (Error.Message != null)
                     return;
+                if (!_matrix.IsSymmetrical())
+                {
+                    OpenExceptionWindow();
+                    return;
+                }
+
                 ShowResult(_inputMatrix.GetMatrixValue(), _matrix.GetRank().ToString(), ResultKind.Rank);
             };
             _exponentiation.Click += delegate
@@ -171,6 +195,12 @@ namespace NeoSoftware
                 SetMatrix(_gridLayoutMatrix);
                 if (Error.Message != null)
                     return;
+                if (!_matrix.IsSymmetrical())
+                {
+                    OpenExceptionWindow();
+                    return;
+                }
+
                 ShowResult(_matrix,
                     _inputMatrix.Exponentiation(int.Parse(FindViewById<EditText>(Resource.Id.exp_value).Text)),
                     ResultKind.Exponentiation);
@@ -189,6 +219,12 @@ namespace NeoSoftware
                     SetMatrix(_gridLayoutMatrix);
                     if (Error.Message != null)
                         return;
+                    if (!_matrix.IsSymmetrical())
+                    {
+                        OpenExceptionWindow();
+                        return;
+                    }
+
                     using var solver = new Solver(_matrix);
                     ShowResult(_inputMatrix.GetMatrixValue(), solver.ToString(), ResultKind.Solve);
                 }
