@@ -15,17 +15,17 @@ public class Parser
     public const char SplitSymbol = ';';
 
     /// <summary>
-    /// needs for determining negative digits
+    /// determines negative digits
     /// </summary>
     public const char NegativeSymbol = '-';
 
     /// <summary>
-    /// needs for determining float digits with split symbol "." (dot)
+    /// determines float digits with split symbol "." (dot)
     /// </summary>
     public const char FloatSymbolDot = '.';
 
     /// <summary>
-    /// needs for determining float digits with split symbol "," (comma)
+    /// determines float digits with split symbol "," (comma)
     /// </summary>
     public const char FloatSymbolComma = ',';
 
