@@ -2,6 +2,7 @@
 using Android.Widget;
 using MathNet.Numerics.LinearAlgebra;
 using Neo.Services;
+using Neo.Utilities;
 
 namespace NeoSoftware.Utilities
 {
@@ -10,18 +11,11 @@ namespace NeoSoftware.Utilities
         public static string GetMatrixValue(this Matrix<double> matrix)
         {
             var message = new StringBuilder();
-            for (var i = 0; i < matrix.RowCount; i++)
+            for (var i = 0; i < matrix.ColumnCount; i++)
             {
-                for (var j = 0; j <= matrix.ColumnCount; j++)
-                {
-                    if (j == matrix.ColumnCount)
-                    {
-                        message.Append("\n");
-                        continue;
-                    }
-
+                for (var j = 0; j < matrix.RowCount; j++)
                     message.Append($"{matrix[j, i]}\t\t");
-                }
+                message.Append("\n");
             }
 
             return message.ToString();
@@ -55,6 +49,22 @@ namespace NeoSoftware.Utilities
             }
 
             return sb.ToString();
+        }
+
+        public static bool IsSquare(this Matrix<double> matrix)
+        {
+            if (matrix.RowCount == matrix.ColumnCount)
+                return true;
+            Error.Message = "matrix must be square.";
+            return false;
+        }
+
+        public static bool IsGaussianMatrix(this Matrix<double> matrix)
+        {
+            if (matrix.RowCount == matrix.ColumnCount + 1)
+                return true;
+            Error.Message = "matrix can't solve by Gaussian method due to incorrect size of its sides.";
+            return false;
         }
     }
 }

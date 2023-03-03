@@ -137,6 +137,8 @@ public static class ParserExtension
     /// <returns></returns>
     public static bool ContainsString(this string str, string contains)
     {
+        if (str is null || contains is null)
+            return false;
         return contains.Any(str.Contains);
     }
 

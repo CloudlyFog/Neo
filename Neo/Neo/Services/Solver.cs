@@ -17,6 +17,8 @@ public sealed class Solver : IDisposable
 
     private readonly string _constantInput;
 
+    private readonly bool _isMatrix;
+
     /// <summary>
     /// instance of <see cref="Parser"/>
     /// </summary>
@@ -79,6 +81,7 @@ public sealed class Solver : IDisposable
     /// <param name="matrix">matrix for conversion to <see cref="_input"/></param>
     public Solver(Matrix<double> matrix)
     {
+        _isMatrix = true;
         _parser = new Parser(string.Empty);
         try
         {
@@ -145,6 +148,13 @@ public sealed class Solver : IDisposable
             return $"{Error.Message}\n{Error.InnerMessage}\n{Error.ArgValues}";
 
         var sb = new StringBuilder();
+        if (_isMatrix)
+        {
+            for (var i = 0; i < Result.Count; i++)
+                sb.AppendLine($"x{i}: {Result[i]}");
+            return sb.ToString();
+        }
+
         for (var i = 0; i < Result.Count; i++)
             sb.AppendLine($"{_constantInput.GetUnknownVariables()[i]}: {Result[i]}");
 

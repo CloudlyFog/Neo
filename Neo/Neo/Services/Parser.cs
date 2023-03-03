@@ -229,18 +229,11 @@ public class Parser
     private static string GetMatrixValue(Matrix<double> matrix)
     {
         var sb = new StringBuilder();
-        for (var i = 0; i < matrix.RowCount; i++)
+        for (var i = 0; i < matrix.ColumnCount; i++)
         {
-            for (var j = 0; j <= matrix.ColumnCount; j++)
-            {
-                if (j == matrix.ColumnCount)
-                {
-                    sb.Append('\n');
-                    continue;
-                }
-
-                sb.Append($"{matrix[i, j]} ");
-            }
+            for (var j = 0; j < matrix.RowCount; j++)
+                sb.Append($"{matrix[j, i]} ");
+            sb.Append("\n");
         }
 
         return sb.ToString();
