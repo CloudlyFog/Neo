@@ -120,11 +120,8 @@ namespace NeoSoftware
         /// <param name="calledRCCConf">defines calling this method from <see cref="ConfigureRowsColumnsCount"/></param>
         private void RenderMainInputElement(bool calledRCCConf = false)
         {
-            //_solveMatrix.Clickable = EquationValueStorage.IsEquation;
             if (EquationValueStorage.IsEquation)
-            {
                 ConfigureEquationsGrid();
-            }
             else
             {
                 if (!calledRCCConf)
@@ -221,7 +218,6 @@ namespace NeoSoftware
                     ShowResult(_inputMatrix.GetMatrixValue(), solver.ToString(), ResultKind.Solve);
                 }
             };
-            //_solveMatrix.Clickable = EquationValueStorage.IsEquation;
         }
 
         /// <summary>

@@ -150,8 +150,9 @@ public sealed class Solver : IDisposable
         var sb = new StringBuilder();
         if (_isMatrix)
         {
-            for (var i = 0; i < Result.Count; i++)
-                sb.AppendLine($"x{i}: {Result[i]}");
+            var index = 1;
+            for (var i = 0; i < Result.Count; i++, index++)
+                sb.AppendLine($"x{index}: {Result[i]}");
             return sb.ToString();
         }
 
