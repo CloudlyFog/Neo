@@ -11,6 +11,7 @@ using Android.Runtime;
 using Android;
 using AndroidX.AppCompat.App;
 using AndroidX.Core.App;
+using AndroidX.Core.Content;
 using Java.Lang;
 using StringBuilder = System.Text.StringBuilder;
 using static Android.Gms.Vision.Detector;
@@ -35,9 +36,7 @@ namespace NeoSoftware
         private bool _isLoadMain = false;
         private bool _isEquations = false;
 
-
-        private
-            const int RequestCameraPermissionID = 1001;
+        private const int RequestCameraPermissionID = 1001;
 
         protected override void OnCreate(Bundle savedInstanceState)
         {
@@ -46,13 +45,13 @@ namespace NeoSoftware
             SetContentView(Resource.Layout.activity_main);
             _isLoadMain = true;
 
-            BuildUI();
+            BuildUi();
         }
 
         /// <summary>
         /// renders all ui of app
         /// </summary>
-        private void BuildUI()
+        private void BuildUi()
         {
             if (_isLoadMain)
             {
@@ -125,7 +124,7 @@ namespace NeoSoftware
 
         public void SurfaceCreated(ISurfaceHolder holder)
         {
-            if (ActivityCompat.CheckSelfPermission(ApplicationContext, Manifest.Permission.Camera) !=
+            if (ContextCompat.CheckSelfPermission(ApplicationContext, Manifest.Permission.Camera) !=
                 Android.Content.PM.Permission.Granted)
             {
                 //Request permission  
@@ -156,7 +155,7 @@ namespace NeoSoftware
                 var strBuilder = new StringBuilder();
                 for (var i = 0; i < items.Size(); ++i)
                 {
-                    strBuilder.Append(((TextBlock)items.ValueAt(i)).Value);
+                    strBuilder.Append(((TextBlock)items.ValueAt(i))?.Value);
                     strBuilder.Append("\n");
                 }
 

@@ -43,7 +43,7 @@ public class TestSolver
             { 1, 2, 3, },
             { 4, 5, 6, },
         });
-        string actual = new Solver(matrix);
+        string actual = new Solver().Solve(matrix);
 
         Assert.AreEqual(expected, actual);
     }

@@ -199,7 +199,7 @@ namespace NeoSoftware
                 if (EquationValueStorage.IsEquation)
                 {
                     SetEquations(_gridLayoutMatrix);
-                    using var solver = new Solver(_equations);
+                    var solver = new Solver().Solve(_equations);
                     ShowResult(_inputEquations.Replace(Parser.SplitSymbol, '\n'), solver.ToString(),
                         ResultKind.Solve);
                 }
@@ -214,7 +214,7 @@ namespace NeoSoftware
                         return;
                     }
 
-                    using var solver = new Solver(_matrix);
+                    var solver = new Solver().Solve(_matrix);
                     ShowResult(_inputMatrix.GetMatrixValue(), solver.ToString(), ResultKind.Solve);
                 }
             };
@@ -358,7 +358,7 @@ namespace NeoSoftware
         {
             _isLoadMain = true;
             SetContentView(Resource.Layout.activity_main);
-            BuildUI();
+            BuildUi();
         }
 
         [Export("BackToManual")]
@@ -366,7 +366,7 @@ namespace NeoSoftware
         {
             _isLoadMain = false;
             SetContentView(Resource.Layout.activity_manual);
-            BuildUI();
+            BuildUi();
             RenderMainInputElement();
         }
 

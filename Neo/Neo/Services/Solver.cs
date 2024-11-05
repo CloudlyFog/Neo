@@ -8,16 +8,16 @@ namespace Neo.Services;
 /// <summary>
 /// class finds unknown variables of equation/s
 /// </summary>
-public sealed class Solver : IDisposable
+public sealed class Solver
 {
     /// <summary>
     /// passed recognized string (expected system linear equations)
     /// </summary>
-    private readonly string _input;
+    private string _input;
 
-    private readonly string _constantInput;
+    private string _constantInput;
 
-    private readonly bool _isMatrix;
+    private bool _isMatrix;
 
     /// <summary>
     /// instance of <see cref="Parser"/>
@@ -41,9 +41,16 @@ public sealed class Solver : IDisposable
     /// <summary>
     /// explicitly converts passed <see cref="_input"/> to <see cref="Solver"/>
     /// </summary>
-    /// <param name="solver">instance of <see cref="Solver"/></param>
+    /// <param name="input"></param>
     /// <returns>instance of <see cref="Solver"/></returns>
     public static explicit operator Solver(string input) => new(input);
+
+    /// <summary>
+    /// returns instance of <see cref="Solver"/> with different implicit and explicit operators
+    /// </summary>
+    public Solver()
+    {
+    }
 
     /// <summary>
     /// returns instance of <see cref="Solver"/> with different implicit and explicit operators
@@ -95,15 +102,73 @@ public sealed class Solver : IDisposable
     }
 
     /// <summary>
+    /// returns instance of <see cref="Solver"/> with solved matrix
+    /// </summary>
+    /// <param name="input"><see cref="_input"/></param>
+    public Solver Solve(string input)
+    {
+        _input = SetInputConfiguration(input);
+
+        if (string.IsNullOrEmpty(_input))
+            return this;
+
+        _parser = new Parser(_input);
+        try
+        {
+            Solve(_input.GetUnknownVariables(), null);
+        }
+        catch (Exception exception)
+        {
+            Error.Message = exception.Message;
+            Error.InnerMessage = exception.InnerException?.Message;
+        }
+
+        return this;
+    }
+
+    /// <summary>
+    /// returns instance of <see cref="Solver"/> with solved matrix
+    /// </summary>
+    /// <param name="matrix">matrix for conversion to <see cref="_input"/></param>
+    /// <returns></returns>
+    public Solver Solve(Matrix<double> matrix)
+    {
+        _isMatrix = true;
+        _parser = new Parser(string.Empty);
+        try
+        {
+            Solve(null, matrix);
+        }
+        catch (Exception exception)
+        {
+            Error.Message = exception.Message;
+            Error.InnerMessage = exception.InnerException?.Message;
+        }
+
+        return this;
+    }
+
+    private string SetInputConfiguration(string input)
+    {
+        _constantInput = input;
+        _input = input.Replace("\n", Parser.SplitSymbol.ToString()).ToLower();
+        _input = _input.AppendZeroCoefficients(input.GetUnknownVariables()).RemoveWhiteSpacesNearSeparator();
+
+        if (_input is "no text" or "" || _input.IsTrash())
+            return string.Empty;
+
+        return _input;
+    }
+
+    /// <summary>
     /// solves system linear equations. set values to <see cref="Result"/>, <see cref="LeftSide"/>, <see cref="RightSide"/>
     /// </summary>
-    private void Solve(string unknownVariables, Matrix<double> matrix = null)
+    private void Solve(string unknownVariables, Matrix<double> matrix)
     {
         LeftSide = _parser.MatrixConversion(unknownVariables, matrix);
         if (LeftSide is null)
         {
             Error.Message = $"{nameof(LeftSide)} is null.";
-            Dispose();
             return;
         }
 
@@ -111,7 +176,6 @@ public sealed class Solver : IDisposable
         if (RightSide is null)
         {
             Error.Message = $"{nameof(RightSide)} is null.";
-            Dispose();
             return;
         }
 
@@ -123,7 +187,6 @@ public sealed class Solver : IDisposable
         {
             Error.Message = exception.Message;
             Error.InnerMessage = exception.InnerException?.Message;
-            Dispose();
         }
     }
 
@@ -160,32 +223,5 @@ public sealed class Solver : IDisposable
             sb.AppendLine($"{_constantInput.GetUnknownVariables()[i]}: {Result[i]}");
 
         return sb.ToString();
-    }
-
-    private void ReleaseUnmanagedResources()
-    {
-        LeftSide = null;
-        RightSide = null;
-        Result = null;
-        _parser = null;
-    }
-
-    private void Dispose(bool disposing)
-    {
-        ReleaseUnmanagedResources();
-        if (disposing)
-        {
-        }
-    }
-
-    public void Dispose()
-    {
-        Dispose(true);
-        GC.SuppressFinalize(this);
-    }
-
-    ~Solver()
-    {
-        Dispose(false);
     }
 }
